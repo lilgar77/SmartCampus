@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\EtatAS;
 use App\Repository\AcquisitionSystemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,6 +28,12 @@ class AcquisitionSystem
 
     #[ORM\Column(length: 255)]
     private ?string $mac_adress = null;
+
+    #[ORM\Column(enumType: EtatAS::class)]
+    private ?EtatAS $etat = null;
+
+
+
 
     public function getId(): ?int
     {
@@ -89,6 +96,18 @@ class AcquisitionSystem
     public function setMacAdress(string $mac_adress): static
     {
         $this->mac_adress = $mac_adress;
+
+        return $this;
+    }
+
+    public function getEtat(): ?EtatAS
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(EtatAS $etat): static
+    {
+        $this->etat = $etat;
 
         return $this;
     }
