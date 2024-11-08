@@ -32,6 +32,9 @@ class AcquisitionSystem
     #[ORM\Column(enumType: EtatAS::class)]
     private ?EtatAS $etat = null;
 
+    #[ORM\OneToOne(mappedBy: 'id_AS', cascade: ['persist', 'remove'])]
+    private ?Room $room = null;
+
 
 
 
@@ -108,6 +111,28 @@ class AcquisitionSystem
     public function setEtat(EtatAS $etat): static
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($room === null && $this->room !== null) {
+            $this->room->setIdAS(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($room !== null && $room->getIdAS() !== $this) {
+            $room->setIdAS($this);
+        }
+
+        $this->room = $room;
 
         return $this;
     }
