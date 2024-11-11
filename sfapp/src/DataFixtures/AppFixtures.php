@@ -13,7 +13,6 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
 
-
         $acquisitionSystem = new AcquisitionSystem();
         $acquisitionSystem->setTemperature(20);
         $acquisitionSystem->setCo2(400);
