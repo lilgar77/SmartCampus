@@ -16,4 +16,10 @@ class RoomsController extends AbstractController
             'rooms' => $roomRepository->findAll(),
         ]);
     }
+
+    #[Route('/rooms/add', name: 'app_room_add')]
+    public function add(): Response
+    {
+        return $this->render('rooms/add.html.twig');
+    }
 }
