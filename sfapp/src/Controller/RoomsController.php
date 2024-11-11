@@ -6,6 +6,10 @@ use App\Repository\RoomRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Room;
+use App\Form\RoomFormType;
 
 class RoomsController extends AbstractController
 {
@@ -18,8 +22,24 @@ class RoomsController extends AbstractController
     }
 
     #[Route('/rooms/add', name: 'app_room_add')]
-    public function add(): Response
+    public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('rooms/add.html.twig');
+        $room = new Room();
+        $form = $this->createForm(RoomFormType::class, $room);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($room);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_rooms');
+        }
+
+        $rooms = $entityManager->getRepository(Room::class)->findAll();
+
+        return $this->render('rooms/add.html.twig', [
+            'rooms' => $rooms,
+            'roomForm' => $form->createView(),
+        ]);
     }
 }

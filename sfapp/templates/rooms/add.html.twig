@@ -16,21 +16,17 @@
             <li>Your template at <code>/app/sfapp/templates/rooms/add.html.twig</code></li>
         </ul>
 
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>NAME</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for room in rooms %}
-                <tr>
-                    <td>{{ room.id }}</td>
-                    <td>{{ room.name }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {{ form_start(roomForm) }}
+
+        {{ form_label(roomForm.name) }}
+        {{ form_widget(roomForm.name) }}
+
+        {{ form_label(roomForm.id_AS) }}
+        {{ form_widget(roomForm.id_AS) }}
+
+        <button type="submit" class="transition-button">Ajouter une Salle</button>
+        {{ form_end(roomForm) }}
+
+
     </div>
 {% endblock %}
