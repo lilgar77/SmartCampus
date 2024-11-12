@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to Smart Campus{% endblock %}
+
+{% block head %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+    <div class="position-absolute top-0 start-0 quarter-circle"></div>
+    <div class="position-absolute bottom-0 end-0 quarter-circle"></div>
+
+    <div class="d-flex justify-content-center align-items-center vh-0">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo du campus" >
+    </div>
+    <!-- Conteneur pour les liens centré en haut, occupant toute la largeur -->
+    <div class="container-fluid d-flex justify-content-center  p-3">
+        <a href="#accueil" class="mx-3 text-link">Accueil</a>
+        <a href="#plan" class="mx-3 text-link">Plan</a>
+    </div>
+
+    <!-- Contenu principal centré -->
+    <div class="d-flex justify-content-center align-items-center vh-60 flex-column">
+        <h1>Welcome to Smart Campus</h1>
+    </div>
+
+
+
+
+    <!-- Scripts JavaScript de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
