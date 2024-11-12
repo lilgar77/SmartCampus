@@ -28,14 +28,51 @@
                         <tr>
                             <td>{{ room.id }}</td>
                             <td>{{ room.name }}</td>
-                            <td> <a href="{{ path('app_room_delete', {id: room.id })}}">Supprimé</a> </td>
+                            <td>
+                                <!-- Bouton pour ouvrir le modal de suppression -->
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ room.id }}">
+                                    Supprimer
+                                </button>
+
+                                <!-- Lien pour modifier la salle -->
+                                <a href="{{ path('app_room_edit', {id: room.id}) }}" class="btn btn-warning">
+                                    Modifier
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
-                    <a href="{{ path('app_room_add') }}">
-                        <button type="button" class="transition-button">Ajouter une Salle</button>
-                    </a>
+                    </tbody>
                 </table>
+
+                <a href="{{ path('app_room_add') }}">
+                    <button type="button" class="transition-button">Ajouter une Salle</button>
+                </a>
             </div>
+
+            <!-- Modal de confirmation de suppression -->
+            {% for room in rooms %}
+                <div class="modal fade" id="deleteModal{{ room.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ room.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{ room.id }}">Confirmer la suppression</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Êtes-vous sûr de vouloir supprimer la salle "{{ room.name }}" ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+
+                                <!-- Formulaire POST pour supprimer la salle -->
+                                <form action="{{ path('app_room_delete', {id: room.id}) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
