@@ -32,7 +32,7 @@ class AppFixtures extends Fixture
         $acquisitionSystem2->setEtat(EtatAS::INSTALL);
 
         $manager->persist($acquisitionSystem2);
-        
+
         $room = new Room();
         $room->setName('D302');
         $room->setIdAS($acquisitionSystem);
