@@ -28,9 +28,12 @@
                         <tr>
                             <td>{{ room.id }}</td>
                             <td>{{ room.name }}</td>
+                            <td> <a href="{{ path('app_room_delete', {id: room.id })}}">Supprimé</a> </td>
                         </tr>
                     {% endfor %}
-                    </tbody>
+                    <a href="{{ path('app_room_add') }}">
+                        <button type="button" class="transition-button">Ajouter une Salle</button>
+                    </a>
                 </table>
             </div>
         </div>
