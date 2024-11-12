@@ -43,12 +43,30 @@ class RoomsController extends AbstractController
         ]);
     }
 
-    #[Route('/rooms/{id}', name: 'app_room_delete')]
+    #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
     public function delete(Room $room, EntityManagerInterface $entityManager): Response
     {
         $entityManager->remove($room);
         $entityManager->flush();
 
         return $this->redirectToRoute('app_rooms');
+    }
+
+    #[Route('/rooms/{id}/edit', name: 'app_room_edit')]
+    public function edit(Room $room, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(RoomFormType::class, $room);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_rooms');
+        }
+
+        return $this->render('rooms/edit.html.twig', [
+            'room' => $room,
+            'roomForm' => $form->createView(),
+        ]);
     }
 }
