@@ -17,7 +17,7 @@ class RoomFormType extends AbstractType
             ->add('name')
             ->add('id_AS', EntityType::class, [
                 'class' => AcquisitionSystem::class,
-                'choice_label' => 'wording',
+                'choice_label' => 'mac_adress',
             ])
         ;
     }
