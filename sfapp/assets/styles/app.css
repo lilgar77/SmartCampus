@@ -1,3 +1,26 @@
 body {
     background-color: white;
 }
+
+
+.text-link{
+    text-decoration-color: mediumpurple;
+    color : mediumpurple;
+}
+
+.quarter-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 0 100% 0 0;
+    background-color: mediumpurple;
+    /* Forme de base de quart de cercle */
+}
+
+/* Spécifique pour chaque coin */
+.position-absolute.top-0.start-0 {
+    border-radius: 0 0 100% 0; /* Coin supérieur gauche */
+}
+
+.position-absolute.bottom-0.end-0 {
+    border-radius: 100% 0 0 0; /* Coin inférieur droit */
+}
