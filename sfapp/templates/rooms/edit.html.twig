@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la Salle - {{ room.name }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card shadow-sm p-4">
+            <h1 class="h3 mb-4 text-center">Modifier la Salle "{{ room.name }}"</h1>
+
+            <p class="text-muted">
+                Ce formulaire vous permet de modifier les informations de la salle.
+            </p>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    {{ form_start(roomForm) }}
+                    {{ form_row(roomForm.name, {'label': 'Nom de la Salle'}) }}
+                    {{ form_row(roomForm.id_AS, {'label': 'ID de l\'AS'}) }}
+
+                    <!-- Ajoute d'autres champs du formulaire ici si nécessaire -->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
+                    </div>
+                    {{ form_end(roomForm) }}
+
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="{{ path('app_rooms') }}" class="btn btn-secondary">Retour à la liste des salles</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
