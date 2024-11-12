@@ -42,4 +42,13 @@ class RoomsController extends AbstractController
             'roomForm' => $form->createView(),
         ]);
     }
+
+    #[Route('/rooms/{id}', name: 'app_room_delete')]
+    public function delete(Room $room, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($room);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_rooms');
+    }
 }
