@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\BuildingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BuildingRepository::class)]
@@ -23,6 +24,9 @@ class Building
 
     #[ORM\OneToMany(targetEntity: Floor::class, mappedBy: 'IdBuilding')]
     private Collection $floors;
+
+    #[ORM\OneToMany(targetEntity: Room::class, mappedBy: 'building')]
+    private Collection $rooms;
 
     public function __construct()
     {
@@ -76,6 +80,8 @@ class Building
         return $this;
     }
 
+
+
     public function removeFloor(Floor $floor): self
     {
         if ($this->floors->removeElement($floor)) {
@@ -87,8 +93,37 @@ class Building
         return $this;
     }
 
+    /**
+     * @return Collection<int, Room>
+     */
+    public function getRooms(): Collection
+    {
+        return $this->rooms;
+    }
+
+    public function addRoom(Room $room): self
+    {
+        if (!$this->floors->contains($room)) {
+            $this->floors[] = $room;
+            $room->setBuilding($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoom(Room $room): self
+    {
+        if ($this->rooms->removeElement($room)) {
+            if ($room->getBuilding() === $this) {
+                $room->setBuilding(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function __toString(): string
     {
-        return $this->NameBuilding; // Retourne le nom du type d'instrument
+        return $this->NameBuilding;
     }
 }

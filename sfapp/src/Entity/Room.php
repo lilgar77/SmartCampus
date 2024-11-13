@@ -19,6 +19,14 @@ class Room
     #[ORM\OneToOne(inversedBy: 'room', cascade: ['persist'])]
     private ?AcquisitionSystem $id_AS = null;
 
+    #[ORM\ManyToOne(targetEntity: Floor::class, inversedBy: 'rooms')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Floor $floor = null;
+
+    #[ORM\ManyToOne(targetEntity: Building::class, inversedBy: 'rooms')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Building $building = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +52,30 @@ class Room
     public function setIdAS(?AcquisitionSystem $id_AS): static
     {
         $this->id_AS = $id_AS;
+
+        return $this;
+    }
+
+    public function getFloor(): ?Floor
+    {
+        return $this->floor;
+    }
+
+    public function setFloor(?Floor $floor): static
+    {
+        $this->floor = $floor;
+
+        return $this;
+    }
+
+    public function getBuilding(): ?Building
+    {
+        return $this->building;
+    }
+
+    public function setBuilding(?Building $building): static
+    {
+        $this->building = $building;
 
         return $this;
     }
