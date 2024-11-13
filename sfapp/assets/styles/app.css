@@ -24,3 +24,22 @@ body {
 .position-absolute.bottom-0.end-0 {
     border-radius: 100% 0 0 0; /* Coin inférieur droit */
 }
+
+/*purple table*/
+.table-violet{
+    background-color: mediumpurple;
+}
+
+/*table scroll*/
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.sticky-header th {
+    position: sticky;
+    top: 0;
+    background-color: #6a0dad; /* Ajuste la couleur pour correspondre au style violet souhaité */
+    color: #fff;
+    z-index: 10;
+}

@@ -23,6 +23,16 @@ class AppFixtures extends Fixture
 
         $manager->persist($acquisitionSystem);
 
+        $acquisitionSystem2 = new AcquisitionSystem();
+        $acquisitionSystem2->setTemperature(25);
+        $acquisitionSystem2->setCo2(500);
+        $acquisitionSystem2->setHumidity(60);
+        $acquisitionSystem2->setWording('Salle de réunion 2');
+        $acquisitionSystem2->setMacAdress('00:00:00:00:00:01');
+        $acquisitionSystem2->setEtat(EtatAS::INSTALL);
+
+        $manager->persist($acquisitionSystem2);
+
         $room = new Room();
         $room->setName('D302');
         $room->setIdAS($acquisitionSystem);

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RoomsController!{% endblock %}
+
+{% block body %}
+
+    <div class="position-absolute top-0 start-0 quarter-circle"></div>
+    <div class="position-absolute bottom-0 end-0 quarter-circle"></div>
+
+    <div class="d-flex justify-content-center align-items-center vh-0">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo du campus">
+    </div>
+    <div class="container-fluid d-flex justify-content-center p-3">
+        <a href="{{ path('app_welcome') }}" class="mx-3 text-link">Accueil</a>
+        <a href="{{ path('app_rooms') }}" class="mx-3 text-link">Plan</a>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card shadow-sm p-4">
+            <h2 class="text-center mb-4">Ajouter une Salle</h2>
+
+            {{ form_start(roomForm) }}
+            <div class="mb-3">
+                {{ form_label(roomForm.name, 'Nom de la salle', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(roomForm.name, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(roomForm.id_AS, 'ID de l\'AS', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(roomForm.id_AS, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter une Salle</button>
+            </div>
+            {{ form_end(roomForm) }}
+        </div>
+    </div>
+
+{% endblock %}

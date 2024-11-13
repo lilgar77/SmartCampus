@@ -16,7 +16,7 @@ class Room
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToOne(inversedBy: 'room', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'room', cascade: ['persist'])]
     private ?AcquisitionSystem $id_AS = null;
 
     public function getId(): ?int

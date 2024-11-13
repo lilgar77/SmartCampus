@@ -36,8 +36,6 @@ class AcquisitionSystem
     private ?Room $room = null;
 
 
-
-
     public function getId(): ?int
     {
         return $this->id;
