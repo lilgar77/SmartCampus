@@ -43,3 +43,14 @@ body {
     color: #fff;
     z-index: 10;
 }
+
+.navbar-custom {
+    width: 40%;  /* Ajustez la largeur selon vos besoins */
+    margin: 0 auto;  /* Centre la navbar */
+    border-radius: 10px;  /* Ajustez la valeur du rayon pour l'effet désiré */
+    overflow: hidden;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 20px;  /* Ajustez la valeur pour augmenter l'écart */
+}
