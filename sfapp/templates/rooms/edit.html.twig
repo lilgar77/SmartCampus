@@ -24,13 +24,23 @@
                 <div class="col-md-8">
                     {{ form_start(roomForm) }}
                     <div class="mb-3">
-                        {{ form_label(roomForm.name, 'Nom de la Salle', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(roomForm.name, 'Nom de la salle', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(roomForm.name, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
                     <div class="mb-3">
                         {{ form_label(roomForm.id_AS, 'ID de l\'AS', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(roomForm.id_AS, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(roomForm.floor, 'Etage', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(roomForm.floor, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(roomForm.building, 'Batiment', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(roomForm.building, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
                     <div class="text-center">
