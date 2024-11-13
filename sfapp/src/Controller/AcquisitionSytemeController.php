@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 class AcquisitionSytemeController extends AbstractController
 {
 
@@ -36,9 +35,10 @@ class AcquisitionSytemeController extends AbstractController
 
             return $this->redirectToRoute('liste_app_acquisition_syteme');
         }
-        $acquisitionSystem = $entityManager->getRepository(AcquisitionSystem::class)->findAll();
-        return $this->render('acquisition_syteme/index.html.twig', [
+        $acquisitionSystems = $entityManager->getRepository(AcquisitionSystem::class)->findAll();
+        return $this->render('acquisition_syteme/add.html.twig', [
             'acquisition_systems' => $acquisitionSystems,
+            'ASForm' => $form->createView(),
         ]);
 
         /*

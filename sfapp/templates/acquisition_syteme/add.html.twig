@@ -8,23 +8,39 @@
     </style>
 
     <h1>Add AS</h1>
-    <table border = 1>
-        {{ form_start(form) }}
-        {{ form_row(form.type) }}
-        <button type="submit"> Ajouter instrument</button>
-        {{ form_end(form) }}
-        <thead>
-        <tr>
-            <th>Type Instrument</th>
-        </tr>
-        </thead>
-        <tbody>
-        {%for type in type%}
-            <tr>
-                <td>{{ type.type }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
+    {{ form_start(ASForm) }}
+    <div class="mb-3">
+        {{ form_label(ASForm.macAdress, 'Mac Adresse', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(ASForm.macAdress, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(ASForm.temperature, 'sa temperature', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(ASForm.temperature, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(ASForm.humidity, 'son humidite', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(ASForm.humidity, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(ASForm.CO2, 'son c02', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(ASForm.CO2, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(ASForm.etat, 'son etat', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(ASForm.etat, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(ASForm.room, 'sa salle', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(ASForm.room, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(ASForm.wording, 'Libelle', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(ASForm.wording, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter un SA</button>
+    </div>
+    {{ form_end(ASForm) }}
 
 {% endblock %}
