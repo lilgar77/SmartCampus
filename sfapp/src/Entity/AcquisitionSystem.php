@@ -27,7 +27,7 @@ class AcquisitionSystem
     private ?string $wording = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $mac_adress = null;
+    private ?string $macAdress = null;
 
     #[ORM\Column(enumType: EtatAS::class)]
     private ?EtatAS $etat = null;
@@ -93,12 +93,12 @@ class AcquisitionSystem
 
     public function getMacAdress(): ?string
     {
-        return $this->mac_adress;
+        return $this->macAdress;
     }
 
-    public function setMacAdress(string $mac_adress): static
+    public function setMacAdress(string $macAdress): static
     {
-        $this->mac_adress = $mac_adress;
+        $this->macAdress = $macAdress;
 
         return $this;
     }
