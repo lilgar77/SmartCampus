@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\AcquisitionSystem;
 use App\Entity\Room;
 use App\Form\AcquisitionSystemeType;
+use App\Form\RoomFormType;
 use App\Repository\AcquisitionSystemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,5 +54,23 @@ class AcquisitionSytemeController extends AbstractController
         return $this->redirectToRoute('liste_app_acquisition_syteme');
     }
 
+
+    #[Route('/acquisitionsyteme/{id}/edit', name: 'app_acquisition_syteme_edit')]
+    public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('liste_app_acquisition_syteme');
+        }
+
+        return $this->render('acquisition_syteme/edit.html.twig', [
+            'acquisition_systems' => $acquisitionSystem,
+            'ASForm' => $form->createView(),
+        ]);
+    }
 
 }

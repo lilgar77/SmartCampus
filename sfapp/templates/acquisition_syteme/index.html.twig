@@ -46,6 +46,9 @@
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ AS.id }}">
                                     Supprimer
                                 </button>
+                                <a href="{{ path('app_acquisition_syteme_edit', {id: AS.id}) }}" class="btn btn-warning">
+                                    Modifier
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
