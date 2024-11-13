@@ -9,12 +9,24 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>AS Liste</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/app/sfapp/src/Controller/AcquisitionSytemeController.php</code></li>
-        <li>Your template at <code>/app/sfapp/templates/acquisition_syteme/index.html.twig</code></li>
-    </ul>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>etat</th>
+        </tr>
+        </thead>
+        <tbody>
+        {%for AS in acquisition_systems%}
+            <tr>
+                <td>{{ AS.id }}</td>
+                <td>{{ AS.etat.value }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
+
 {% endblock %}
