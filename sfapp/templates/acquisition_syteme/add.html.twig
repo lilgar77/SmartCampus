@@ -1,46 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AS!{% endblock %}
+{% block title %}Ajouter un SA{% endblock %}
 
 {% block body %}
-    <style>
-        .body {background-color : #FFFFFF;}
-    </style>
 
-    <h1>Add AS</h1>
+    <div class="position-absolute top-0 start-0 quarter-circle"></div>
+    <div class="position-absolute bottom-0 end-0 quarter-circle"></div>
 
-    {{ form_start(ASForm) }}
-    <div class="mb-3">
-        {{ form_label(ASForm.macAdress, 'Mac Adresse', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(ASForm.macAdress, {'attr': {'class': 'form-control'}}) }}
+    <div class="d-flex justify-content-center align-items-center vh-0">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo du campus">
     </div>
-    <div class="mb-3">
-        {{ form_label(ASForm.temperature, 'sa temperature', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(ASForm.temperature, {'attr': {'class': 'form-control'}}) }}
+    <div class="container-fluid d-flex justify-content-center p-3">
+        <a href="{{ path('app_welcome') }}" class="mx-3 text-link">Accueil</a>
+        <a href="{{ path('app_rooms') }}" class="mx-3 text-link">Plan</a>
     </div>
-    <div class="mb-3">
-        {{ form_label(ASForm.humidity, 'son humidite', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(ASForm.humidity, {'attr': {'class': 'form-control'}}) }}
+
+    <div class="container mt-5">
+        <div class="card shadow-sm p-4">
+            <h2 class="text-center mb-4">Ajouter un SA</h2>
+
+            {{ form_start(ASForm) }}
+            <div class="mb-3">
+                {{ form_label(ASForm.macAdress, 'Mac Adresse', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(ASForm.macAdress, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(ASForm.temperature, 'Température', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(ASForm.temperature, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(ASForm.humidity, 'Humidité', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(ASForm.humidity, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(ASForm.CO2, 'CO2', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(ASForm.CO2, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(ASForm.etat, 'État', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(ASForm.etat, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(ASForm.room, 'Salle', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(ASForm.room, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(ASForm.wording, 'Libellé', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(ASForm.wording, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter un SA</button>
+            </div>
+            {{ form_end(ASForm) }}
+        </div>
     </div>
-    <div class="mb-3">
-        {{ form_label(ASForm.CO2, 'son c02', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(ASForm.CO2, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="mb-3">
-        {{ form_label(ASForm.etat, 'son etat', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(ASForm.etat, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="mb-3">
-        {{ form_label(ASForm.room, 'sa salle', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(ASForm.room, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="mb-3">
-        {{ form_label(ASForm.wording, 'Libelle', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(ASForm.wording, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="text-center">
-        <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter un SA</button>
-    </div>
-    {{ form_end(ASForm) }}
 
 {% endblock %}

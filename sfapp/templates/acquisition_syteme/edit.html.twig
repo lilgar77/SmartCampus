@@ -12,6 +12,7 @@
 
     <div class="container-fluid d-flex justify-content-center p-3">
         <a href="{{ path('app_welcome') }}" class="mx-3 text-link">Accueil</a>
+        <a href="{{ path('app_rooms') }}" class="mx-3 text-link">Plan</a>
     </div>
 
     <div class="container mt-5">
@@ -22,35 +23,40 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     {{ form_start(ASForm) }}
+
                     <div class="mb-3">
                         {{ form_label(ASForm.macAdress, 'Mac Adresse', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(ASForm.macAdress, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="mb-3">
-                        {{ form_label(ASForm.temperature, 'sa temperature', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(ASForm.temperature, 'Température', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(ASForm.temperature, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="mb-3">
-                        {{ form_label(ASForm.humidity, 'son humidite', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(ASForm.humidity, 'Humidité', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(ASForm.humidity, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="mb-3">
-                        {{ form_label(ASForm.CO2, 'son c02', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(ASForm.CO2, 'CO2', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(ASForm.CO2, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="mb-3">
-                        {{ form_label(ASForm.etat, 'son etat', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(ASForm.etat, 'État', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(ASForm.etat, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="mb-3">
-                        {{ form_label(ASForm.room, 'sa salle', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(ASForm.room, 'Salle', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(ASForm.room, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="mb-3">
-                        {{ form_label(ASForm.wording, 'Libelle', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(ASForm.wording, 'Libellé', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(ASForm.wording, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                        <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Sauvegarder les modifications</button>                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Sauvegarder les modifications</button>
+                    </div>
+
                     {{ form_end(ASForm) }}
                 </div>
             </div>
