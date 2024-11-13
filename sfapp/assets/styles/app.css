@@ -43,3 +43,27 @@ body {
     color: #fff;
     z-index: 10;
 }
+/* Style pour rendre les checkboxes plus jolies et violet */
+.form-check-input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #6f42c1; /* Violet */
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.form-check-input:checked {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.form-check-input:checked::before {
+    color: white;
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    font-size: 14px;
+}
