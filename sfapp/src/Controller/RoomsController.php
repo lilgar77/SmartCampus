@@ -9,16 +9,39 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Room;
+use App\Form\SearchRoomFormType;
 use App\Form\RoomFormType;
 
 class RoomsController extends AbstractController
 {
     #[Route('/rooms', name: 'app_rooms')]
-    public function index(RoomRepository $roomRepository): Response
+    public function index(Request $request, RoomRepository $roomRepository): Response
     {
-        return $this->render('rooms/index.html.twig', [
-            'rooms' => $roomRepository->findAll(),
+        $room = new Room();
+        $form = $this->createForm(SearchRoomFormType::class, $room, [
+            'method' => 'GET'
         ]);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid() && $room->getName()!=''){
+            $roomSearch = $roomRepository->findBy(
+                ['name' => $room->getName()],
+                ['name' => 'ASC']
+            );
+
+            return $this->render('rooms/index.html.twig',
+                [
+                    'rooms' => $roomSearch,
+                    'room' => $form,
+                ]);
+
+
+        }
+        return $this->render('rooms/index.html.twig',
+            [
+                'room'  => $form->createView(),
+                'rooms' => $roomRepository->findAll(),
+            ]);
+
     }
 
     #[Route('/rooms/add', name: 'app_room_add')]
