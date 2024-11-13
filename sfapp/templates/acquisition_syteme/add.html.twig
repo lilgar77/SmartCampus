@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AS!{% endblock %}
+
+{% block body %}
+    <style>
+        .body {background-color : #FFFFFF;}
+    </style>
+
+    <h1>Add AS</h1>
+    <table border = 1>
+        {{ form_start(form) }}
+        {{ form_row(form.type) }}
+        <button type="submit"> Ajouter instrument</button>
+        {{ form_end(form) }}
+        <thead>
+        <tr>
+            <th>Type Instrument</th>
+        </tr>
+        </thead>
+        <tbody>
+        {%for type in type%}
+            <tr>
+                <td>{{ type.type }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\AcquisitionSystem;
+use App\Form\AcquisitionSystemeType;
 use App\Repository\AcquisitionSystemRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +23,35 @@ class AcquisitionSytemeController extends AbstractController
             'acquisition_systems' => $acquisitionSystems,
         ]);
     }
+    #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
+    public function addAS(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $acquisitionSystem = new AcquisitionSystem();
+        $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($acquisitionSystem);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('liste_app_acquisition_syteme');
+        }
+        $acquisitionSystem = $entityManager->getRepository(AcquisitionSystem::class)->findAll();
+        return $this->render('acquisition_syteme/index.html.twig', [
+            'acquisition_systems' => $acquisitionSystems,
+        ]);
+
+        /*
+
+        $rooms = $entityManager->getRepository(Room::class)->findAll();
+
+        return $this->render('rooms/add.html.twig', [
+            'rooms' => $rooms,
+            'roomForm' => $form->createView(),
+        ]);
+         */
+    }
+
 
 
 
