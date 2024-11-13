@@ -10,24 +10,51 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\Building;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
 
 class RoomFormType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom ne peut pas être vide.',
+                    ]),
+                ],
+            ])
             ->add('id_AS', EntityType::class, [
+                'required' => true,
                 'class' => AcquisitionSystem::class,
                 'choice_label' => 'mac_adress',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez sélectionner un système d\'acquisition.',
+                    ]),
+                ],
             ])
             ->add('floor', EntityType::class, [
+                'required' => true,
                 'class' => Floor::class,
                 'choice_label' => 'numberFloor',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez sélectionner un étage.',
+                    ]),
+                ],
             ])
             ->add('building', EntityType::class, [
+                'required' => true,
                 'class' => Building::class,
                 'choice_label' => 'NameBuilding',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez sélectionner un bâtiment.',
+                    ]),
+                ],
             ])
         ;
     }
