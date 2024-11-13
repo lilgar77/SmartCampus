@@ -2,7 +2,7 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AcquisitionSytemeController!{% endblock %}
+{% block title %}Gestion des Système d'acqisition{% endblock %}
 
 {% block body %}
     <div class="position-absolute top-0 start-0 quarter-circle"></div>
@@ -13,10 +13,33 @@
     </div>
     <div class="container-fluid d-flex justify-content-center p-3">
         <a href="{{ path('app_welcome') }}" class="mx-3 text-link">Accueil</a>
+        <a href="{{ path('app_rooms') }}" class="mx-3 text-link">Plan</a>
     </div>
+
+    <nav class="navbar navbar-expand-lg table-violet table-responsive navbar-custom">
+        <div class="container-fluid justify-content-center">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto ms-auto">
+                    <li class="nav-item me-3">  <!-- Utilisation de me-3 pour espacer -->
+                        <a class="nav-link text-white" aria-current="page" href="{{ path('app_rooms') }}">Salles</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link text-dark text-decoration-underline active" href="{{  path('liste_app_acquisition_syteme') }}">Systèmes d'acquisition</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link text-white" href="{{ path('app_building') }}">Bâtiments</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link text-white" href="{{ path('app_floor') }}">Etages</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mt-4">
         <div class="card shadow-sm p-4">
-            <h1 class="h3 mb-4 text-center">Liste des Systeme d'acquisition</h1>
+            <h1 class="h3 mb-4 text-center">Liste des Système d'acquisition</h1>
 
             <!-- Conteneur scrollable pour le tableau uniquement -->
             <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
@@ -28,7 +51,7 @@
                         <th scope="col">temperature</th>
                         <th scope="col">CO2</th>
                         <th scope="col">humidity</th>
-                        <th scope="col">mac_adress</th>
+                        <th scope="col">Adresse Mac</th>
                         <th scope="col">Room associate</th>
                     </tr>
                     </thead>

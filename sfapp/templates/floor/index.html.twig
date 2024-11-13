@@ -20,16 +20,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto ms-auto">
                     <li class="nav-item me-3">  <!-- Utilisation de me-3 pour espacer -->
-                        <a class="nav-link text-white" href="{{ path('app_rooms') }}">Salles</a>
+                        <a class="nav-link text-white" aria-current="page" href="{{ path('app_rooms') }}">Salles</a>
                     </li>
                     <li class="nav-item me-3">
-                        <a class="nav-link text-white" href="#">Systèmes d'acquisition</a>
+                        <a class="nav-link text-white" href="{{  path('liste_app_acquisition_syteme') }}">Systèmes d'acquisition</a>
                     </li>
                     <li class="nav-item me-3">
                         <a class="nav-link text-white" href="{{ path('app_building') }}">Bâtiments</a>
                     </li>
                     <li class="nav-item me-3">
-                        <a class="nav-link text-dark text-decoration-underline active" aria-current="page" href="{{ path('app_floor') }}">Etages</a>
+                        <a class="nav-link text-dark text-decoration-underline active" href="{{ path('app_floor') }}">Etages</a>
                     </li>
                 </ul>
             </div>
