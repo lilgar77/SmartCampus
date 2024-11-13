@@ -14,7 +14,7 @@ class Floor
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'floors')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Building $IdBuilding = null;
 
     #[ORM\Column]

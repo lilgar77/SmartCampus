@@ -66,25 +66,29 @@ class Building
         return $this->floors;
     }
 
-    public function addFloor(Floor $floor): static
+    public function addFloor(Floor $floor): self
     {
         if (!$this->floors->contains($floor)) {
-            $this->floors->add($floor);
+            $this->floors[] = $floor;
             $floor->setIdBuilding($this);
         }
 
         return $this;
     }
 
-    public function removeFloor(Floor $floor): static
+    public function removeFloor(Floor $floor): self
     {
         if ($this->floors->removeElement($floor)) {
-            // set the owning side to null (unless already changed)
             if ($floor->getIdBuilding() === $this) {
                 $floor->setIdBuilding(null);
             }
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->NameBuilding; // Retourne le nom du type d'instrument
     }
 }

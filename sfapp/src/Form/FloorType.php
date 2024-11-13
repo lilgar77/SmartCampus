@@ -17,7 +17,7 @@ class FloorType extends AbstractType
             ->add('numberFloor')
             ->add('IdBuilding', EntityType::class, [
                 'class' => Building::class,
-'choice_label' => 'id',
+'choice_label' => 'NameBuilding',
             ])
         ;
     }
