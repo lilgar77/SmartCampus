@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'étage - {{ floor.numberFloor }}{% endblock %}
+
+{% block body %}
+    <div class="position-absolute top-0 start-0 quarter-circle"></div>
+    <div class="position-absolute bottom-0 end-0 quarter-circle"></div>
+
+    <div class="d-flex justify-content-center align-items-center vh-0">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo du campus" >
+    </div>
+    <!-- Conteneur pour les liens centré en haut, occupant toute la largeur -->
+    <div class="container-fluid d-flex justify-content-center  p-3">
+        <a href="{{ path('app_welcome') }}" class="mx-3 text-link">Accueil</a>
+        <a href="{{ path('app_rooms') }}" class="mx-3 text-link">Plan</a>
+    </div>
+
+
+    <div class="container mt-5">
+        <div class="card shadow-sm p-4">
+            <h2 class="text-center mb-4">Modifier l'étage "{{ floor.numberFloor }}"</h2>
+            <p class="text-muted text-center">Ce formulaire vous permet de modifier les informations de l'étage.</p>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+
+                    {{ form_start(floorForm) }}
+                    <div class="mb-3">
+                        {{ form_label(floorForm.numberFloor, "Numéro d'étage", {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(floorForm.numberFloor, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(floorForm.IdBuilding, 'Batiment', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(floorForm.IdBuilding, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Sauvegarder les modifications</button>                    </div>
+                    {{ form_end(floorForm) }}
+
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="{{ path('app_floor') }}" class="btn btn-secondary">Retour à la liste des étages</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
