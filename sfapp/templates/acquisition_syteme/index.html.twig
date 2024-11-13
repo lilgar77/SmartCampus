@@ -16,6 +16,11 @@
         <tr>
             <th>ID</th>
             <th>etat</th>
+            <th>temperature</th>
+            <th>CO2</th>
+            <th>humidity</th>
+            <th>mac_adress</th>
+            <th>Room associate</th>
         </tr>
         </thead>
         <tbody>
@@ -23,6 +28,13 @@
             <tr>
                 <td>{{ AS.id }}</td>
                 <td>{{ AS.etat.value }}</td>
+                <td>{{ AS.temperature }}</td>
+                <td>{{ AS.CO2 }}</td>
+                <td>{{ AS.humidity }}</td>
+                <td>{{ AS.getMacAdress() }}</td>
+
+                <td>{{ AS.room}}</td>
+
             </tr>
         {% endfor %}
         </tbody>
