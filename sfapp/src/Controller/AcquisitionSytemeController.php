@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AcquisitionSystem;
+use App\Entity\Room;
 use App\Form\AcquisitionSystemeType;
 use App\Repository\AcquisitionSystemRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,50 +41,17 @@ class AcquisitionSytemeController extends AbstractController
             'acquisition_systems' => $acquisitionSystems,
             'ASForm' => $form->createView(),
         ]);
-
-        /*
-
-        $rooms = $entityManager->getRepository(Room::class)->findAll();
-
-        return $this->render('rooms/add.html.twig', [
-            'rooms' => $rooms,
-            'roomForm' => $form->createView(),
-        ]);
-         */
     }
 
 
-
-
-/*
- * public function index(Request $request, UsagerRepository $usagerRepository): Response
+    #[Route('/acquisitionsyteme/{id}', name: 'app_acquisition_syteme_delete', methods: ['POST'])]
+    public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager) : Response
     {
-        $searchUsagerData = new Usager;
-        $form = $this->createForm(UsagerSearchType::class, $searchUsagerData);
+        $entityManager->remove($acquisitionSystem);
+        $entityManager->flush();
 
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid() && $searchUsagerData->getNom() != ''){
-            $usager = $usagerRepository->findBy(
-                ['nom' => $searchUsagerData->getNom()],
-                ['prenom'=> 'ASC'],
-            );
-            return $this->render('usager_liste/index.html.twig',
-            [   'usager' => $usager,
-                'form' => $form,
-            ]);
-        }
-
-
-        return $this->render('usager_liste/index.html.twig', [
-            'usager' => $usagerRepository->findBy(
-            [],
-            ['nom'=> 'ASC'],
-            ),
-            'form' => $form->createView(),
-
-        ]);
- */
-
+        return $this->redirectToRoute('liste_app_acquisition_syteme');
+    }
 
 
 }
