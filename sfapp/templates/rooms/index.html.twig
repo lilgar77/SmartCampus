@@ -55,6 +55,8 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">NOM</th>
+                        <th scope="col">ETAGE</th>
+                        <th scope="col">BATIMENT</th>
                         <th scope="col">ACTIONS</th>
                     </tr>
                     </thead>
@@ -63,6 +65,8 @@
                         <tr>
                             <td>{{ room.id }}</td>
                             <td>{{ room.name }}</td>
+                            <td>{{ room.floor.numberFloor }}</td>
+                            <td>{{ room.building.NameBuilding }}</td>
                             <td>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ room.id }}">
                                     Supprimer
@@ -77,7 +81,6 @@
                 </table>
             </div>
 
-            <!-- Bouton "Ajouter une Salle" en dehors du conteneur scrollable -->
             <div class="d-flex justify-content-end mt-3">
                 <a href="{{ path('app_room_add') }}">
                     <button type="button" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter une Salle</button>
