@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier AS - {{ acquisition_systems.macAdress }}{% endblock %}
+
+{% block body %}
+    <div class="position-absolute top-0 start-0 quarter-circle"></div>
+    <div class="position-absolute bottom-0 end-0 quarter-circle"></div>
+
+    <div class="d-flex justify-content-center align-items-center vh-0">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo du campus">
+    </div>
+
+    <div class="container-fluid d-flex justify-content-center p-3">
+        <a href="{{ path('app_welcome') }}" class="mx-3 text-link">Accueil</a>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card shadow-sm p-4">
+            <h2 class="text-center mb-4">Modifier AS "{{ acquisition_systems.macAdress }}"</h2>
+            <p class="text-muted text-center">Ce formulaire vous permet de modifier les informations de AS.</p>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    {{ form_start(ASForm) }}
+                    <div class="mb-3">
+                        {{ form_label(ASForm.macAdress, 'Mac Adresse', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(ASForm.macAdress, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(ASForm.temperature, 'sa temperature', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(ASForm.temperature, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(ASForm.humidity, 'son humidite', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(ASForm.humidity, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(ASForm.CO2, 'son c02', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(ASForm.CO2, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(ASForm.etat, 'son etat', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(ASForm.etat, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(ASForm.room, 'sa salle', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(ASForm.room, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(ASForm.wording, 'Libelle', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(ASForm.wording, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                        <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Sauvegarder les modifications</button>                    </div>
+                    {{ form_end(ASForm) }}
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="{{ path('liste_app_acquisition_syteme') }}" class="btn btn-secondary">Retour à la liste des AS</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
