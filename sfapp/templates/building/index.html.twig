@@ -72,7 +72,7 @@
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 
                                 <!-- Formulaire POST pour supprimer la salle -->
-                                <form action="{{ path('app_room_delete', {id: building.id}) }}" method="POST" style="display: inline;">
+                                <form action="{{ path('app_building_delete', {id: building.id}) }}" method="POST" style="display: inline;">
                                     <button type="submit" class="btn btn-danger">Supprimer</button>
                                 </form>
                             </div>

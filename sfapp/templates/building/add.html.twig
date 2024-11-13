@@ -1,85 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Batiments!{% endblock %}
+{% block title %}Ajouter un bâtiment!{% endblock %}
 
 {% block body %}
+
     <div class="position-absolute top-0 start-0 quarter-circle"></div>
     <div class="position-absolute bottom-0 end-0 quarter-circle"></div>
 
     <div class="d-flex justify-content-center align-items-center vh-0">
         <img src="{{ asset('images/logo.png') }}" alt="Logo du campus" >
     </div>
-    <!-- Conteneur pour les liens centré en haut, occupant toute la largeur -->
     <div class="container-fluid d-flex justify-content-center  p-3">
-        <a href="#accueil" class="mx-3 text-link">Accueil</a>
+        <a href="{{ path('app_welcome') }}" class="mx-3 text-link">Accueil</a>
         <a href="#plan" class="mx-3 text-link">Plan</a>
     </div>
-    <div class="container mt-4">
-        <div class="card shadow-sm p-4">
-            <h1 class="h3 mb-4 text-center">Liste des Bâtiments</h1>
+
+    <div class="example-wrapper">
 
 
 
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead class="table-dark">
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">NOM</th>
-                        <th scope="col">ADRESSE</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for building in buildings %}
-                        <tr>
-                            <td>{{ building.id }}</td>
-                            <td>{{ building.NameBuilding }}</td>
-                            <td>{{ building.AdressBuilding }}</td>
-                            <td>
-                                <!-- Bouton pour ouvrir le modal de suppression -->
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ building.id }}">
-                                    Supprimer
-                                </button>
+        {{ form_start(buildingForm) }}
 
-                                <!-- Lien pour modifier la salle -->
-                                <a href="{{ path('app_building_edit', {id: building.id}) }}" class="btn btn-warning">
-                                    Modifier
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+        {{ form_label(buildingForm.NameBuilding, 'Nom du bâtiment') }}
+        {{ form_widget(buildingForm.NameBuilding) }}
 
-                <a href="{{ path('app_building_add') }}">
-                    <button type="button" class="transition-button">Ajouter un Bâtiment</button>
-                </a>
-            </div>
+        {{ form_label(buildingForm.AdressBuilding, 'Adresse du bâtiment') }}
+        {{ form_widget(buildingForm.AdressBuilding) }}
 
-            <!-- Modal de confirmation de suppression -->
-            {% for building in buildings %}
-                <div class="modal fade" id="deleteModal{{ building.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ building.id }}" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel{{ building.id }}">Confirmer la suppression</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Êtes-vous sûr de vouloir supprimer la salle "{{ building.NameBuilding }}" ?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="transition-button">Ajouter un bâtiment</button>
+        {{ form_end(buildingForm) }}
 
-                                <!-- Formulaire POST pour supprimer la salle -->
-                                <form action="{{ path('app_room_delete', {id: building.id}) }}" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+
     </div>
 {% endblock %}
