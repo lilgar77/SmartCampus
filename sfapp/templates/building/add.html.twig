@@ -12,24 +12,32 @@
     </div>
     <div class="container-fluid d-flex justify-content-center  p-3">
         <a href="{{ path('app_welcome') }}" class="mx-3 text-link">Accueil</a>
-        <a href="#plan" class="mx-3 text-link">Plan</a>
+        <a href="{{ path('app_rooms') }}" class="mx-3 text-link">Plan</a>
     </div>
 
-    <div class="example-wrapper">
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h2 class="text-center mb-4">Ajouter un Bâtiment</h2>
 
 
 
         {{ form_start(buildingForm) }}
+        <div class="mb-3">
+        {{ form_label(buildingForm.NameBuilding, 'Nom du bâtiment', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(buildingForm.NameBuilding, {'attr': {'class': 'form-control'}}) }}
+        </div>
 
-        {{ form_label(buildingForm.NameBuilding, 'Nom du bâtiment') }}
-        {{ form_widget(buildingForm.NameBuilding) }}
+        <div class="mb-3">
+        {{ form_label(buildingForm.AdressBuilding, 'Adresse du bâtiment', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(buildingForm.AdressBuilding, {'attr': {'class': 'form-control'}}) }}
+        </div>
 
-        {{ form_label(buildingForm.AdressBuilding, 'Adresse du bâtiment') }}
-        {{ form_widget(buildingForm.AdressBuilding) }}
-
-        <button type="submit" class="transition-button">Ajouter un bâtiment</button>
+        <div class="text-center">
+            <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter une Salle</button>
+        </div>
         {{ form_end(buildingForm) }}
 
 
     </div>
+</div>
 {% endblock %}
