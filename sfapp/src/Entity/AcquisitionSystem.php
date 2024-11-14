@@ -35,6 +35,9 @@ class AcquisitionSystem
     #[ORM\OneToOne(mappedBy: 'id_AS', cascade: ['persist', 'remove'])]
     private ?Room $room = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Name = null;
+
 
     public function getId(): ?int
     {
@@ -137,6 +140,18 @@ class AcquisitionSystem
     public function __toString(): string
     {
         return $this->etat;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->Name;
+    }
+
+    public function setName(?string $Name): static
+    {
+        $this->Name = $Name;
+
+        return $this;
     }
 
 }

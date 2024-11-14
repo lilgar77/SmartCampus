@@ -28,6 +28,10 @@
                         {{ form_label(ASForm.macAdress, 'Mac Adresse', {'label_attr': {'style': 'font-size: 1rem; margin-bottom: 0.5rem;'}}) }}
                         {{ form_widget(ASForm.macAdress, {'attr': {'style': 'height: 40px; font-size: 1rem; width: 100%;'}}) }}
                     </div>
+                    <div class="mb-3">
+                        {{ form_label(ASForm.name, 'Nom du SA', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(ASForm.name, {'attr': {'class': 'form-control'}}) }}
+                    </div>
 
                     <div class="mb-4">
                         {{ form_label(ASForm.temperature, 'Température', {'label_attr': {'style': 'font-size: 1rem; margin-bottom: 0.5rem;'}}) }}
