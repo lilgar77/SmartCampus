@@ -1,4 +1,12 @@
 <?php
+#############################################################################################
+## @Name of file : FloorType.php                                                           ##
+## @brief : Form type for floor entity                                                     ##
+## @Function : Defines the form fields for creating or editing a floor                     ##
+####                                                                                       ##
+## Uses Symfony form component to generate floor form fields, including building selection ##
+##                                                                                         ##
+#############################################################################################
 
 namespace App\Form;
 

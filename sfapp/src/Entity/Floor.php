@@ -1,4 +1,12 @@
 <?php
+#########################################################################
+## @Name of file : Floor.php                                           ##
+## @brief : Entity representing a floor                                ##
+## @Function : Defines the properties and methods for the Floor entity ##
+####                                                                   ##
+## Uses Doctrine ORM to map Floor entity properties to the database.   ##
+##                                                                     ##
+#########################################################################
 
 namespace App\Entity;
 

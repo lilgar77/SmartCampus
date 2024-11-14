@@ -1,4 +1,12 @@
 <?php
+############################################################################
+## @Name of file : BuildingType.php                                       ##
+## @brief : Form type for building entity                                 ##
+## @Function : Defines the form fields for creating or editing a building ##
+####                                                                      ##
+## Uses Symfony form component to generate building form fields           ##
+##                                                                        ##
+############################################################################
 
 namespace App\Form;
 

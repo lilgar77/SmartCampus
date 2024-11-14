@@ -1,4 +1,12 @@
 <?php
+############################################################################
+## @Name of file : Building.php                                           ##
+## @brief : Entity representing a building                                ##
+## @Function : Defines the properties and methods for the Building entity ##
+####                                                                      ##
+## Uses Doctrine ORM to map Building entity properties to the database    ##
+##                                                                        ##
+############################################################################
 
 namespace App\Entity;
 

@@ -1,4 +1,12 @@
 <?php
+################################################################################
+## @Name of file : FloorController.php                                        ##
+## @brief : Controller for floor management                                   ##
+## @Function : Manages display, addition, editing, and deletion of floors.    ##
+####                                                                          ##
+## Uses Symfony to handle HTTP requests and CRUD operations on Floor entities ##
+##                                                                            ##
+################################################################################
 
 namespace App\Controller;
 

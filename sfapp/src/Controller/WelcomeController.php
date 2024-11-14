@@ -1,4 +1,12 @@
 <?php
+#######################################################################
+## @Name of file : WelcomeController.php                             ##
+## @brief : Controller for the welcome page                          ##
+## @Function : Renders the welcome page                              ##
+####                                                                 ##
+## Uses Symfony to handle HTTP requests and display the welcome page ##
+##                                                                   ##
+#######################################################################
 
 namespace App\Controller;
 

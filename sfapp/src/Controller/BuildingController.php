@@ -1,5 +1,13 @@
 <?php
 
+###################################################################################
+## @Name of file : BuildingController.php                                        ##
+## @brief : Controller for building management                                   ##
+## @Function : Manages display, addition, editing, and deletion of buildings.    ##
+####                                                                             ##
+## Uses Symfony to handle HTTP requests and CRUD operations on Building entities ##
+##                                                                               ##
+###################################################################################
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
