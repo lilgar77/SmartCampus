@@ -30,6 +30,14 @@
         <div class="card shadow-sm p-4">
             <h1 class="h3 mb-4 text-center">Liste des Bâtiments</h1>
 
+            {% for type, messages in app.flashes %}
+                <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
 
 
             <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">

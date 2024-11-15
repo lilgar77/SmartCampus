@@ -49,6 +49,8 @@ class BuildingController extends AbstractController
         $entityManager->remove($building);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Bâtiment "'. $building->getNameBuilding() . '" supprimé avec succès ');
+
         return $this->redirectToRoute('app_building');
     }
 
