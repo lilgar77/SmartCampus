@@ -67,6 +67,8 @@ class AcquisitionSytemeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" modifié avec succès ');
+
             return $this->redirectToRoute('liste_app_acquisition_syteme');
         }
 
