@@ -31,6 +31,7 @@ class BuildingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($building);
             $entityManager->flush();
+            $this->addFlash('success', 'Bâtiment "'. $building->getNameBuilding() . '" ajouté avec succès ');
 
             return $this->redirectToRoute('app_building');
         }
@@ -62,6 +63,7 @@ class BuildingController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+            $this->addFlash('success', 'Bâtiment "'. $building->getNameBuilding() . '" modifié avec succès ');
 
             return $this->redirectToRoute('app_building');
         }

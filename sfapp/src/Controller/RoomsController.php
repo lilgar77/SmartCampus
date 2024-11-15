@@ -54,6 +54,7 @@ class RoomsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($room);
             $entityManager->flush();
+            $this->addFlash('success', 'La salle "' . $room->getName() . '" a été ajoutée avec succès.');
             return $this->redirectToRoute('app_rooms');
         }
 
@@ -85,6 +86,8 @@ class RoomsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+
+            $this->addFlash('success', 'La salle "' . $room->getName() . '" a été modifiée avec succès.');
 
             return $this->redirectToRoute('app_rooms');
         }
