@@ -7,7 +7,7 @@
         <div class="container-fluid justify-content-center">
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto ms-auto">
-                    <li class="nav-item me-3">  <!-- Utilisation de me-3 pour espacer -->
+                    <li class="nav-item me-3">
                         <a class="nav-link text-dark text-decoration-underline active" aria-current="page" href="{{ path('app_rooms') }}">Salles</a>
                     </li>
                     <li class="nav-item me-3">
@@ -23,11 +23,22 @@
             </div>
         </div>
     </nav>
+
     <div class="container mt-4">
         <div class="card shadow-sm p-4">
             <h1 class="h3 mb-4 text-center">Liste des Salles</h1>
 
-            <!-- Barre de recherche avec bordure et alignement centré -->
+            <!-- Flash Messages -->
+            {% for type, messages in app.flashes %}
+                <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            <!-- Fin Flash Messages -->
+
             <div class="d-flex justify-content mb-4">
                 {{ form_start(room, { 'attr': {'class': 'd-flex w'} }) }}
                 {{ form_widget(room, { 'attr': {'class': 'form-control me-2'} }) }}
