@@ -47,6 +47,7 @@
                     <thead class="table-violet sticky-header">
                     <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
                         <th scope="col">etat</th>
                         <th scope="col">temperature</th>
                         <th scope="col">CO2</th>
@@ -60,6 +61,7 @@
                         {%for AS in acquisition_systems%}
                             <tr>
                                 <td>{{ AS.id }}</td>
+                                <td>{{ AS.name }}</td>
                                 <td>{{ AS.etat.value }}</td>
                                 <td>{{ AS.temperature }}</td>
                                 <td>{{ AS.CO2 }}</td>

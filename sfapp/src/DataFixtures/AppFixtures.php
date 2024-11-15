@@ -19,6 +19,7 @@ class AppFixtures extends Fixture
         $acquisitionSystem->setTemperature(20);
         $acquisitionSystem->setCo2(400);
         $acquisitionSystem->setHumidity(50);
+        $acquisitionSystem->setName('C3-PO');
         $acquisitionSystem->setWording('Salle de réunion');
         $acquisitionSystem->setMacAdress('00:00:00:00:00:00');
         $acquisitionSystem->setEtat(EtatAS::AVAILABLE);

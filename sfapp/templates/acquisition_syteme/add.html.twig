@@ -25,6 +25,10 @@
                 {{ form_widget(ASForm.macAdress, {'attr': {'class': 'form-control'}}) }}
             </div>
             <div class="mb-3">
+                {{ form_label(ASForm.name, 'Nom du SA', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(ASForm.name, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
                 {{ form_label(ASForm.temperature, 'Température', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(ASForm.temperature, {'attr': {'class': 'form-control'}}) }}
             </div>

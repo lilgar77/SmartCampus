@@ -18,6 +18,7 @@ class AcquisitionSystemeType extends AbstractType
         $builder
             ->add('temperature')
             ->add('CO2')
+            ->add('name')
             ->add('humidity')
             ->add('wording')
             ->add('macAdress')
