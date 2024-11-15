@@ -35,7 +35,9 @@ class AcquisitionSystemeType extends AbstractType
             ])
             ->add('room', EntityType::class, [
                 'class' => Room::class,
-'choice_label' => 'id',
+                'choice_label' => 'name',
+                'placeholder' => 'Aucune salle',
+                'required' => false,
             ])
         ;
     }

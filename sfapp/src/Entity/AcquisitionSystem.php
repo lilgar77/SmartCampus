@@ -5,6 +5,13 @@ namespace App\Entity;
 use App\Model\EtatAS;
 use App\Repository\AcquisitionSystemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+#[UniqueEntity(
+    fields: 'macAdress',
+    message: 'Cette adresse MAC est déjà utilisée.'
+)]
 
 #[ORM\Entity(repositoryClass: AcquisitionSystemRepository::class)]
 class AcquisitionSystem
@@ -26,7 +33,7 @@ class AcquisitionSystem
     #[ORM\Column(length: 255)]
     private ?string $wording = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $macAdress = null;
 
     #[ORM\Column(enumType: EtatAS::class)]
