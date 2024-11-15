@@ -34,6 +34,8 @@ class AcquisitionSytemeController extends AbstractController
             $entityManager->persist($acquisitionSystem);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" ajouté avec succès ');
+
             return $this->redirectToRoute('liste_app_acquisition_syteme');
         }
         $acquisitionSystems = $entityManager->getRepository(AcquisitionSystem::class)->findAll();
