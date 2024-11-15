@@ -50,6 +50,8 @@ class AcquisitionSytemeController extends AbstractController
         $entityManager->remove($acquisitionSystem);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" supprimé avec succès ');
+
         return $this->redirectToRoute('liste_app_acquisition_syteme');
     }
 
