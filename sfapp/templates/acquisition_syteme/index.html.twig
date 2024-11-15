@@ -47,9 +47,9 @@
                         <th scope="col">ID</th>
                         <th scope="col">Nom</th>
                         <th scope="col">Etat</th>
-                        <th scope="col">Température (°C)</th>
-                        <th scope="col">CO2 (ppm)</th>
-                        <th scope="col">Humidité (%)</th>
+                        <th scope="col">Température</th>
+                        <th scope="col">CO2</th>
+                        <th scope="col">Humidité</th>
                         <th scope="col">Adresse Mac</th>
                         <th scope="col">Salle</th>
                         <th scope="col">ACTIONS</th>
@@ -61,9 +61,9 @@
                                 <td>{{ AS.id }}</td>
                                 <td>{{ AS.name }}</td>
                                 <td>{{ AS.etat.value }}</td>
-                                <td>{{ AS.temperature }}</td>
-                                <td>{{ AS.CO2 }}</td>
-                                <td>{{ AS.humidity }}</td>
+                                <td>{{ AS.temperature }} °C</td>
+                                <td>{{ AS.CO2 }} ppm</td>
+                                <td>{{ AS.humidity }} %</td>
                                 <td>{{ AS.macAdress }}</td>
                                 <td>{{ AS.room}}</td>
                             <td>
