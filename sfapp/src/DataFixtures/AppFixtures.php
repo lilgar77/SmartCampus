@@ -64,7 +64,14 @@ class AppFixtures extends Fixture
         $floor4->setNumberFloor(3);
         $floor4->setIdBuilding($building);
         $manager->persist($floor4);
-        
+
+        $room = new Room();
+        $room->setName('D302');
+        $room->setFloor($floor4);
+        $room->setBuilding($building);
+        $room->setIdAS($acquisitionSystem);
+
+        $manager->persist($room);
 
 
 
