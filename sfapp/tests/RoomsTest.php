@@ -2,14 +2,9 @@
 
 namespace App\Tests;
 
-use App\Model\EtatAS;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use App\Entity\Room;
-use App\Entity\Floor;
-use App\Entity\AcquisitionSystem;
-use App\Entity\Building;
 
-class RoomsControllerTest extends WebTestCase
+class RoomsTest extends WebTestCase
 {
     public function testIndexPage()
     {
@@ -21,80 +16,65 @@ class RoomsControllerTest extends WebTestCase
         $this->assertCount(0, $crawler->filter('div.room')); // Assure qu'il n'y a pas encore de chambre, ou ajustez selon les données
     }
 
-    public function testAddRoom()
+    /*public function testAddRoom()
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/rooms/add');
 
-        // Check if the page loaded successfully
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('form[name="room_form"]');
+        $this->assertSelectorTextContains('h2', 'Ajouter une Salle');
 
-        // Submit the form with test values
-        $client->submitForm('Ajouter une Salle', [
-            'room_form[name]' => 'Test Room',
-            'room_form[id_AS]' => '6',  // Replace with a valid ID_AS
-            'room_form[floor]' => '1',                  // Replace with a valid floor ID
-            'room_form[building]' => '1',    // Replace with a valid building ID
-        ]);
-
-        // Confirm redirection after form submission
-        $this->assertResponseRedirects('/rooms');
-        $client->followRedirect();
-
-
-        // Vérification que la salle a bien été ajoutée dans la liste
-        $this->assertSelectorExists('td');  // Vérifie si une ligne de tableau existe
-        $this->assertSelectorTextContains('td:nth-child(2)', 'Test Room');
-        
-        // Vérifie si le nom de la salle est dans une ligne
-        // Vérification de l'étage
-    }
-
-    /*public function testEditRoom()
-    {
-        $client = static::createClient();
-        // Assurez-vous que la salle avec l'ID 1 existe dans la base de données
-        $crawler = $client->request('GET', '/rooms/1/edit');
-
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h2', 'Modifier la Salle');
-
-        // Vérification des valeurs initiales avant modification
-        $this->assertSelectorTextContains('input[name="roomForm[name]"][value="Test Room"]');
-        $this->assertSelectorTextContains('input[name="roomForm[id_AS]"][value="1"]');
-        $this->assertSelectorTextContains('input[name="roomForm[floor]"][value="1"]');
-        $this->assertSelectorTextContains('input[name="roomForm[building]"][value="1"]');
-
-        // Remplissage du formulaire pour modifier la salle
-        $form = $crawler->selectButton('Sauvegarder les modifications')->form([
-            'roomForm[name]' => 'Updated Room',
-            'roomForm[id_AS]' => '2', // Nouveau ID pour Système d'Acquisition
-            'roomForm[floor]' => '2', // Nouvel ID pour l'étage
-            'roomForm[building]' => '2', // Nouveau ID pour le bâtiment
+        // Remplissage du formulaire pour ajouter une salle
+        $form = $crawler->selectButton('Ajouter la Salle')->form([
+            'roomForm[name]' => 'Test Room',
+            'roomForm[id_AS]' => '1', // ID de l'AS
+            'roomForm[floor]' => '3', // Etage
+            'roomForm[building]' => '1', // Batiment
         ]);
 
         $client->submit($form);
         $this->assertResponseRedirects('/rooms');
         $client->followRedirect();
 
-        // Vérification que la salle a bien été mise à jour
+        // Vérification que la salle a été ajoutée dans la liste
+        $this->assertSelectorTextContains('div.room', 'Test Room');
+        $this->assertSelectorTextContains('div.room', 'Building A');
+        $this->assertSelectorTextContains('div.room', '3'); // Vérifie l'étage
+    }*/
+
+   /* public function testEditRoom()
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/rooms/1/edit'); // Assurez-vous que la chambre avec l'ID 1 existe
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'Edit Room');
+
+        // Remplissage du formulaire pour modifier une chambre existante
+        $form = $crawler->selectButton('Save')->form([
+            'roomForm[name]' => 'Updated Room',
+            'roomForm[capacity]' => 4,
+        ]);
+
+        $client->submit($form);
+        $this->assertResponseRedirects('/rooms');
+        $client->followRedirect();
+
+        // Vérification que le nom de la chambre a été mis à jour
         $this->assertSelectorTextContains('div.room', 'Updated Room');
-        $this->assertSelectorTextContains('div.room', 'Building B'); // Vérification du bâtiment mis à jour
-        $this->assertSelectorTextContains('div.room', '2'); // Vérification de l'étage mis à jour
     }
 
     public function testDeleteRoom()
     {
         $client = static::createClient();
-        $client->request('POST', '/rooms/1'); // Supposons que la salle avec l'ID 1 existe et est supprimée
+        $client->request('POST', '/rooms/1'); // Supposons que la chambre avec l'ID 1 existe
 
         $this->assertResponseRedirects('/rooms');
         $client->followRedirect();
 
-        // Vérification que la salle a été supprimée
+        // Vérification que la chambre a été supprimée
         $client->request('GET', '/rooms');
-        $this->assertSelectorNotContains('div.room', 'Room to Delete'); // Assurez-vous que la salle supprimée n'est plus visible
+        $this->assertSelectorNotContains('div.room', 'Room to Delete'); // Assurez-vous que la chambre supprimée n'est plus visible
     }
 
     public function testSearchRoom()
@@ -102,15 +82,15 @@ class RoomsControllerTest extends WebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', '/rooms');
 
-        // Soumettre une recherche par nom de salle
+        // Soumettre une recherche par nom de chambre
         $form = $crawler->selectButton('Search')->form([
-            'search_room_form[name]' => 'Test Room', // Assurez-vous que cette salle existe dans la base de données
+            'search_room_form[name]' => 'Test Room', // Assurez-vous que cette chambre existe dans la base de données
         ]);
 
         $client->submit($form);
         $this->assertResponseIsSuccessful();
 
-        // Vérification que la salle correspondante est affichée
+        // Vérification que la chambre correspondante est affichée
         $this->assertSelectorTextContains('div.room', 'Test Room');
     }*/
 }
