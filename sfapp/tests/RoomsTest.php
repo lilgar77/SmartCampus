@@ -33,58 +33,73 @@ class RoomsControllerTest extends WebTestCase
         // Submit the form with test values
         $client->submitForm('Ajouter une Salle', [
             'room_form[name]' => 'Test Room',
-            'room_form[id_AS]' => '6',  // Replace with a valid ID_AS
-            'room_form[floor]' => '1',                  // Replace with a valid floor ID
-            'room_form[building]' => '1',    // Replace with a valid building ID
+            'room_form[id_AS]' => '7',  // Ensure this is a valid AS ID in your test database
+            'room_form[floor]' => '5',  // Ensure this is a valid floor ID
+            'room_form[building]' => '3', // Ensure this is a valid building ID
         ]);
 
         // Confirm redirection after form submission
         $this->assertResponseRedirects('/rooms');
         $client->followRedirect();
 
-
-        // Vérification que la salle a bien été ajoutée dans la liste
-        $this->assertSelectorExists('td');  // Vérifie si une ligne de tableau existe
+        // Verify that the new room is in the list
+        $this->assertSelectorExists('td'); // Ensure the table has at least one row
         $this->assertSelectorTextContains('td:nth-child(2)', 'Test Room');
-        
-        // Vérifie si le nom de la salle est dans une ligne
-        // Vérification de l'étage
+        $this->assertSelectorTextContains('td:nth-child(3)', '0');
+        $this->assertSelectorTextContains('td:nth-child(4)', 'Informatique');
+
     }
 
-    /*public function testEditRoom()
+    public function testEditRoom()
     {
         $client = static::createClient();
-        // Assurez-vous que la salle avec l'ID 1 existe dans la base de données
+        $entityManager = self::$kernel->getContainer()->get('doctrine')->getManager();
+
+
+        // Ensure the room exists in the database
+        $room = $entityManager->getRepository(Room::class)->find(1);
+        if (!$room) {
+            $room = new Room();
+            $room->setName('Test Room');
+            $room->setIdAS($entityManager->getRepository(AcquisitionSystem::class)->find(7));
+            $room->setFloor($entityManager->getRepository(Floor::class)->find(5));
+            $room->setBuilding($entityManager->getRepository(Building::class)->find(3));
+            $entityManager->persist($room);
+            $entityManager->flush();
+        }
+
         $crawler = $client->request('GET', '/rooms/1/edit');
 
+
+
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h2', 'Modifier la Salle');
+        $this->assertSelectorTextContains('h2', 'Modifier la Salle "Test Room"');
 
         // Vérification des valeurs initiales avant modification
-        $this->assertSelectorTextContains('input[name="roomForm[name]"][value="Test Room"]');
-        $this->assertSelectorTextContains('input[name="roomForm[id_AS]"][value="1"]');
-        $this->assertSelectorTextContains('input[name="roomForm[floor]"][value="1"]');
-        $this->assertSelectorTextContains('input[name="roomForm[building]"][value="1"]');
+        $this->assertSelectorTextContains('input[name="room_Form[name]"][value="Test Room"]');
+        $this->assertSelectorTextContains('input[name="room_Form[id_AS]"][value="7"]');
+        $this->assertSelectorTextContains('input[name="room_Form[floor]"][value="5"]');
+        $this->assertSelectorTextContains('input[name="room_Form[building]"][value="3"]');
 
         // Remplissage du formulaire pour modifier la salle
-        $form = $crawler->selectButton('Sauvegarder les modifications')->form([
-            'roomForm[name]' => 'Updated Room',
-            'roomForm[id_AS]' => '2', // Nouveau ID pour Système d'Acquisition
-            'roomForm[floor]' => '2', // Nouvel ID pour l'étage
-            'roomForm[building]' => '2', // Nouveau ID pour le bâtiment
+        $client->submitForm('Sauvegarder les modifications', [
+            'room_form[name]' => 'Test',
+            'room_form[id_AS]' => '8',  // Ensure this is a valid AS ID in your test database
+            'room_form[floor]' => '6',  // Ensure this is a valid floor ID
+            'room_form[building]' => '3', // Ensure this is a valid building ID
         ]);
 
-        $client->submit($form);
         $this->assertResponseRedirects('/rooms');
         $client->followRedirect();
 
         // Vérification que la salle a bien été mise à jour
-        $this->assertSelectorTextContains('div.room', 'Updated Room');
-        $this->assertSelectorTextContains('div.room', 'Building B'); // Vérification du bâtiment mis à jour
-        $this->assertSelectorTextContains('div.room', '2'); // Vérification de l'étage mis à jour
+        $this->assertSelectorExists('td'); // Ensure the table has at least one row
+        $this->assertSelectorTextContains('td:nth-child(2)', 'Test');
+        $this->assertSelectorTextContains('td:nth-child(3)', '1');
+        $this->assertSelectorTextContains('td:nth-child(4)', 'Informatique');
     }
 
-    public function testDeleteRoom()
+    /*public function testDeleteRoom()
     {
         $client = static::createClient();
         $client->request('POST', '/rooms/1'); // Supposons que la salle avec l'ID 1 existe et est supprimée
