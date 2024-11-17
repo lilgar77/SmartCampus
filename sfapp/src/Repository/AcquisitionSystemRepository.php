@@ -21,6 +21,15 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
         parent::__construct($registry, AcquisitionSystem::class);
     }
 
+    public function findASByName($name): ?AcquisitionSystem
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.Name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 
 //    /**
 //     * @return AcquisitionSystem[] Returns an array of AcquisitionSystem objects
