@@ -3,7 +3,6 @@
 namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use App\Model\EtatAS;
 use App\Entity\AcquisitionSystem;
 
 class AcquisitionSystemTest extends WebTestCase

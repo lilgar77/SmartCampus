@@ -24,7 +24,7 @@ class AcquisitionSystemeType extends AbstractType
             ->add('name')
             ->add('humidity')
             ->add('wording')
-            ->add('macAdress', null, [ // Remplace `null` par `TextType::class` si tu veux être explicite
+            ->add('macAdress', null, [
                 'constraints' => [
                     new NotBlank([
                         'message' => 'L\'adresse MAC est obligatoire.',
