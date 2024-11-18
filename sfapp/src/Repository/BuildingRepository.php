@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AcquisitionSystem;
 use App\Entity\Building;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,6 +20,15 @@ class BuildingRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Building::class);
+    }
+
+    public function findBuildingByName($name): ?Building
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.NameBuilding = :NameBuilding')
+            ->setParameter('NameBuilding', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**

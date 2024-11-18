@@ -29,7 +29,7 @@ class RoomFormType extends AbstractType
             ->add('id_AS', EntityType::class, [
                 'required' => true,
                 'class' => AcquisitionSystem::class,
-                'choice_label' => 'macAdress',
+                'choice_label' => 'name',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez sélectionner un système d\'acquisition.',

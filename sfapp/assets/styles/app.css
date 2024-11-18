@@ -56,3 +56,11 @@ body {
 }
 
 
+.btn-violet {
+    background-color: #6a0dad;
+    border-color: #6a0dad;
+}
+.btn-violet:hover {
+    background-color: #590b92;
+    border-color: #590b92;
+}

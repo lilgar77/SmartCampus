@@ -18,9 +18,7 @@ class SearchRoomFormType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'required' => false,
-                'attr' => [
-                    'placeholder' => 'Recherche des salles...',
-                ],
+
             ]);
     }
 

@@ -54,7 +54,7 @@ class RoomsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($room);
             $entityManager->flush();
-
+            $this->addFlash('success', 'La salle "' . $room->getName() . '" a été ajoutée avec succès.');
             return $this->redirectToRoute('app_rooms');
         }
 
@@ -67,10 +67,13 @@ class RoomsController extends AbstractController
     }
 
     #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
-    public function delete(Room $room, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Room $room, EntityManagerInterface $entityManager): Response
     {
         $entityManager->remove($room);
         $entityManager->flush();
+
+        $this->addFlash('success', 'La salle "' . $room->getName() . '" a été supprimée avec succès.');
+
 
         return $this->redirectToRoute('app_rooms');
     }
@@ -83,6 +86,8 @@ class RoomsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+
+            $this->addFlash('success', 'La salle "' . $room->getName() . '" a été modifiée avec succès.');
 
             return $this->redirectToRoute('app_rooms');
         }
