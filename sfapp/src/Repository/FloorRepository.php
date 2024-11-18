@@ -21,6 +21,16 @@ class FloorRepository extends ServiceEntityRepository
         parent::__construct($registry, Floor::class);
     }
 
+    public function findFloorByNumber($name): ?Floor
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.numberFloor = :numberFloor')
+            ->setParameter('numberFloor', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
 //    /**
 //     * @return Floor[] Returns an array of Floor objects
 //     */

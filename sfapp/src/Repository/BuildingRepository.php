@@ -21,6 +21,15 @@ class BuildingRepository extends ServiceEntityRepository
         parent::__construct($registry, Building::class);
     }
 
+    public function findBuildingByName($name): ?Building
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.NameBuilding = :NameBuilding')
+            ->setParameter('NameBuilding', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Building[] Returns an array of Building objects
 //     */
