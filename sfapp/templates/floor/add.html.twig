@@ -11,14 +11,17 @@
 
         {{ form_start(floorForm) }}
             <div class="mb-3">
-        {{ form_label(floorForm.numberFloor, "Numéro d'étage",  {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(floorForm.numberFloor, {'attr': {'class': 'form-control'}}) }}
+                {{ form_label(floorForm.numberFloor, "Numéro d'étage",  {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(floorForm.numberFloor, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(floorForm.numberFloor, {'attr': {'class': 'text-danger'}}) }}
             </div>
 
             <div class="mb-3">
-        {{ form_label(floorForm.IdBuilding, 'Batiment', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(floorForm.IdBuilding, {'attr': {'class': 'form-control'}}) }}
+                {{ form_label(floorForm.IdBuilding, 'Bâtiment', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(floorForm.IdBuilding, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(floorForm.IdBuilding, {'attr': {'class': 'text-danger'}}) }}
             </div>
+
 
 
             <div class="text-center">
