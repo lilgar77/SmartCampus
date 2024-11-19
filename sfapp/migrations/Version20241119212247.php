@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20241119202842 extends AbstractMigration
+final class Version20241119212247 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -25,7 +25,7 @@ final class Version20241119202842 extends AbstractMigration
         $this->addSql('CREATE TABLE floor (id INT AUTO_INCREMENT NOT NULL, id_building_id INT NOT NULL, number_floor INT NOT NULL, INDEX IDX_BE45D62E5538B3E5 (id_building_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE room (id INT AUTO_INCREMENT NOT NULL, id_as_id INT DEFAULT NULL, floor_id INT NOT NULL, building_id INT NOT NULL, name VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_729F519B6C7FFB80 (id_as_id), INDEX IDX_729F519B854679E2 (floor_id), INDEX IDX_729F519B4D2A7E12 (building_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE floor ADD CONSTRAINT FK_BE45D62E5538B3E5 FOREIGN KEY (id_building_id) REFERENCES building (id) ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE room ADD CONSTRAINT FK_729F519B6C7FFB80 FOREIGN KEY (id_as_id) REFERENCES acquisition_system (id)');
+        $this->addSql('ALTER TABLE room ADD CONSTRAINT FK_729F519B6C7FFB80 FOREIGN KEY (id_as_id) REFERENCES acquisition_system (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE room ADD CONSTRAINT FK_729F519B854679E2 FOREIGN KEY (floor_id) REFERENCES floor (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE room ADD CONSTRAINT FK_729F519B4D2A7E12 FOREIGN KEY (building_id) REFERENCES building (id) ON DELETE CASCADE');
     }

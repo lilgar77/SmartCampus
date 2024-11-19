@@ -4,7 +4,13 @@ namespace App\Entity;
 
 use App\Repository\RoomRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+//Entity uniqueness
+#[UniqueEntity(
+    fields: ['name','floor','building'],
+    message: 'Cette salle est déjà utilisée.'
+)]
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Room
 {
@@ -17,6 +23,7 @@ class Room
     private ?string $name = null;
 
     #[ORM\OneToOne(inversedBy: 'room', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?AcquisitionSystem $id_AS = null;
 
     #[ORM\ManyToOne(targetEntity: Floor::class, inversedBy: 'rooms')]

@@ -7,6 +7,8 @@ use App\Repository\AcquisitionSystemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+//Entity uniqueness
 #[UniqueEntity(
     fields: 'macAdress',
     message: 'Cette adresse MAC est déjà utilisée.'
@@ -44,7 +46,7 @@ class AcquisitionSystem
     #[ORM\Column(enumType: EtatAS::class)]
     private ?EtatAS $etat = null;
 
-    #[ORM\OneToOne(mappedBy: 'id_AS', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'id_AS', cascade: ['persist'])]
     private ?Room $room = null;
 
     #[ORM\Column(length: 255, nullable: true)]
