@@ -73,5 +73,7 @@ class BuildingTest extends WebTestCase
 
         // Check for success message after deletion
         $this->assertSelectorTextContains('div.alert', 'Bâtiment "Droit" supprimé avec succès');
+
+
     }
 }
