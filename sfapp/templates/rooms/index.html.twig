@@ -76,7 +76,7 @@
                     {% for room in rooms %}
                         <tr>
                             <td>{{ room.name }}</td>
-                            <td>{{ room.idAS.Name}}</td>
+                            <td>{{ room.idAS is not null ? room.idAS.name : 'N/A' }}</td>
                             <td>{{ room.floor.numberFloor }}</td>
                             <td>{{ room.building.NameBuilding }}</td>
                             <td>
