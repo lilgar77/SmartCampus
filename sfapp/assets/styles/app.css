@@ -1,0 +1,66 @@
+body {
+    background-color: white;
+}
+
+
+.text-link{
+    text-decoration-color: mediumpurple;
+    color : mediumpurple;
+}
+
+.quarter-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 0 100% 0 0;
+    background-color: mediumpurple;
+    /* Forme de base de quart de cercle */
+}
+
+/* Spécifique pour chaque coin */
+.position-absolute.top-0.start-0 {
+    border-radius: 0 0 100% 0; /* Coin supérieur gauche */
+}
+
+.position-absolute.bottom-0.end-0 {
+    border-radius: 100% 0 0 0; /* Coin inférieur droit */
+}
+
+/*purple table*/
+.table-violet{
+    background-color: mediumpurple;
+}
+
+/*table scroll*/
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.sticky-header th {
+    position: sticky;
+    top: 0;
+    background-color: #6a0dad; /* Ajuste la couleur pour correspondre au style violet souhaité */
+    color: #fff;
+    z-index: 10;
+}
+
+.navbar-custom {
+    width: 40%;  /* Ajustez la largeur selon vos besoins */
+    margin: 0 auto;  /* Centre la navbar */
+    border-radius: 10px;  /* Ajustez la valeur du rayon pour l'effet désiré */
+    overflow: hidden;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 20px;  /* Ajustez la valeur pour augmenter l'écart */
+}
+
+
+.btn-violet {
+    background-color: #6a0dad;
+    border-color: #6a0dad;
+}
+.btn-violet:hover {
+    background-color: #590b92;
+    border-color: #590b92;
+}
