@@ -63,3 +63,35 @@ pwd
 ```
 localhost:8000
 ```
+## Configurer l'environnement de test `PhpUnit`
+
+Après avoir configuré la connexion au service `sfapp`, suivez les étapes ci-dessous :
+
+1. Ajouter une variable d'environnement dans `phpunit.php` :
+```php
+putenv('APP_ENV=test'); 
+```
+
+2.	Configurer la base de données de test dans `.env.test` :
+```php
+DATABASE_URL="mysql://root:rdbsfapp@database:3306/dbsfapp?serverVersion=10.10.2-MariaDB&charset=utf8mb4"
+```
+
+3.Créer la base de données de test :
+```php
+php bin/console doctrine:database:create --env=test
+```
+
+4.	Exécuter les migrations sur la base de test :
+```php
+
+php bin/console doctrine:migrations:migrate --env=test
+```
+
+5.	Lancer les tests :
+```php
+php bin/phpunit
+```
+
+
+
