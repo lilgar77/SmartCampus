@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AcquisitionSytemeController extends AbstractController
 {
 
-    #[Route('/acquisitionsysteme', name: 'liste_app_acquisition_syteme')]
+    #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
         $acquisitionSystems = $acquisitionSystemRepository->findAll();
@@ -36,7 +36,7 @@ class AcquisitionSytemeController extends AbstractController
 
             $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" ajouté avec succès ');
 
-            return $this->redirectToRoute('liste_app_acquisition_syteme');
+            return $this->redirectToRoute('app_acquisition_syteme_liste');
         }
         $acquisitionSystems = $entityManager->getRepository(AcquisitionSystem::class)->findAll();
         return $this->render('acquisition_syteme/add.html.twig', [
@@ -54,7 +54,7 @@ class AcquisitionSytemeController extends AbstractController
 
         $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" supprimé avec succès ');
 
-        return $this->redirectToRoute('liste_app_acquisition_syteme');
+        return $this->redirectToRoute('app_acquisition_syteme_liste');
     }
 
 
@@ -69,7 +69,7 @@ class AcquisitionSytemeController extends AbstractController
 
             $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" modifié avec succès ');
 
-            return $this->redirectToRoute('liste_app_acquisition_syteme');
+            return $this->redirectToRoute('app_acquisition_syteme_liste');
         }
 
         return $this->render('acquisition_syteme/edit.html.twig', [
