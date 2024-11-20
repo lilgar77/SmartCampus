@@ -44,13 +44,8 @@
                 <table class="table table-striped table-bordered">
                     <thead class="table-violet sticky-header">
                     <tr>
-                        <th scope="col">ID</th>
                         <th scope="col">Nom</th>
                         <th scope="col">Etat</th>
-                        <th scope="col">Température</th>
-                        <th scope="col">CO2</th>
-                        <th scope="col">Humidité</th>
-                        <th scope="col">Adresse Mac</th>
                         <th scope="col">Salle</th>
                         <th scope="col">ACTIONS</th>
                     </tr>
@@ -58,13 +53,8 @@
                     <tbody>
                         {%for AS in acquisition_systems%}
                             <tr>
-                                <td>{{ AS.id }}</td>
                                 <td>{{ AS.name }}</td>
                                 <td>{{ AS.etat.value }}</td>
-                                <td>{{ AS.temperature }} °C</td>
-                                <td>{{ AS.CO2 }} ppm</td>
-                                <td>{{ AS.humidity }} %</td>
-                                <td>{{ AS.macAdress }}</td>
                                 <td>{{ AS.room}}</td>
                             <td>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ AS.id }}">

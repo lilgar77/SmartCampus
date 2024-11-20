@@ -44,7 +44,6 @@
                 <table class="table table-striped table-bordered">
                     <thead class="table-violet sticky-header">
                     <tr>
-                        <th scope="col">ID</th>
                         <th scope="col">NOM</th>
                         <th scope="col">ADRESSE</th>
                         <th scope="col">ACTIONS</th>
@@ -53,7 +52,6 @@
                     <tbody>
                     {% for building in buildings %}
                         <tr>
-                            <td>{{ building.id }}</td>
                             <td>{{ building.NameBuilding }}</td>
                             <td>{{ building.AdressBuilding }}</td>
                             <td>

@@ -61,8 +61,8 @@
                 <table class="table table-striped table-bordered">
                     <thead class="table-violet sticky-header">
                     <tr>
-                        <th scope="col">ID</th>
                         <th scope="col">NOM</th>
+                        <th scope="col">NOM DU SA RELIÉ</th>
                         <th scope="col">ETAGE</th>
                         <th scope="col">BATIMENT</th>
                         <th scope="col">ACTIONS</th>
@@ -71,8 +71,8 @@
                     <tbody>
                     {% for room in rooms %}
                         <tr>
-                            <td>{{ room.id }}</td>
                             <td>{{ room.name }}</td>
+                            <td>{{ room.idAS.Name}}</td>
                             <td>{{ room.floor.numberFloor }}</td>
                             <td>{{ room.building.NameBuilding }}</td>
                             <td>
