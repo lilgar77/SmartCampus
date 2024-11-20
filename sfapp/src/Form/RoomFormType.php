@@ -27,14 +27,10 @@ class RoomFormType extends AbstractType
                 ],
             ])
             ->add('id_AS', EntityType::class, [
-                'required' => true,
+                'required' => false,
                 'class' => AcquisitionSystem::class,
                 'choice_label' => 'name',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez sélectionner un système d\'acquisition.',
-                    ]),
-                ],
+                'placeholder' => 'Choisissez une acquisition',
             ])
             ->add('floor', EntityType::class, [
                 'required' => true,
