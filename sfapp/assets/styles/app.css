@@ -2,7 +2,13 @@ body {
     background-color: white;
 }
 
-
+body.modal-open .background-container {
+    -webkit-filter: blur(4px);
+    -moz-filter: blur(4px);
+    -o-filter: blur(4px);
+    -ms-filter: blur(4px);
+    filter: blur(4px);
+}
 .text-link{
     text-decoration-color: mediumpurple;
     color : mediumpurple;
