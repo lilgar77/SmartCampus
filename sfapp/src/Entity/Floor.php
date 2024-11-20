@@ -4,6 +4,13 @@ namespace App\Entity;
 
 use App\Repository\FloorRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+//Entity uniqueness
+#[UniqueEntity(
+    fields: ['numberFloor','IdBuilding'],
+    message: 'Cet étage est déjà utilisée.'
+)]
 
 #[ORM\Entity(repositoryClass: FloorRepository::class)]
 class Floor

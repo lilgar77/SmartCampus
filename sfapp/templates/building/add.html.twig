@@ -12,13 +12,15 @@
 
         {{ form_start(buildingForm) }}
         <div class="mb-3">
-        {{ form_label(buildingForm.NameBuilding, 'Nom du bâtiment', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(buildingForm.NameBuilding, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(buildingForm.NameBuilding, 'Nom du bâtiment', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(buildingForm.NameBuilding, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(buildingForm.NameBuilding, {'attr': {'class': 'text-danger'}}) }}
         </div>
 
         <div class="mb-3">
-        {{ form_label(buildingForm.AdressBuilding, 'Adresse du bâtiment', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(buildingForm.AdressBuilding, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(buildingForm.AdressBuilding, 'Adresse du bâtiment', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(buildingForm.AdressBuilding, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(buildingForm.AdressBuilding, {'attr': {'class': 'text-danger'}}) }}
         </div>
 
         <div class="text-center">

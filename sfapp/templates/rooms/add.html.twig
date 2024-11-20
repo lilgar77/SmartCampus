@@ -13,21 +13,25 @@
             <div class="mb-3">
                 {{ form_label(roomForm.name, 'Nom de la salle', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(roomForm.name, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(roomForm.name, {'attr': {'class': 'text-danger'}}) }}
             </div>
 
             <div class="mb-3">
-                {{ form_label(roomForm.id_AS, 'ID de l\'AS', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_label(roomForm.id_AS, 'Système d\'acquisition', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(roomForm.id_AS, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(roomForm.id_AS, {'attr': {'class': 'text-danger'}}) }}
             </div>
 
             <div class="mb-3">
                 {{ form_label(roomForm.floor, 'Etage', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(roomForm.floor, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(roomForm.floor, {'attr': {'class': 'text-danger'}}) }}
             </div>
 
             <div class="mb-3">
                 {{ form_label(roomForm.building, 'Batiment', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(roomForm.building, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(roomForm.building, {'attr': {'class': 'text-danger'}}) }}
             </div>
 
             <div class="text-center">

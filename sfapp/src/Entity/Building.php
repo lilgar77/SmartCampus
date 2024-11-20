@@ -7,7 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+//Entity uniqueness
+#[UniqueEntity(
+    fields: ['NameBuilding','AdressBuilding'],
+    message: 'Ce Batiment est déjà utilisée.'
+)]
 #[ORM\Entity(repositoryClass: BuildingRepository::class)]
 class Building
 {
