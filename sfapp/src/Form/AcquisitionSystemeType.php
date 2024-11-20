@@ -21,7 +21,12 @@ class AcquisitionSystemeType extends AbstractType
         $builder
             ->add('temperature')
             ->add('CO2')
-            ->add('name')
+            ->add('name', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom est obligatoire.',
+                    ],) ],
+                ])
             ->add('humidity')
             ->add('wording')
             ->add('macAdress', null, [
