@@ -29,6 +29,7 @@ class AppFixtures extends Fixture
         $acquisitionSystem2->setTemperature(25);
         $acquisitionSystem2->setCo2(500);
         $acquisitionSystem2->setHumidity(60);
+        $acquisitionSystem2->setName('R2-D2');
         $acquisitionSystem2->setWording('Salle de réunion 2');
         $acquisitionSystem2->setMacAdress('00:00:00:00:00:01');
         $acquisitionSystem2->setEtat(EtatAS::INSTALL);
