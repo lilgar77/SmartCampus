@@ -5,111 +5,108 @@
 {% block title %}Gestion des Systèmes d'acqisitions{% endblock %}
 
 {% block body %}
-
-    <nav class="navbar navbar-expand-lg table-violet table-responsive navbar-custom">
-        <div class="container-fluid justify-content-center">
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto ms-auto">
-                    <li class="nav-item me-3">
-                        <a class="nav-link text-white" aria-current="page" href="{{ path('app_rooms') }}">Salles</a>
-                    </li>
-                    <li class="nav-item me-3">
-                        <a class="nav-link text-dark text-decoration-underline active" href="{{  path('liste_app_acquisition_syteme') }}">Systèmes d'acquisition</a>
-                    </li>
-                    <li class="nav-item me-3">
-                        <a class="nav-link text-white" href="{{ path('app_building') }}">Bâtiments</a>
-                    </li>
-                    <li class="nav-item me-3">
-                        <a class="nav-link text-white" href="{{ path('app_floor') }}">Etages</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        <div class="card shadow-sm p-4">
-            <h1 class="h3 mb-4 text-center">Liste des Systèmes d'acquisitions</h1>
-
-            {% for type, messages in app.flashes %}
-                <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="background-container">
+        <nav class="navbar navbar-expand-lg table-violet table-responsive navbar-custom">
+            <div class="container-fluid justify-content-center">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto ms-auto">
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" aria-current="page" href="{{ path('app_rooms') }}">Salles</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-dark text-decoration-underline active" href="{{  path('liste_app_acquisition_syteme') }}">Systèmes d'acquisition</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" href="{{ path('app_building') }}">Bâtiments</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" href="{{ path('app_floor') }}">Etages</a>
+                        </li>
+                    </ul>
                 </div>
-            {% endfor %}
-
-            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                <table class="table table-striped table-bordered">
-                    <thead class="table-violet sticky-header">
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Etat</th>
-                        <th scope="col">Température</th>
-                        <th scope="col">CO2</th>
-                        <th scope="col">Humidité</th>
-                        <th scope="col">Adresse Mac</th>
-                        <th scope="col">Salle</th>
-                        <th scope="col">ACTIONS</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {%for AS in acquisition_systems%}
-                            <tr>
-                                <td>{{ AS.id }}</td>
-                                <td>{{ AS.name }}</td>
-                                <td>{{ AS.etat.value }}</td>
-                                <td>{{ AS.temperature }} °C</td>
-                                <td>{{ AS.CO2 }} ppm</td>
-                                <td>{{ AS.humidity }} %</td>
-                                <td>{{ AS.macAdress }}</td>
-                                <td>{{ AS.room}}</td>
-                            <td>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ AS.id }}">
-                                    Supprimer
-                                </button>
-                                <a href="{{ path('app_acquisition_syteme_edit', {id: AS.id}) }}" class="btn btn-warning">
-                                    Modifier
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
             </div>
+        </nav>
 
-            <div class="d-flex justify-content-end mt-3">
-                <a href="{{ path('app_acquisition_syteme_add') }}">
-                    <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter un SA</button>
-                </a>
-            </div>
+        <div class="container mt-4">
+            <div class="card shadow-sm p-4">
+                <h1 class="h3 mb-4 text-center">Liste des Systèmes d'acquisitions</h1>
 
-            {%for AS in acquisition_systems%}
-                <div class="modal fade" id="deleteModal{{ AS.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ AS.id }}" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel{{ AS.id }}">Confirmer la suppression</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Êtes-vous sûr de vouloir supprimer l'AS "{{ AS.macAdress }}" ?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                <form action="{{ path('app_acquisition_syteme_delete', {id: AS.id}) }}" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                                </form>                            </div>
-                        </div>
+                {% for type, messages in app.flashes %}
+                    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                {% endfor %}
+
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-violet sticky-header">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Etat</th>
+                            <th scope="col">Température</th>
+                            <th scope="col">CO2</th>
+                            <th scope="col">Humidité</th>
+                            <th scope="col">Adresse Mac</th>
+                            <th scope="col">Salle</th>
+                            <th scope="col">ACTIONS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {%for AS in acquisition_systems%}
+                                <tr>
+                                    <td>{{ AS.id }}</td>
+                                    <td>{{ AS.name }}</td>
+                                    <td>{{ AS.etat.value }}</td>
+                                    <td>{{ AS.temperature }} °C</td>
+                                    <td>{{ AS.CO2 }} ppm</td>
+                                    <td>{{ AS.humidity }} %</td>
+                                    <td>{{ AS.macAdress }}</td>
+                                    <td>{{ AS.room}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ AS.id }}">
+                                        Supprimer
+                                    </button>
+                                    <a href="{{ path('app_acquisition_syteme_edit', {id: AS.id}) }}" class="btn btn-warning">
+                                        Modifier
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            {% endfor %}
+
+                <div class="d-flex justify-content-end mt-3">
+                    <a href="{{ path('app_acquisition_syteme_add') }}">
+                        <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter un SA</button>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-
-
-
-
+    {%for AS in acquisition_systems%}
+        <div class="modal fade" id="deleteModal{{ AS.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ AS.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel{{ AS.id }}">Confirmer la suppression</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Êtes-vous sûr de vouloir supprimer l'AS "{{ AS.macAdress }}" ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <form action="{{ path('app_acquisition_syteme_delete', {id: AS.id}) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}

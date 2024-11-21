@@ -3,10 +3,6 @@ body {
 }
 
 body.modal-open .background-container {
-    -webkit-filter: blur(4px);
-    -moz-filter: blur(4px);
-    -o-filter: blur(4px);
-    -ms-filter: blur(4px);
     filter: blur(4px);
 }
 .text-link{
@@ -14,7 +10,15 @@ body.modal-open .background-container {
     color : mediumpurple;
 }
 
-.quarter-circle {
+.quarter-circle-start{
+    width: 200px;
+    height: 200px;
+    border-radius: 0 100% 0 0;
+    background-color: mediumpurple;
+    /* Forme de base de quart de cercle */
+}
+
+.quarter-circle-end{
     width: 200px;
     height: 200px;
     border-radius: 0 100% 0 0;
