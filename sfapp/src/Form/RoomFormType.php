@@ -30,7 +30,7 @@ class RoomFormType extends AbstractType
                 'required' => false,
                 'class' => AcquisitionSystem::class,
                 'choice_label' => 'name',
-                'placeholder' => 'Choisissez une acquisition',
+                'placeholder' => 'Choisissez un système',
             ])
             ->add('floor', EntityType::class, [
                 'required' => true,
