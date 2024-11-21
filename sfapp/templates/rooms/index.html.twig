@@ -67,8 +67,7 @@
                     <tr>
                         <th scope="col">NOM</th>
                         <th scope="col">NOM DU SA RELIÉ</th>
-                        <th scope="col">ETAGE</th>
-                        <th scope="col">BATIMENT</th>
+                        <th scope="col">ETAGE / BATIMENT</th>
                         <th scope="col">ACTIONS</th>
                     </tr>
                     </thead>
@@ -77,8 +76,7 @@
                         <tr>
                             <td>{{ room.name }}</td>
                             <td>{{ room.idAS is not null ? room.idAS.name : 'N/A' }}</td>
-                            <td>{{ room.floor.numberFloor }}</td>
-                            <td>{{ room.building.NameBuilding }}</td>
+                            <td>{{ room.floor.numberFloor}}- {{room.building.NameBuilding }} ( {{room.building.AdressBuilding}} )</td>
                             <td>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ room.id }}">
                                     Supprimer
