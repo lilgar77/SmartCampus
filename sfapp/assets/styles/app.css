@@ -80,3 +80,34 @@ body.modal-open .background-container {
     background-color: #590b92;
     border-color: #590b92;
 }
+
+/* for the dashboard */
+
+.room-card {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.room-card:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.room-card .card-body {
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    color: #5a4d9c;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #333;
+}
+
+.card-body a, .card-body button {
+    margin-top: 10px;
+}

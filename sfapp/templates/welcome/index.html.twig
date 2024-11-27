@@ -10,31 +10,37 @@
 
     <!-- Contenu principal centré -->
     <div class="d-flex justify-content-center align-items-center vh-60 flex-column">
-        <h1>Welcome to Smart Campus</h1>
+        <h1>Dashboard Smart Campus</h1>
     </div>
 
+    <div class="container mt-4 ">
+    <div class="card shadow-sm p-4 ">
+        <h1 class="h3 mb-4 text-center background-container">Liste des Salles</h1>
 
-    <table class="table table-striped table-bordered">
-        <thead class="table-violet sticky-header">
-        <tr>
-            <th scope="col">NOM</th>
-            <th scope="col">ACTIONS</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for room in rooms %}
-            <tr>
-                <td>{{ room.name }}</td>
 
-                <td>
-                    <a href="{{ path('app_welcome_details', {id: room.id}) }}" class="btn btn-warning">
-                        details
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="container">
+            <div class="row">
+                {% for room in rooms %}
+                    <div class="col-3 mb-4">
+                        <div class="room-card card shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ room.id }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ room.name }}</h5>
+                                <p class="card-text">
+                                    <strong>Relier à:</strong> {{ room.idAS is not null ? room.idAS.name : 'N/A' }}<br>
+                                    <strong>Étage:</strong> {{ room.floor.numberFloor }}<br>
+                                    <strong>Bâtiment:</strong> {{ room.building.NameBuilding }} ({{ room.building.AdressBuilding }})
+                                </p>
+                                <a href="{{ path('app_welcome_details', {id: room.id}) }}" class="btn btn-dark table-violet">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </div>
+
 
 
     <!-- Scripts JavaScript de Bootstrap -->
