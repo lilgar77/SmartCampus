@@ -3,6 +3,7 @@
 {% block title %}Gestion des Salles{% endblock %}
 
 {% block body %}
+    <div class="background-container">
     <nav class="navbar navbar-expand-lg table-violet navbar-custom">
         <div class="container-fluid justify-content-center">
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -92,6 +93,10 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+    </div>
+
             <!-- Fin Tableau des salles -->
 
 
@@ -99,7 +104,7 @@
             <!-- Modals de confirmation -->
             {% for room in rooms %}
                 <div class="modal fade" id="deleteModal{{ room.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ room.id }}" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="deleteModalLabel{{ room.id }}">Confirmer la suppression</h5>
@@ -119,6 +124,5 @@
                 </div>
             {% endfor %}
             <!-- Fin Modals -->
-        </div>
-    </div>
+
 {% endblock %}
