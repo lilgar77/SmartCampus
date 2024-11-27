@@ -33,7 +33,7 @@ class RoomRepository extends ServiceEntityRepository
     public function findRoomWithAs(): array
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.id_AS IS NOT NULL') 
+            ->andWhere('r.id_AS IS NOT NULL')
             ->getQuery()
             ->getResult();
     }
