@@ -30,7 +30,7 @@ class AcquisitionSytemeController extends AbstractController
     @param :                                                                                ##
         $acquisitionSystemRepository (Access the System Acquisition table in the database)  ##
      **/
-    #[Route('/acquisitionsysteme', name: 'liste_app_acquisition_syteme')]
+    #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
         $acquisitionSystems = $acquisitionSystemRepository->findAll();
