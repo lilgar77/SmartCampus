@@ -10,12 +10,21 @@
 
     <div class="position-fixed top-0 start-0 quarter-circle-start background-container"></div>
     <div class="position-fixed bottom-0 end-0 quarter-circle-end background-container"></div>
+    <div class="position-fixed icon-fixed top-0 end-0">
+        <i class="bi bi-person" style="font-size: 100px"></i>
+        <a href="{{ path('app_login') }}" class="mx-3 text-link
+        {% if app.request.attributes.get('_route') starts with 'app_acquisition_syteme'
+            or app.request.attributes.get('_route') starts with 'app_building'
+            or app.request.attributes.get('_route') starts with 'app_floor'
+            or app.request.attributes.get('_route') starts with 'app_room'%}text-dark text-decoration-underline active{% endif %}">Login</a>
+    </div>
 
     <div class="background-container">
-    <div class="d-flex justify-content-center align-items-center vh-0">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo du campus">
-    </div>
-    <div class="container-fluid d-flex justify-content-center p-3">
+        <div class="d-flex justify-content-center align-items-center vh-0">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo du campus">
+        </div>
+
+        <div class="container-fluid d-flex justify-content-center p-3">
         <a href="{{ path('app_welcome') }}" class="mx-3 text-link
         {% if app.request.attributes.get('_route') == 'app_welcome' %}text-dark text-decoration-underline active{% endif %}">Accueil</a>
         <a href="{{ path('app_rooms') }}" class="mx-3 text-link

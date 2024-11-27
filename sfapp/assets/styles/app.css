@@ -28,6 +28,11 @@ body.modal-open .background-container {
     /* Forme de base de quart de cercle */
 }
 
+.icon-fixed.top-0.end-0{
+    top: 10%;
+    left: 87%;
+}
+
 /* Spécifique pour chaque coin */
 .position-fixed.top-0.start-0 {
     top: 0;
