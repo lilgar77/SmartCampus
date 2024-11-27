@@ -36,7 +36,14 @@
                 const wave = document.querySelector('.wave');
 
                 if (!isNaN(humidity)) {
-                    const height = 200 - (humidity * 2); // Conversion de l'humidité (0-100) en hauteur SVG
+                    // Calcul de la hauteur de la vague en fonction de l'humidité
+                    // Humidité entre 8% (presque bas du cercle) et 90% (près du sommet)
+                    let height = 200 - (humidity * 1.5); // 1.5 pour que l'humidité 90% donne presque 10
+
+                    // Limiter la hauteur à ne pas dépasser la base (200) et à ne pas être trop basse
+                    height = Math.max(10, Math.min(height, 180));
+
+                    // Appliquer la nouvelle hauteur à la vague
                     wave.setAttribute('d', `M 0 ${height} Q 50 ${height - 10}, 100 ${height} T 200 ${height} V 200 H 0 Z`);
                 }
             });
