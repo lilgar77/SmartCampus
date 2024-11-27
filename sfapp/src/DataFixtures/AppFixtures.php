@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Installation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Room;
@@ -22,7 +23,7 @@ class AppFixtures extends Fixture
         $acquisitionSystem->setName('C3-PO');
         $acquisitionSystem->setWording('Salle de réunion');
         $acquisitionSystem->setMacAdress('00:00:00:00:00:00');
-        $acquisitionSystem->setEtat(EtatAS::AVAILABLE);
+        $acquisitionSystem->setEtat(EtatAS::Disponible);
         $manager->persist($acquisitionSystem);
 
         $acquisitionSystem2 = new AcquisitionSystem();
@@ -32,7 +33,7 @@ class AppFixtures extends Fixture
         $acquisitionSystem2->setName('R2-D2');
         $acquisitionSystem2->setWording('Salle de réunion 2');
         $acquisitionSystem2->setMacAdress('00:00:00:00:00:01');
-        $acquisitionSystem2->setEtat(EtatAS::INSTALL);
+        $acquisitionSystem2->setEtat(EtatAS::En_Installation);
         $manager->persist($acquisitionSystem2);
 
         $building = new Building();
@@ -71,10 +72,19 @@ class AppFixtures extends Fixture
         $room->setFloor($floor4);
         $room->setBuilding($building);
         $room->setIdAS($acquisitionSystem);
-
         $manager->persist($room);
 
+        $installation=new Installation();
+        $installation->setSA($acquisitionSystem2);
+        $installation->setRoom($room);
 
+        $manager->persist($installation);
+
+        $installation2=new Installation();
+        $installation2->setSA($acquisitionSystem);
+        $installation2->setRoom($room);
+
+        $manager->persist($installation2);
 
         $manager->flush();
     }

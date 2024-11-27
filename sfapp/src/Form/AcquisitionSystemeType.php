@@ -43,10 +43,11 @@ class AcquisitionSystemeType extends AbstractType
             ])
             ->add('etat', ChoiceType::class, [
                 'choices' => [
-                    'Dispo' => EtatAS::AVAILABLE,
-                    'désinstallé' => EtatAS::UNINSTALL,
-                    'installé' => EtatAS::INSTALL,
-                    'À réparer' => EtatAS::REPAIRED,
+                    'Dispo' => EtatAS::Disponible,
+                    'Désinstaller' => EtatAS::A_Desinstaller,
+                    'Installer' => EtatAS::Installer,
+                    'À réparer' => EtatAS::A_Reparer,
+                    'En cours d\'installation' => EtatAS::En_Installation,
                 ],
                 'choice_label' => function($choice) {
                     return $choice->name;
