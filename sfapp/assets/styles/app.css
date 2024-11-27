@@ -9,19 +9,24 @@ body {
 }
 
 .quarter-circle {
-    width: 200px;
-    height: 200px;
+    width: 10vw;
+    height: 10vw;
     border-radius: 0 100% 0 0;
     background-color: mediumpurple;
     /* Forme de base de quart de cercle */
+    position: fixed;
 }
 
 /* Spécifique pour chaque coin */
 .position-absolute.top-0.start-0 {
+    top: 0;
+    left: 0;
     border-radius: 0 0 100% 0; /* Coin supérieur gauche */
 }
 
 .position-absolute.bottom-0.end-0 {
+    bottom: 0;
+    right: 0;
     border-radius: 100% 0 0 0; /* Coin inférieur droit */
 }
 

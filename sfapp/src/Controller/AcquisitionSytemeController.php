@@ -62,7 +62,7 @@ class AcquisitionSytemeController extends AbstractController
 
             $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" ajouté avec succès ');
 
-            return $this->redirectToRoute('liste_app_acquisition_syteme');
+            return $this->redirectToRoute('app_acquisition_syteme_liste');
         }
 
         // Render the add page with the form
@@ -87,7 +87,7 @@ class AcquisitionSytemeController extends AbstractController
 
         $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" supprimé avec succès ');
 
-        return $this->redirectToRoute('liste_app_acquisition_syteme');
+        return $this->redirectToRoute('app_acquisition_syteme_liste');
     }
 
     /**
@@ -109,7 +109,7 @@ class AcquisitionSytemeController extends AbstractController
 
             $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" modifié avec succès ');
 
-            return $this->redirectToRoute('liste_app_acquisition_syteme');
+            return $this->redirectToRoute('app_acquisition_syteme_liste');
         }
 
         return $this->render('acquisition_syteme/edit.html.twig', [
