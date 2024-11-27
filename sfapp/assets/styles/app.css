@@ -157,21 +157,67 @@ body.modal-open .background-container {
 }
 
 
+/* Styles pour le soleil */
 .sun {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgb(0, 0, 255) 0%, rgb(255, 0, 0) 100%);
-    transition: background 1s ease; /* Transition pour adoucir le changement de couleur */
-    position: relative;
+    width: 290px; /* Largeur et hauteur identiques pour un cercle parfait */
+    height: 290px;
+    border-radius: 50%; /* Cercle parfait */
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    background: radial-gradient(circle, #0022ff 30%, #aa0000 100%); /* Rouge avec dégradé */
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); /* Légère lueur rouge */
 }
 
-/* Texte au centre du cercle */
+/* Texte au centre du soleil */
 .sun-text {
-    font-size: 2rem;
-    font-weight: bold;
     color: white;
+    font-size: 20px;
+    font-weight: bold;
+    z-index: 2; /* Au-dessus des rayons */
 }
+
+/* Rayons statiques autour du soleil */
+.sun::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 290px;
+    height: 290px;
+    background: radial-gradient(circle, transparent 60%, rgba(255, 100, 100, 0.6) 70%, transparent 80%);
+    border-radius: 50%;
+    z-index: 1; /* Derrière le cercle rouge */
+    mask-image: radial-gradient(circle, transparent 60%, black 61%);
+}
+/* Conteneur principal pour aligner les cercles */
+.circles-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px; /* Espacement entre les cercles */
+}
+
+/* Ajouter les traits */
+.sun .ray {
+    position: absolute;
+    width: 10px; /* Largeur des traits */
+    height: 20px; /* Longueur des traits */
+    background-color: black;
+    transform-origin:  120px; /* Positionner à l'extérieur du cercle */
+    top: 50%;
+    left: 50%;
+}
+
+/* Ajouter 10 traits autour */
+.sun .ray:nth-child(1) { transform: rotate(0deg); }
+.sun .ray:nth-child(2) { transform: rotate(36deg); }
+.sun .ray:nth-child(3) { transform: rotate(72deg); }
+.sun .ray:nth-child(4) { transform: rotate(108deg); }
+.sun .ray:nth-child(5) { transform: rotate(144deg); }
+.sun .ray:nth-child(6) { transform: rotate(180deg); }
+.sun .ray:nth-child(7) { transform: rotate(216deg); }
+.sun .ray:nth-child(8) { transform: rotate(252deg); }
+.sun .ray:nth-child(9) { transform: rotate(288deg); }
+.sun .ray:nth-child(10) { transform: rotate(324deg); }

@@ -13,24 +13,39 @@
         <h1>Détails de la salle {{ room.name }}</h1>
 
 
-        <div class="progress-circle-container">
-            <svg class="progress-circle" viewBox="0 0 200 200">
-                <!-- Cercle de bordure -->
-                <circle cx="100" cy="100" r="90" class="circle-bg" />
+        <!-- Conteneur pour aligner les cercles -->
+        <div class="circles-container">
+            <!-- Premier cercle : Humidité -->
+            <div class="progress-circle-container">
+                <svg class="progress-circle" viewBox="0 0 200 200">
+                    <!-- Cercle de bordure -->
+                    <circle cx="100" cy="100" r="90" class="circle-bg" />
 
-                <!-- Vague animée -->
-                <mask id="wave-mask">
-                    <rect x="0" y="0" width="200" height="200" fill="white" />
-                    <path class="wave" d="M 0 150 Q 50 140, 100 150 T 200 150 V 200 H 0 Z" fill="black" />
-                </mask>
+                    <!-- Vague animée -->
+                    <mask id="wave-mask">
+                        <rect x="0" y="0" width="200" height="200" fill="white" />
+                        <path class="wave" d="M 0 150 Q 50 140, 100 150 T 200 150 V 200 H 0 Z" fill="black" />
+                    </mask>
 
-                <!-- Cercle avec vague -->
-                <circle cx="100" cy="100" r="90" class="circle-wave" mask="url(#wave-mask)" />
-            </svg>
-        </div>
+                    <!-- Cercle avec vague -->
+                    <circle cx="100" cy="100" r="90" class="circle-wave" mask="url(#wave-mask)" />
+                </svg>
+            </div>
 
-        <div class="sun" id="sun">
-            <div class="sun-text" id="temp-text">{{ room.idAS.temperature }}°C</div>
+            <!-- Deuxième cercle : Température -->
+            <div class="sun" id="sun">
+                <div class="sun-text" id="temp-text">{{ room.idAS.temperature }}°C</div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+                <div class="ray"></div>
+            </div>
         </div>
 
         <script>
@@ -78,25 +93,35 @@
                 const temperature = parseFloat('{{ room.idAS.temperature }}'); // Température de la salle
 
                 if (!isNaN(temperature)) {
-                    let startColor = 'rgb(0, 0, 255)'; // Bleu foncé pour -5°C
-                    let endColor = 'rgb(255, 0, 0)'; // Rouge foncé pour 40°C
 
-                    // Calculer la couleur du dégradé en fonction de la température
-                    let tempRatio = (temperature + 5) / 45; // Température normalisée de -5°C à 40°C
-                    tempRatio = Math.min(Math.max(tempRatio, 0), 1); // Limiter la valeur entre 0 et 1
 
-                    // Calculer les nouvelles couleurs en fonction de la température
-                    let r = Math.round((255 - 0) * tempRatio + 0);  // Calcul du rouge
-                    let g = 0;  // Pas de vert dans ce dégradé
-                    let b = Math.round((0 - 255) * (1 - tempRatio) + 255);  // Calcul du bleu
+                    switch (true) {
+                        case (temperature < 0):
+                            sun.style.background = "darkblue";
+                            break;
+                        case (temperature >= 0 && temperature <= 5):
+                            sun.style.background = "blue";
+                            break;
+                        case (temperature > 5 && temperature <= 15):
+                            sun.style.background = "yellow";
+                            break;
+                        case (temperature > 15 && temperature <= 25):
+                            sun.style.background = "orange";
+                            break;
+                        case (temperature > 25 && temperature <= 30):
+                            sun.style.background = "orangered";
+                            break;
+                        case (temperature > 30):
+                            sun.style.background = "red";
+                            break;
+                        default:
+                            console.log("Température invalide.");
+                            break;
+                    }
 
-                    // Créer la couleur du dégradé
-                    const gradient = `radial-gradient(circle, rgb(${b}, ${g}, ${r}) 0%, rgb(255, 0, 0) 100%)`;
 
-                    // Appliquer la couleur du dégradé au cercle
-                    sun.style.background = gradient;
 
-                    // Afficher la température au centre du cercle
+                    // Afficher la température au centre
                     tempText.textContent = `${temperature}°C`;
                 }
             });
