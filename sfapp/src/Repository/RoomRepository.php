@@ -30,23 +30,19 @@ class RoomRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findRoomWithAs(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.id_AS IS NOT NULL') 
+            ->getQuery()
+            ->getResult();
+    }
 
 
 
 //    /**
 //     * @return Room[] Returns an array of Room objects
 //     */
-   public function findByExampleField($value): array
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
 
 //    public function findOneBySomeField($value): ?Room
 //    {
