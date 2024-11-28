@@ -16,18 +16,35 @@
         <!-- Conteneur pour aligner les cercles -->
         <div class="circles-container">
             <!-- Premier cercle : Humidité -->
+
             <div class="progress-circle-container">
                 <svg class="progress-circle" viewBox="0 0 200 200">
                     <!-- Cercle de bordure -->
                     <circle cx="100" cy="100" r="90" class="circle-bg" />
 
-                    <!-- Vague animée -->
+                    <!-- Masque pour la vague -->
                     <mask id="wave-mask">
-                        <rect x="0" y="0" width="200" height="200" fill="white" />
-                        <path class="wave" d="M 0 150 Q 50 140, 100 150 T 200 150 V 200 H 0 Z" fill="black" />
+                        <rect x="0" y="0" width="800" height="200" fill="white" />
+                        <path
+                                class="wave"
+                                d="
+                    M 0 300
+                    Q 50 140, 100 150
+                    Q 50 140, 200 250
+                    T 200 150
+                    T 300 150
+                    T 400 150
+                    T 500 150
+                    T 600 150
+                    T 700 150
+                    T 800 150
+                    V 200 H 0 Z
+                "
+                                fill="black"
+                        />
                     </mask>
 
-                    <!-- Cercle avec vague -->
+                    <!-- Cercle utilisant le masque -->
                     <circle cx="100" cy="100" r="90" class="circle-wave" mask="url(#wave-mask)" />
                 </svg>
             </div>
@@ -60,34 +77,38 @@
                 const wave = document.querySelector('.wave');
 
                 if (!isNaN(humidity)) {
-                    // Calcul de la hauteur de la vague en fonction de l'humidité
-                    // Humidité entre 8% (presque bas du cercle) et 90% (près du sommet)
-
                     let height;
 
-                    // Condition selon l'humidité
+                    // Calcul de la hauteur de la vague en fonction de l'humidité
                     if (humidity <= 10) {
-                        // Si l'humidité est très faible (jusqu'à 10%), la vague sera presque en bas
                         height = humidity * 3.5; // Très bas
                     } else if (humidity > 10 && humidity <= 30) {
-                        // Humidité entre 10 et 30%, la vague monte légèrement
                         height = humidity * 2.7; // Un peu plus haut
                     } else if (humidity > 30 && humidity < 50) {
-                        // Humidité entre 30 et 50%, la vague est plus haute
                         height = humidity * 2.2; // Plus haute
                     } else {
-                        // Si l'humidité est supérieure à 90%, la vague est au sommet
                         height = humidity * 2; // Presque au sommet
                     }
 
+                    // Limiter la hauteur à ne pas dépasser 200 (hauteur maximale du cercle)
+                    height = Math.min(200, Math.max(0, height));
 
-                     // 1.5 pour que l'humidité 90% donne presque 10
+                    // Chemin pour une vague longue (800px)
+                    const wavePath = `
+                M 0 ${height}
+                Q 50 ${height - 10}, 100 ${height}
+                T 200 ${height}
+                T 300 ${height}
+                T 400 ${height}
+                T 500 ${height}
+                T 600 ${height}
+                T 700 ${height}
+                T 800 ${height}
+                V 200 H 0 Z
+            `;
 
-                    // Limiter la hauteur à ne pas dépasser la base (200) et à ne pas être trop basse
-                    height = Math.min(200, height);
-
-                    // Appliquer la nouvelle hauteur à la vague
-                    wave.setAttribute('d', `M 0 ${height} Q 50 ${height - 10}, 100 ${height} T 200 ${height} V 200 H 0 Z`);
+                    // Appliquer le chemin au SVG
+                    wave.setAttribute('d', wavePath);
                 }
             });
         </script>
@@ -111,7 +132,7 @@
                             color = "blue";
                             break;
                         case (temperature > 5 && temperature <= 15):
-                            color = "yellow";
+                            color = "#edc11d";
                             break;
                         case (temperature > 15 && temperature <= 25):
                             color = "orange";
@@ -144,7 +165,7 @@
             const co2 = parseFloat('{{ room.idAS.CO2 }}');
             const cloud = document.getElementById('cloud');
             if (!isNaN(co2)) {
-                const scale = Math.min(Math.max(co2 / 1400, 0.28), 1); // Échelle entre 0.5 et 1.5
+                const scale = Math.min(Math.max(co2 / 1400, 0.28), 0.8); // Échelle entre 0.5 et 1.5
                 cloud.style.transform = `scale(${scale})`;
             }
         </script>
