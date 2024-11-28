@@ -186,7 +186,7 @@ body.modal-open .background-container {
     left: 0;
     width: 290px;
     height: 290px;
-    background: radial-gradient(circle, transparent 60%, rgba(255, 100, 100, 0.6) 70%, transparent 80%);
+    background: radial-gradient(circle, transparent 60%, rgba(255, 100, 100, 0.6) 70%, transparent 80%,);
     border-radius: 50%;
     z-index: 1; /* Derrière le cercle rouge */
     mask-image: radial-gradient(circle, transparent 60%, black 61%);
@@ -220,3 +220,15 @@ body.modal-open .background-container {
 .sun .ray:nth-child(8) { transform: rotate(252deg); }
 .sun .ray:nth-child(9) { transform: rotate(288deg); }
 .sun .ray:nth-child(10) { transform: rotate(324deg); }
+
+
+.cloud-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#cloud {
+    transition: transform 0.3s ease; /* Transition douce pour le changement de taille */
+}

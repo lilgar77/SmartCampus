@@ -47,7 +47,11 @@
                 <div class="ray"></div>
             </div>
 
-            <img src="{{ asset('images/temp.png') }}" alt="Description de l'image" width="300" height="200">
+
+            <div class="cloud-container">
+                <img id="cloud" src="{{ asset('images/Nuage.png') }}" alt="Nuage Vert">
+            </div>
+
         </div>
 
         <script>
@@ -135,6 +139,14 @@
                     tempText.textContent = `${temperature}°C`;
                 }
             });
+
+            // Gestion du CO₂ (taille du nuage)
+            const co2 = parseFloat('{{ room.idAS.CO2 }}');
+            const cloud = document.getElementById('cloud');
+            if (!isNaN(co2)) {
+                const scale = Math.min(Math.max(co2 / 1400, 0.28), 1); // Échelle entre 0.5 et 1.5
+                cloud.style.transform = `scale(${scale})`;
+            }
         </script>
         <h3>Température : {{ room.idAS.temperature }} °C</h3>
         <h3>Humidité : {{ room.idAS.humidity }}%</h3>
