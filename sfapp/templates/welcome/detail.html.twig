@@ -46,6 +46,8 @@
                 <div class="ray"></div>
                 <div class="ray"></div>
             </div>
+
+            <img src="{{ asset('images/temp.png') }}" alt="Description de l'image" width="300" height="200">
         </div>
 
         <script>
@@ -90,36 +92,44 @@
             document.addEventListener('DOMContentLoaded', () => {
                 const sun = document.getElementById('sun');
                 const tempText = document.getElementById('temp-text');
+                const rays = document.querySelectorAll('.sun .ray'); // Sélectionner tous les traits
                 const temperature = parseFloat('{{ room.idAS.temperature }}'); // Température de la salle
 
                 if (!isNaN(temperature)) {
+                    let color;
 
-
+                    // Déterminer la couleur en fonction de la température
                     switch (true) {
                         case (temperature < 0):
-                            sun.style.background = "darkblue";
+                            color = "darkblue";
                             break;
                         case (temperature >= 0 && temperature <= 5):
-                            sun.style.background = "blue";
+                            color = "blue";
                             break;
                         case (temperature > 5 && temperature <= 15):
-                            sun.style.background = "yellow";
+                            color = "yellow";
                             break;
                         case (temperature > 15 && temperature <= 25):
-                            sun.style.background = "orange";
+                            color = "orange";
                             break;
                         case (temperature > 25 && temperature <= 30):
-                            sun.style.background = "orangered";
+                            color = "orangered";
                             break;
                         case (temperature > 30):
-                            sun.style.background = "red";
+                            color = "red";
                             break;
                         default:
                             console.log("Température invalide.");
                             break;
                     }
 
+                    // Appliquer la couleur au cercle
+                    sun.style.background = color;
 
+                    // Appliquer la couleur aux traits
+                    rays.forEach(ray => {
+                        ray.style.background = color;
+                    });
 
                     // Afficher la température au centre
                     tempText.textContent = `${temperature}°C`;

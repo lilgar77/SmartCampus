@@ -202,12 +202,11 @@ body.modal-open .background-container {
 /* Ajouter les traits */
 .sun .ray {
     position: absolute;
-    width: 10px; /* Largeur des traits */
-    height: 20px; /* Longueur des traits */
+    width: 20px; /* Largeur des traits */
+    height: 10px; /* Longueur des traits */
     background-color: black;
-    transform-origin:  120px; /* Positionner à l'extérieur du cercle */
-    top: 50%;
-    left: 50%;
+    transform-origin: 175px; /* Positionner à l'extérieur du cercle */
+    left: -10%;
 }
 
 /* Ajouter 10 traits autour */
