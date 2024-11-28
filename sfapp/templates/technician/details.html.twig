@@ -42,8 +42,12 @@
 
                 <div class="text-center">
                     <button type="submit" class="btn btn-success" data-bs-target="#deleteModal{{ installations.id }}">Valider l'installation</button>
+                    <a href="{{ path('app_technician')}}" class="btn btn-secondary">
+                        Annuler l'installation
+                    </a>
                 </div>
                 {{ form_end(technicianForm) }}
+
 
         </div>
     </div>

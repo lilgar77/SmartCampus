@@ -33,7 +33,7 @@ class AppFixtures extends Fixture
         $acquisitionSystem2->setName('R2-D2');
         $acquisitionSystem2->setWording('Salle de réunion 2');
         $acquisitionSystem2->setMacAdress('00:00:00:00:00:01');
-        $acquisitionSystem2->setEtat(EtatAS::En_Installation);
+        $acquisitionSystem2->setEtat(EtatAS::Disponible);
         $manager->persist($acquisitionSystem2);
 
         $building = new Building();
@@ -73,18 +73,6 @@ class AppFixtures extends Fixture
         $room->setBuilding($building);
         $room->setIdAS($acquisitionSystem);
         $manager->persist($room);
-
-        $installation=new Installation();
-        $installation->setSA($acquisitionSystem2);
-        $installation->setRoom($room);
-
-        $manager->persist($installation);
-
-        $installation2=new Installation();
-        $installation2->setSA($acquisitionSystem);
-        $installation2->setRoom($room);
-
-        $manager->persist($installation2);
 
         $manager->flush();
     }
