@@ -9,6 +9,7 @@ use App\Entity\AcquisitionSystem;
 use App\Model\EtatAS;
 use App\Entity\Building;
 use App\Entity\Floor;
+use App\Entity\User;
 
 class AppFixtures extends Fixture
 {
@@ -74,6 +75,12 @@ class AppFixtures extends Fixture
 
         $manager->persist($room);
 
+        $user = new User();
+        $user->setEmail('admin@admin.com');
+        $user->setUsername('admin');
+        $user->setPassword('admin');
+        $user->setRoles(['ROLE_ADMIN']);
+        $manager->persist($user);
 
 
         $manager->flush();
