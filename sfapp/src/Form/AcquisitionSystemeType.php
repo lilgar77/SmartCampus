@@ -14,6 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * @extends AbstractType<\App\Entity\AcquisitionSystem>
+ */
 class AcquisitionSystemeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -48,8 +51,8 @@ class AcquisitionSystemeType extends AbstractType
                     'installé' => EtatAS::INSTALL,
                     'À réparer' => EtatAS::REPAIRED,
                 ],
-                'choice_label' => function($choice) {
-                    return $choice->name;
+                'choice_label' => function (EtatAS $choice): string {
+                    return (string) ($choice->name ?? '');
                 },
             ])
             ->add('room', EntityType::class, [
