@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "nom": "temp",
+    "valeur": 22.5,
+    "dateCapture": "2024-12-04 12:00:00",
+    "localisation": "D207",
+    "description": "Température ambiante",
+    "nomsa": "R2-D2"
+  },
+  {
+    "id": 2,
+    "nom": "hum",
+    "valeur": 55.3,
+    "dateCapture": "2024-12-04 12:10:00",
+    "localisation": "D207",
+    "description": "Humidité ambiante",
+    "nomsa": "R2-D2"
+  },
+  {
+    "id": 3,
+    "nom": "co2",
+    "valeur": 420,
+    "dateCapture": "2024-12-04 12:20:00",
+    "localisation": "D207",
+    "description": "Concentration de CO2",
+    "nomsa": "R2-D2"
+  }
+]
