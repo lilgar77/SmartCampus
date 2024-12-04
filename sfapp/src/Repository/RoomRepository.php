@@ -53,18 +53,4 @@ class RoomRepository extends ServiceEntityRepository
     }
 
 
-
-//    /**
-//     * @return Room[] Returns an array of Room objects
-//     */
-
-//    public function findOneBySomeField($value): ?Room
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
