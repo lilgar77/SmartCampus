@@ -151,10 +151,6 @@ class AcquisitionSystem
 
         return $this;
     }
-    public function __toString(): string
-    {
-        return $this->etat;
-    }
 
     public function getName(): ?string
     {
