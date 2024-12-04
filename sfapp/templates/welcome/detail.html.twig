@@ -29,19 +29,12 @@
         </div>
 
         <div class="circle-item">
-            <div class="sun" id="sun">
-                <div class="ray"></div>
-                <div class="ray"></div>
-                <div class="ray"></div>
-                <div class="ray"></div>
-                <div class="ray"></div>
-                <div class="ray"></div>
-                <div class="ray"></div>
-                <div class="ray"></div>
-                <div class="ray"></div>
-                <div class="ray"></div>
+            <div class="thermometer-container">
+                <div class="thermometer">
+                    <div class="thermometer-level"></div>
+                </div>
+                <p class="circle-info-temp">Température : {{ room.idAS.temperature }}°C</p>
             </div>
-            <p class="circle-info-sun">Température : {{ room.idAS.temperature }}°C</p>
         </div>
 
         <div class="circle-item">
@@ -121,49 +114,29 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                const sun = document.getElementById('sun');
-                const tempText = document.getElementById('temp-text');
-                const rays = document.querySelectorAll('.sun .ray'); // Sélectionner tous les traits
-                const temperature = parseFloat('{{ room.idAS.temperature }}'); // Température de la salle
+                const temp = parseFloat('{{ room.idAS.temperature }}'); // Récupérer la température
+                const thermometerLevel = document.querySelector('.thermometer-level'); // Niveau de la jauge
 
-                if (!isNaN(temperature)) {
-                    let color;
+                if (!isNaN(temp)) {
+                    // Calculer la hauteur du niveau (150px = max, température max : 40°C)
+                    const maxTemp = 40; // Température maximale attendue
+                    const minTemp = -10; // Température minimale attendue
+                    const clampedTemp = Math.max(minTemp, Math.min(maxTemp, temp)); // Limiter entre min et max
+                    const height = ((clampedTemp - minTemp) / (maxTemp - minTemp)) * 100; // Échelle entre -10 et 40°C
+                    thermometerLevel.style.height = `${height}px`;
 
-                    // Déterminer la couleur en fonction de la température
-                    switch (true) {
-                        case (temperature < 0):
-                            color = "darkblue";
-                            break;
-                        case (temperature >= 0 && temperature <= 5):
-                            color = "blue";
-                            break;
-                        case (temperature > 5 && temperature <= 15):
-                            color = "#edc11d";
-                            break;
-                        case (temperature > 15 && temperature <= 25):
-                            color = "orange";
-                            break;
-                        case (temperature > 25 && temperature <= 30):
-                            color = "orangered";
-                            break;
-                        case (temperature > 30):
-                            color = "red";
-                            break;
-                        default:
-                            console.log("Température invalide.");
-                            break;
+                    // Définir la couleur du niveau selon la température
+                    if (temp < 0) {
+                        thermometerLevel.style.background = 'blue';
+                    } else if (temp >= 0 && temp <= 15) {
+                        thermometerLevel.style.background = '#edc11d'; // Jaune
+                    } else if (temp > 15 && temp <= 25) {
+                        thermometerLevel.style.background = 'orange';
+                    } else if (temp > 25 && temp <= 30) {
+                        thermometerLevel.style.background = 'orangered';
+                    } else if (temp > 30) {
+                        thermometerLevel.style.background = 'red';
                     }
-
-                    // Appliquer la couleur au cercle
-                    sun.style.background = color;
-
-                    // Appliquer la couleur aux traits
-                    rays.forEach(ray => {
-                        ray.style.background = color;
-                    });
-
-                    // Afficher la température au centre
-                    tempText.textContent = `${temperature}°C`;
                 }
             });
 
