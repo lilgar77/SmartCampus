@@ -33,7 +33,8 @@
                 <div class="thermometer">
                     <div class="thermometer-level"></div>
                 </div>
-                <p class="circle-info-temp">Température : {{ room.idAS.temperature }}°C</p>
+                <div class="thermometer-bulb"> <p class="circle-info-temp"> {{ room.idAS.temperature }}°C</p></div>
+
             </div>
         </div>
 
@@ -121,8 +122,28 @@
                     // Calculer la hauteur du niveau (150px = max, température max : 40°C)
                     const maxTemp = 40; // Température maximale attendue
                     const minTemp = -10; // Température minimale attendue
-                    const clampedTemp = Math.max(minTemp, Math.min(maxTemp, temp)); // Limiter entre min et max
-                    const height = ((clampedTemp - minTemp) / (maxTemp - minTemp)) * 100; // Échelle entre -10 et 40°C
+                    const clampedTemp = Math.max(minTemp, Math.min(maxTemp, temp));
+                    let height
+                    if(clampedTemp >= 35){
+                        height = ((clampedTemp + minTemp) / (maxTemp + minTemp)) * 320;
+                    }
+                    else if(clampedTemp < 35 && clampedTemp >= 30)
+                    {
+                        height = ((clampedTemp + minTemp) / (maxTemp + minTemp)) * 330;
+                    }
+                    else if(clampedTemp < 30 && clampedTemp >= 25)
+                    {
+                        height = ((clampedTemp + minTemp) / (maxTemp + minTemp)) * 360;
+                    }
+                    else if(clampedTemp < 25 && clampedTemp >= 20)
+                    {
+                        height = ((clampedTemp + minTemp) / (maxTemp + minTemp)) * 420;
+                    }
+                    else if(clampedTemp < 20)
+                    {
+                        height = ((clampedTemp - minTemp) / (maxTemp + minTemp)) * 150;
+                    }// Limiter entre min et max
+                     // Échelle entre -10 et 40°C
                     thermometerLevel.style.height = `${height}px`;
 
                     // Définir la couleur du niveau selon la température
