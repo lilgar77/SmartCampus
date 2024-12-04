@@ -2,17 +2,14 @@
 
 namespace App\Repository;
 
+use App\Entity\AcquisitionSystem;
 use App\Entity\Room;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+
 /**
  * @extends ServiceEntityRepository<Room>
- *
- * @method Room|null find($id, $lockMode = null, $lockVersion = null)
- * @method Room|null findOneBy(array $criteria, array $orderBy = null)
- * @method Room[]    findAll()
- * @method Room[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class RoomRepository extends ServiceEntityRepository
 {
@@ -21,21 +18,38 @@ class RoomRepository extends ServiceEntityRepository
         parent::__construct($registry, Room::class);
     }
 
-    public function findRoomByName($name): ?Room
+    /**
+     * @param string $name
+     * @return Room|null
+     */
+    public function findRoomByName(string $name): ?Room
     {
-        return $this->createQueryBuilder('r')
+        $result = $this->createQueryBuilder('r')
             ->andWhere('r.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
             ->getOneOrNullResult();
+
+        if ($result instanceof Room) {
+            return $result; // Retourne l'objet Room
+        }
+
+        return null; // Retourne null si ce n'est pas un Room
     }
 
+    /**
+     * @return Room[] Un tableau indexé contenant des entités Room.
+     */
     public function findRoomWithAs(): array
     {
-        return $this->createQueryBuilder('r')
+        $result = $this->createQueryBuilder('r')
             ->andWhere('r.id_AS IS NOT NULL')
             ->getQuery()
             ->getResult();
+
+
+        /** @var Room[] $result */
+        return $result;
     }
 
 
