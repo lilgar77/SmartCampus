@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Floor;
 use App\Repository\FloorRepository;
 use App\Form\FloorType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class FloorController extends AbstractController
 {
