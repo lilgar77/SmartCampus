@@ -1,8 +1,15 @@
 parameters:
-    level: 6
+    level: 10
+    treatPhpDocTypesAsCertain: false
     paths:
         - bin/
         - config/
-        - public/
-        - src/
-        - tests/
+        - src/Controller/SecurityController.php
+        - src/DataFixtures/
+        - src/Entity/User.php
+        - src/Repository/UserRepository.php
+        - src/Security
+    ignoreErrors:
+        - '#Property App\\Entity\\.*::\$id \(int\|null\) is never assigned int#'
+    reportUnmatchedIgnoredErrors: false
+

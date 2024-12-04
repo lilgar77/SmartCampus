@@ -27,15 +27,31 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $usename = $request->request->get('usename', '');
+        $username = $request->request->get('usename', '');
+        // Vérification de la validité des données
+        if (!is_string($username)) {
+            throw new \InvalidArgumentException('Username must be a string.');
+        }
 
-        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $usename);
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $username);
+
+        // Récupérer le mot de passe, en s'assurant qu'il s'agit d'une chaîne
+        $password = $request->request->get('password', '');
+        if (!is_string($password)) {
+            throw new \InvalidArgumentException('Password must be a string.');
+        }
+
+        // Récupérer le CSRF token, s'assurer que c'est une chaîne
+        $csrfToken = $request->request->get('_csrf_token', '');
+        if (!is_string($csrfToken)) {
+            throw new \InvalidArgumentException('CSRF token must be a string.');
+        }
 
         return new Passport(
-            new UserBadge($usename),
-            new PasswordCredentials($request->request->get('password', '')),
+            new UserBadge($username),
+            new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),            ]
+                new CsrfTokenBadge('authenticate', $csrfToken),            ]
         );
     }
 
