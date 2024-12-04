@@ -157,7 +157,6 @@ body.modal-open .background-container {
     align-items: center;
     position: relative;
     background: radial-gradient(circle, #0022ff 30%, #aa0000 100%); /* Rouge avec dégradé */
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); /* Légère lueur rouge */
 }
 
 /* Texte au centre du soleil */
@@ -176,17 +175,45 @@ body.modal-open .background-container {
     left: 0;
     width: 290px;
     height: 290px;
-    background: radial-gradient(circle, transparent 60%, rgba(255, 100, 100, 0.6) 70%, transparent 80%);
     border-radius: 50%;
     z-index: 1; /* Derrière le cercle rouge */
     mask-image: radial-gradient(circle, transparent 60%, black 61%);
 }
 /* Conteneur principal pour aligner les cercles */
-.circles-container {
+.circles-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: flex-start;
+    margin-left: 90px;
+    gap: 70px; /* Espacement entre les cercles */
+    margin-top: 30px;
+}
+
+
+.circle-item {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 50px; /* Espacement entre les cercles */
+    text-align: center;
+    position: relative; /* Pour permettre des ajustements fins */
+}
+
+.circle-info-wave {
+    margin-top: 25px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.circle-info-sun {
+    margin-top: 37px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.circle-info-cloud {
+    margin-top: -20px;
+    font-size: 1.2rem;
+    color: #333;
 }
 
 /* Ajouter les traits */
@@ -216,9 +243,29 @@ body.modal-open .background-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: -50px;
 }
 
 #cloud {
     transition: transform 0.3s ease; /* Transition douce pour le changement de taille */
+}
+
+@keyframes grow-cloud {
+    0% {
+        transform: scale(0.1); /* Départ : taille réduite à 10% */
+        opacity: 0; /* Transparent */
+    }
+    100% {
+        transform: scale(0.8); /* Arrivée : taille normale */
+        opacity: 1; /* Opaque */
+    }
+}
+
+.cloud-container img {
+    transform-origin: center;
+    animation: grow-cloud 1s ease-out;
+}
+
+.cloud-container img.initial-state {
+    transform: scale(0.1); /* État initial */
 }

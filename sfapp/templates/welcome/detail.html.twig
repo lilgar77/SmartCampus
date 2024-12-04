@@ -13,10 +13,8 @@
         <h1>Détails de la salle {{ room.name }}</h1>
 
 
-        <!-- Conteneur pour aligner les cercles -->
-        <div class="circles-container">
-            <!-- Premier cercle : Humidité -->
-
+    <div class="d-flex justify-content-around circles-wrapper">
+        <div class="circle-item">
             <div class="progress-circle-container">
                 <svg class="progress-circle" viewBox="0 0 200 200">
                     <!-- Cercle de bordure -->
@@ -48,10 +46,11 @@
                     <circle cx="100" cy="100" r="90" class="circle-wave" mask="url(#wave-mask)" />
                 </svg>
             </div>
+            <p class="circle-info-wave">Humidité : {{ room.idAS.humidity }}%</p>
+        </div>
 
-            <!-- Deuxième cercle : Température -->
+        <div class="circle-item">
             <div class="sun" id="sun">
-                <div class="sun-text" id="temp-text">{{ room.idAS.temperature }}°C</div>
                 <div class="ray"></div>
                 <div class="ray"></div>
                 <div class="ray"></div>
@@ -63,13 +62,18 @@
                 <div class="ray"></div>
                 <div class="ray"></div>
             </div>
+            <p class="circle-info-sun">Température : {{ room.idAS.temperature }}°C</p>
+        </div>
 
-
+        <div class="circle-item">
             <div class="cloud-container">
                 <img id="cloud" src="{{ asset('images/Nuage.png') }}" alt="Nuage Vert">
             </div>
-
+            <p class="circle-info-cloud">CO2 : {{ room.idAS.CO2 }} ppm</p>
         </div>
+
+    </div>
+
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
@@ -168,10 +172,21 @@
                 const scale = Math.min(Math.max(co2 / 1400, 0.28), 0.8); // Échelle entre 0.5 et 1.5
                 cloud.style.transform = `scale(${scale})`;
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const cloudImage = document.getElementById('cloud');
+
+                // Ajout d'une classe pour l'état initial
+                cloudImage.classList.add('initial-state');
+
+                // Attendre que la page soit complètement chargée
+                setTimeout(() => {
+                    // Supprimer la classe initiale pour déclencher l'animation
+                    cloudImage.classList.remove('initial-state');
+                    // Laisser l'animation CSS ajuster la taille
+                }, 50); // Légère pause pour garantir la préparation du DOM
+            });
         </script>
-        <h3>Température : {{ room.idAS.temperature }} °C</h3>
-        <h3>Humidité : {{ room.idAS.humidity }}%</h3>
-        <h3>CO2 : {{ room.idAS.CO2 }} ppm</h3>
 
 
     </div>
