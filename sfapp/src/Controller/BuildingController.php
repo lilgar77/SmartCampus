@@ -19,10 +19,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Building;
 use App\Form\BuildingType;
 use App\Repository\BuildingRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class BuildingController extends AbstractController
 {
-
+   
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building', name: 'app_building')]
     public function index(BuildingRepository $buildingRepository): Response
     {
@@ -31,7 +33,8 @@ class BuildingController extends AbstractController
         ]);
     }
 
-
+   
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/add', name: 'app_building_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -55,7 +58,8 @@ class BuildingController extends AbstractController
         ]);
     }
 
-
+    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/{id}', name: 'app_building_delete', methods: ['POST'])]
     public function delete(Building $building, EntityManagerInterface $entityManager): Response
     {
@@ -67,7 +71,8 @@ class BuildingController extends AbstractController
         return $this->redirectToRoute('app_building');
     }
 
-
+   
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/{id}/edit', name: 'app_building_edit')]
     public function edit(Building $building, Request $request, EntityManagerInterface $entityManager): Response
     {

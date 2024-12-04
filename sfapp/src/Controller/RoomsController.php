@@ -21,10 +21,12 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Room;
 use App\Form\SearchRoomFormType;
 use App\Form\RoomFormType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RoomsController extends AbstractController
 {
-
+    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms', name: 'app_rooms')]
     public function index(Request $request, RoomRepository $roomRepository): Response
     {
@@ -53,7 +55,8 @@ class RoomsController extends AbstractController
 
     }
 
-
+   
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -76,7 +79,8 @@ class RoomsController extends AbstractController
         ]);
     }
 
-
+    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
     public function delete(Request $request, Room $room, EntityManagerInterface $entityManager): Response
     {
@@ -89,7 +93,8 @@ class RoomsController extends AbstractController
         return $this->redirectToRoute('app_rooms');
     }
 
-
+    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/{id}/edit', name: 'app_room_edit')]
     public function edit(Room $room, Request $request, EntityManagerInterface $entityManager): Response
     {

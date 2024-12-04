@@ -9,9 +9,18 @@ use App\Entity\AcquisitionSystem;
 use App\Model\EtatAS;
 use App\Entity\Building;
 use App\Entity\Floor;
+use App\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
     public function load(ObjectManager $manager): void
     {
 
@@ -74,6 +83,23 @@ class AppFixtures extends Fixture
 
         $manager->persist($room);
 
+        $user = new User();
+        $user->setEmail('admin@admin.com');
+        $user->setUsername('admin');
+        $plaintextPassword = 'admin';
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $plaintextPassword);
+        $user->setPassword($hashedPassword);
+        $user->setRoles(['ROLE_ADMIN']);
+        $manager->persist($user);
+
+        $user = new User();
+        $user->setEmail('technicien@technicien.com');
+        $user->setUsername('technicien');
+        $plaintextPassword = 'technicien';
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $plaintextPassword);
+        $user->setPassword($hashedPassword);
+        $user->setRoles(['ROLE_TECHNICIEN']);
+        $manager->persist($user);
 
 
         $manager->flush();
