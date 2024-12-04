@@ -16,37 +16,16 @@
     <div class="d-flex justify-content-around circles-wrapper">
         <div class="circle-item">
             <div class="progress-circle-container">
-                <svg class="progress-circle" viewBox="0 0 200 200">
-                    <!-- Cercle de bordure -->
-                    <circle cx="100" cy="100" r="90" class="circle-bg" />
+                <div class="progress-circle">
+                    <div class="circle-info-wave">{{ room.idAS.humidity }}%</div>
+                    <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                        <path id="wave-path" d="" fill="#81c7f5"></path>
+                    </svg>
 
-                    <!-- Masque pour la vague -->
-                    <mask id="wave-mask">
-                        <rect x="0" y="0" width="800" height="200" fill="white" />
-                        <path
-                                class="wave"
-                                d="
-                    M 0 300
-                    Q 50 140, 100 150
-                    Q 50 140, 200 250
-                    T 200 150
-                    T 300 150
-                    T 400 150
-                    T 500 150
-                    T 600 150
-                    T 700 150
-                    T 800 150
-                    V 200 H 0 Z
-                "
-                                fill="black"
-                        />
-                    </mask>
+                </div>
 
-                    <!-- Cercle utilisant le masque -->
-                    <circle cx="100" cy="100" r="90" class="circle-wave" mask="url(#wave-mask)" />
-                </svg>
             </div>
-            <p class="circle-info-wave">Humidité : {{ room.idAS.humidity }}%</p>
+
         </div>
 
         <div class="circle-item">
@@ -78,41 +57,34 @@
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const humidity = parseFloat('{{ room.idAS.humidity }}'); // Récupérer l'humidité
-                const wave = document.querySelector('.wave');
+                const wavePath = document.getElementById('wave-path');
 
                 if (!isNaN(humidity)) {
-                    let height;
+                    // Calcul de la hauteur en fonction de l'humidité (max hauteur : 200)
+                    const height = Math.min(200, Math.max(0, (1 - humidity / 100) * 200));
 
-                    // Calcul de la hauteur de la vague en fonction de l'humidité
-                    if (humidity <= 10) {
-                        height = humidity * 3.5; // Très bas
-                    } else if (humidity > 10 && humidity <= 30) {
-                        height = humidity * 2.7; // Un peu plus haut
-                    } else if (humidity > 30 && humidity < 50) {
-                        height = humidity * 2.2; // Plus haute
-                    } else {
-                        height = humidity * 2; // Presque au sommet
+                    // Générer un chemin SVG avec une oscillation pour un effet naturel
+                    function generateWavePath(offset) {
+                        const waveHeight = height;
+                        return `
+                M0 ${waveHeight + Math.sin(offset) * 10}
+                Q50 ${waveHeight - 10 + Math.cos(offset) * 10}, 100 ${waveHeight + Math.sin(offset) * 10}
+                T200 ${waveHeight + Math.cos(offset) * 10}
+                V200 H0 Z
+            `;
                     }
 
-                    // Limiter la hauteur à ne pas dépasser 200 (hauteur maximale du cercle)
-                    height = Math.min(200, Math.max(0, height));
+                    // Animation de la vague
+                    let offset = 0;
+                    function animateWave() {
+                        offset += 0.1; // Ajuster la vitesse de l'oscillation
+                        wavePath.setAttribute('d', generateWavePath(offset));
+                        requestAnimationFrame(animateWave);
+                    }
 
-                    // Chemin pour une vague longue (800px)
-                    const wavePath = `
-                M 0 ${height}
-                Q 50 ${height - 10}, 100 ${height}
-                T 200 ${height}
-                T 300 ${height}
-                T 400 ${height}
-                T 500 ${height}
-                T 600 ${height}
-                T 700 ${height}
-                T 800 ${height}
-                V 200 H 0 Z
-            `;
-
-                    // Appliquer le chemin au SVG
-                    wave.setAttribute('d', wavePath);
+                    // Initialiser la vague
+                    wavePath.setAttribute('d', generateWavePath(0));
+                    animateWave();
                 }
             });
         </script>
