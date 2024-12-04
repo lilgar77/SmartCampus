@@ -31,6 +31,7 @@ class AcquisitionSytemeController extends AbstractController
     @param :                                                                                ##
         $acquisitionSystemRepository (Access the System Acquisition table in the database)  ##
      **/
+    // faire test que c'est bien la bonne route avec le bonne utilisateur 
     #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(AcquisitionSystemRepository $acquisitionSystemRepository): Response

@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Room;
 use App\Form\SearchRoomFormType;
 use App\Form\RoomFormType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RoomsController extends AbstractController
 {
@@ -30,6 +31,7 @@ class RoomsController extends AbstractController
     @param :                                                            ##
         $roomRepository (Access the rooms table in the database)        ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms', name: 'app_rooms')]
     public function index(Request $request, RoomRepository $roomRepository): Response
     {
@@ -65,6 +67,7 @@ class RoomsController extends AbstractController
         $request (Encapsulates HTTP request data)                       ##
         $entityManager (Used to interact with the database)             ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -94,6 +97,7 @@ class RoomsController extends AbstractController
         $floor (Recovers the floor from the database)       ##
         $entityManager (Used to interact with the database) ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
     public function delete(Request $request, Room $room, EntityManagerInterface $entityManager): Response
     {
@@ -114,6 +118,7 @@ class RoomsController extends AbstractController
         $request (Encapsulates HTTP request data)                               ##
         $entityManager (Used to interact with the database)                     ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/{id}/edit', name: 'app_room_edit')]
     public function edit(Room $room, Request $request, EntityManagerInterface $entityManager): Response
     {

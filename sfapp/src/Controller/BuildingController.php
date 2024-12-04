@@ -29,6 +29,7 @@ class BuildingController extends AbstractController
     @param :                                                            ##
         $buildingRepository (Access the building table in the database) ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building', name: 'app_building')]
     public function index(BuildingRepository $buildingRepository): Response
     {
@@ -44,6 +45,7 @@ class BuildingController extends AbstractController
         $request (Encapsulates HTTP request data)                       ##
         $entityManager (Used to interact with the database)             ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/add', name: 'app_building_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -74,6 +76,7 @@ class BuildingController extends AbstractController
         $building (Recovers the building from the database)    ##
         $entityManager (Used to interact with the database)             ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/{id}', name: 'app_building_delete', methods: ['POST'])]
     public function delete(Building $building, EntityManagerInterface $entityManager): Response
     {
@@ -93,6 +96,7 @@ class BuildingController extends AbstractController
         $request (Encapsulates HTTP request data)                                   ##
         $entityManager (Used to interact with the database)                         ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/{id}/edit', name: 'app_building_edit')]
     public function edit(Building $building, Request $request, EntityManagerInterface $entityManager): Response
     {

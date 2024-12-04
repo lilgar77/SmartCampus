@@ -28,6 +28,7 @@ class FloorController extends AbstractController
     @param :                                                            ##
         $floorRepository (Access the floor table in the database)       ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor', name: 'app_floor')]
     public function index(FloorRepository $floorRepository): Response
     {
@@ -43,6 +44,7 @@ class FloorController extends AbstractController
         $request (Encapsulates HTTP request data)                       ##
         $entityManager (Used to interact with the database)             ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/add', name: 'app_floor_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -74,6 +76,7 @@ class FloorController extends AbstractController
         $floor (Recovers the floor from the database)       ##
         $entityManager (Used to interact with the database) ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/{id}', name: 'app_floor_delete', methods: ['POST'])]
     public function delete(Floor $floor, EntityManagerInterface $entityManager): Response
     {
@@ -93,6 +96,7 @@ class FloorController extends AbstractController
         $request (Encapsulates HTTP request data)                               ##
         $entityManager (Used to interact with the database)                     ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/{id}/edit', name: 'app_floor_edit')]
     public function edit(Floor $floor, Request $request, EntityManagerInterface $entityManager): Response
     {
