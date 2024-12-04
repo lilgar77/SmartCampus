@@ -20,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AcquisitionSytemeController extends AbstractController
 {
@@ -30,6 +31,7 @@ class AcquisitionSytemeController extends AbstractController
     @param :                                                                                ##
         $acquisitionSystemRepository (Access the System Acquisition table in the database)  ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
@@ -47,6 +49,7 @@ class AcquisitionSytemeController extends AbstractController
     $request (Encapsulates HTTP request data)                                       ##
     $entityManager (Used to interact with the database)                             ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
     public function addAS(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -79,6 +82,7 @@ class AcquisitionSytemeController extends AbstractController
         $acquisitionSystem (Recovers the acquisition system from the database)  ##
         $entityManager (Used to interact with the database)                     ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/{id}', name: 'app_acquisition_syteme_delete', methods: ['POST'])]
     public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager): Response
     {
@@ -98,6 +102,7 @@ class AcquisitionSytemeController extends AbstractController
         $request (Encapsulates HTTP request data)                                           ##
         $entityManager (Used to interact with the database)                                 ##
      **/
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/{id}/edit', name: 'app_acquisition_syteme_edit')]
     public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager): Response
     {

@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Building;
 use App\Form\BuildingType;
 use App\Repository\BuildingRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class BuildingController extends AbstractController
 {

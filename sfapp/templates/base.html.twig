@@ -13,9 +13,18 @@
 
     <div class="background-container">
         <div class="icon">
-            <a href="{{ path('app_login') }}" class=" mx-3 text-link
-                {% if app.request.attributes.get('_route') == 'app_login' %}text-dark text-decoration-underline active{% endif %}">Log in</a>
             <i class="bi bi-person" style="font-size: 4rem;"></i>
+
+        </div>
+        <div class="d-flex flex-column align-items-center ">
+            {% if app.user %}
+                {{ app.user.username }}
+                <a href="{{ path('app_logout') }}" class=" mx-3 text-link
+                {% if app.request.attributes.get('_route') == 'app_login' %}text-dark text-decoration-underline active{% endif %}">Déconnexion</a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class=" mx-3 text-link
+                {% if app.request.attributes.get('_route') == 'app_login' %}text-dark text-decoration-underline active{% endif %}">Connexion</a>
+            {% endif %}
         </div>
     </div>
     <div class="d-flex justify-content-center align-items-center vh-0">
