@@ -22,12 +22,7 @@ use App\Form\FloorType;
 
 class FloorController extends AbstractController
 {
-    /**
-    @Name of function : index                                           ##
-    @brief :Page that displays Floor with buttons add delete and edit   ##
-    @param :                                                            ##
-        $floorRepository (Access the floor table in the database)       ##
-     **/
+
     #[Route('/floor', name: 'app_floor')]
     public function index(FloorRepository $floorRepository): Response
     {
@@ -36,13 +31,7 @@ class FloorController extends AbstractController
         ]);
     }
 
-    /**
-    @Name of function : add                                             ##
-    @brief :Page that adds a new floor with the different attributes    ##
-    @param :                                                            ##
-        $request (Encapsulates HTTP request data)                       ##
-        $entityManager (Used to interact with the database)             ##
-     **/
+
     #[Route('/floor/add', name: 'app_floor_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -67,13 +56,7 @@ class FloorController extends AbstractController
         ]);
     }
 
-    /**
-    @Name of function : delete                              ##
-    @brief :Page that deletes the selected floor            ##
-    @param :                                                ##
-        $floor (Recovers the floor from the database)       ##
-        $entityManager (Used to interact with the database) ##
-     **/
+
     #[Route('/floor/{id}', name: 'app_floor_delete', methods: ['POST'])]
     public function delete(Floor $floor, EntityManagerInterface $entityManager): Response
     {
@@ -85,14 +68,7 @@ class FloorController extends AbstractController
         return $this->redirectToRoute('app_floor');
     }
 
-    /**
-    @Name of function : edit                                                    ##
-    @brief :Page that edits an existing floor                                   ##
-    @param :                                                                    ##
-        $acquisitionSystem (Fetches the floor to be edited from the database)   ##
-        $request (Encapsulates HTTP request data)                               ##
-        $entityManager (Used to interact with the database)                     ##
-     **/
+
     #[Route('/floor/{id}/edit', name: 'app_floor_edit')]
     public function edit(Floor $floor, Request $request, EntityManagerInterface $entityManager): Response
     {

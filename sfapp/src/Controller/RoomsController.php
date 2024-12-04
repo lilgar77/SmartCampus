@@ -24,12 +24,7 @@ use App\Form\RoomFormType;
 
 class RoomsController extends AbstractController
 {
-    /**
-    @Name of function : index                                           ##
-    @brief :Page that displays Room with buttons add delete and edit    ##
-    @param :                                                            ##
-        $roomRepository (Access the rooms table in the database)        ##
-     **/
+
     #[Route('/rooms', name: 'app_rooms')]
     public function index(Request $request, RoomRepository $roomRepository): Response
     {
@@ -58,13 +53,7 @@ class RoomsController extends AbstractController
 
     }
 
-    /**
-    @Name of function : add                                             ##
-    @brief :Page that adds a new rooms with the different attributes    ##
-    @param :                                                            ##
-        $request (Encapsulates HTTP request data)                       ##
-        $entityManager (Used to interact with the database)             ##
-     **/
+
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -87,13 +76,7 @@ class RoomsController extends AbstractController
         ]);
     }
 
-    /**
-    @Name of function : delete                              ##
-    @brief :Page that deletes the selected rooms            ##
-    @param :                                                ##
-        $floor (Recovers the floor from the database)       ##
-        $entityManager (Used to interact with the database) ##
-     **/
+
     #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
     public function delete(Request $request, Room $room, EntityManagerInterface $entityManager): Response
     {
@@ -106,14 +89,7 @@ class RoomsController extends AbstractController
         return $this->redirectToRoute('app_rooms');
     }
 
-    /**
-    @Name of function : edit                                                    ##
-    @brief :Page that edits an existing rooms                                   ##
-    @param :                                                                    ##
-        $acquisitionSystem (Fetches the rooms to be edited from the database)   ##
-        $request (Encapsulates HTTP request data)                               ##
-        $entityManager (Used to interact with the database)                     ##
-     **/
+
     #[Route('/rooms/{id}/edit', name: 'app_room_edit')]
     public function edit(Room $room, Request $request, EntityManagerInterface $entityManager): Response
     {

@@ -24,12 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AcquisitionSytemeController extends AbstractController
 {
 
-    /**
-    @Name of function : listeAS                                                             ##
-    @brief :Page that displays SA with buttons add delete and edit                          ##
-    @param :                                                                                ##
-        $acquisitionSystemRepository (Access the System Acquisition table in the database)  ##
-     **/
+
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
@@ -40,13 +35,7 @@ class AcquisitionSytemeController extends AbstractController
         ]);
     }
 
-    /**
-    @Name of function : addAS                                                       ##
-    @brief :Page that adds a new acquisition system with the different attributes   ##
-    @param :                                                                        ##
-    $request (Encapsulates HTTP request data)                                       ##
-    $entityManager (Used to interact with the database)                             ##
-     **/
+
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
     public function addAS(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -72,13 +61,7 @@ class AcquisitionSytemeController extends AbstractController
         ]);
     }
 
-    /**
-    @Name of function : delete                                                  ##
-    @brief :Page that deletes the selected acquisition system                   ##
-    @param :                                                                    ##
-        $acquisitionSystem (Recovers the acquisition system from the database)  ##
-        $entityManager (Used to interact with the database)                     ##
-     **/
+
     #[Route('/acquisitionsyteme/{id}', name: 'app_acquisition_syteme_delete', methods: ['POST'])]
     public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager): Response
     {
@@ -90,14 +73,7 @@ class AcquisitionSytemeController extends AbstractController
         return $this->redirectToRoute('app_acquisition_syteme_liste');
     }
 
-    /**
-    @Name of function : edit                                                                ##
-    @brief :Page that edits an existing acquisition system                                  ##
-    @param :                                                                                ##
-        $acquisitionSystem (Fetches the acquisition system to be edited from the database)  ##
-        $request (Encapsulates HTTP request data)                                           ##
-        $entityManager (Used to interact with the database)                                 ##
-     **/
+
     #[Route('/acquisitionsyteme/{id}/edit', name: 'app_acquisition_syteme_edit')]
     public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager): Response
     {
