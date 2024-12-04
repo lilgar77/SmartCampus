@@ -58,10 +58,40 @@
             document.addEventListener('DOMContentLoaded', () => {
                 const humidity = parseFloat('{{ room.idAS.humidity }}'); // Récupérer l'humidité
                 const wavePath = document.getElementById('wave-path');
+                const colorText = document.querySelector('.circle-info-wave');
+                const temp = parseFloat('{{ room.idAS.temperature }}');
+
+                function updateTextColor() {
+
+                    if(humidity >= 70)
+                    {
+                        if(temp < 20)
+                        {
+                            colorText.style.color = 'green';
+                        }
+                        else if(temp >= 20 && temp <= 25)
+                        {
+                            colorText.style.color = '#edc11d';
+                        }
+                        else
+                        {
+                            colorText.style.color = 'red';
+
+                        }
+                    }
+                    else{
+                        colorText.style.color = 'green';
+                    }
+                }
+
+                // Met à jour la couleur dès le chargement
+                updateTextColor();
 
                 if (!isNaN(humidity)) {
                     // Calcul de la hauteur en fonction de l'humidité (max hauteur : 200)
                     const height = Math.min(200, Math.max(0, (1 - humidity / 100) * 200));
+
+
 
                     // Générer un chemin SVG avec une oscillation pour un effet naturel
                     function generateWavePath(offset) {
