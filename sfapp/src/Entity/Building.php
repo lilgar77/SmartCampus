@@ -154,6 +154,6 @@ class Building
 
     public function __toString(): string
     {
-        return $this->NameBuilding;
+        return $this->NameBuilding ?? '';
     }
 }
