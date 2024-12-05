@@ -72,15 +72,20 @@ body.modal-open .background-container {
 }
 
 .icon {
-    /*
-    display: flex;
-    margin : 20px;
-    justify-content: flex-end;*/
     position: absolute;
     margin-top: 20px;
     margin-right: 30px;
     top: 0px;
     right: 0px;
+}
+
+.loginlogout{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 50px;
+    margin-right: 70px;
+
 }
 
 .btn-violet {
