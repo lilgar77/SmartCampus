@@ -116,7 +116,30 @@
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const temp = parseFloat('{{ room.idAS.temperature }}'); // Récupérer la température
-                const thermometerLevel = document.querySelector('.thermometer-level'); // Niveau de la jauge
+                const thermometerLevel = document.querySelector('.thermometer-level');
+                const colorText = document.querySelector('.circle-info-temp');// Niveau de la jauge
+
+
+                function updateTextColor() {
+
+
+                    if(temp >= 17 && temp <= 21)
+                    {
+                        colorText.style.color = 'green';
+                    }
+                    else if((temp > 21 && temp <= 26) || (temp < 17 && temp >= 12))
+                    {
+                        colorText.style.color = '#edc11d';
+                    }
+                    else
+                    {
+                        colorText.style.color = '#b22222';
+                    }
+
+
+                }
+
+                updateTextColor();
 
                 if (!isNaN(temp)) {
                     // Calculer la hauteur du niveau (150px = max, température max : 40°C)
