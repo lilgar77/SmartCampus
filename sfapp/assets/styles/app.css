@@ -6,7 +6,7 @@ body {
 .text-link{
     text-decoration-color: mediumpurple;
     color : mediumpurple;
-}
+    }
 
 body.modal-open .background-container {
     filter: blur(4px);
@@ -82,4 +82,27 @@ body.modal-open .background-container {
 .btn-violet:hover {
     background-color: #590b92;
     border-color: #590b92;
+}
+
+.a{
+    text-decoration: none; /* Supprime le surlignage */
+    color: inherit; /* Conserve la couleur d'origine du texte */
+    display: flex; /* Applique la disposition flex au lien */
+    align-items: center; /* Aligne verticalement */
+}
+
+
+.list-group-item{
+    text-decoration: none; /* Supprime le surlignage */
+}
+.list-group-item:hover {
+    background-color: #f9f9f9; /* Change le fond sur hover pour un effet visuel agréable */
+}
+
+.text-violet {
+    color: #6f42c1; /* Couleur violette pour l'icône */
+}
+
+.message-content {
+    flex-grow: 1; /* Permet au contenu du message de prendre toute la largeur disponible */
 }
