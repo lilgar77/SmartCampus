@@ -234,56 +234,36 @@ body.modal-open .background-container {
     color: #333;
 }
 
-/* Ajouter les traits */
-.sun .ray {
-    position: absolute;
-    width: 20px; /* Largeur des traits */
-    height: 10px; /* Longueur des traits */
-    background-color: black;
-    transform-origin: 175px; /* Positionner à l'extérieur du cercle */
-    left: -10%;
-}
-
-/* Ajouter 10 traits autour */
-.sun .ray:nth-child(1) { transform: rotate(0deg); }
-.sun .ray:nth-child(2) { transform: rotate(36deg); }
-.sun .ray:nth-child(3) { transform: rotate(72deg); }
-.sun .ray:nth-child(4) { transform: rotate(108deg); }
-.sun .ray:nth-child(5) { transform: rotate(144deg); }
-.sun .ray:nth-child(6) { transform: rotate(180deg); }
-.sun .ray:nth-child(7) { transform: rotate(216deg); }
-.sun .ray:nth-child(8) { transform: rotate(252deg); }
-.sun .ray:nth-child(9) { transform: rotate(288deg); }
-.sun .ray:nth-child(10) { transform: rotate(324deg); }
-
-
-.cloud-container {
+.co2-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: -50px;
+    width: 450px;
+    height: 400px;
+    position: relative;
+    font-family: Arial, sans-serif;
 }
 
-#cloud {
-    transition: transform 0.3s ease; /* Transition douce pour le changement de taille */
+.co2-svg {
+    width: 100%;
+    height: 100%;
 }
 
-@keyframes grow-cloud {
-    0% {
-        transform: scale(0.1); /* Départ : taille réduite à 10% */
-        opacity: 0; /* Transparent */
-    }
-    100% {
-        transform: scale(0.8); /* Arrivée : taille normale */
-        opacity: 1; /* Opaque */
-    }
+.co2-text {
+    fill: url(#co2-gradient); /* Gradient pour le remplissage */
+    font-weight: bold;
+    stroke: black; /* Contour noir */
+    stroke-width: 2; /* Épaisseur du contour */
+    transition: fill 0.5s ease, stroke 0.5s ease; /* Transition douce */
 }
 
-.cloud-container img {
-    transform-origin: center;
-    animation: grow-cloud 1s ease-out;
-}
-
-.cloud-container img.initial-state {
-    transform: scale(0.1); /* État initial */
+.co2-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0; /* Hauteur initiale du remplissage */
+    background: #00ff00; /* Vert pour indiquer la concentration */
+    z-index: 1; /* Met le remplissage derrière le texte */
+    transition: height 0.5s ease;
 }
