@@ -13,7 +13,9 @@
 
     <div class="loginlogout">
         {% if app.user %}
-            {{ app.user.username }}
+            <span>
+                {{ app.user.username }}
+            </span>
             <a href="{{ path('app_logout') }}" class=" mx-3 text-link
             {% if app.request.attributes.get('_route') == 'app_login' %}text-dark text-decoration-underline active{% endif %}">Déconnexion</a>
         {% else %}

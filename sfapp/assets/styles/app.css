@@ -79,13 +79,20 @@ body.modal-open .background-container {
     right: 0px;
 }
 
-.loginlogout{
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    margin-top: 50px;
-    margin-right: 70px;
 
+/* Styling for login/logout */
+.loginlogout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align items to the  right */
+    font-size: 0.9rem; /* Adjust font size */
+    margin-right: 10px;
+}
+
+/* Add spacing between username and logout link */
+.loginlogout span {
+    margin-bottom: 5px;
+    margin-outside: 10px;
 }
 
 .btn-violet {
