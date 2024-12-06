@@ -32,27 +32,29 @@ class RoomsController extends AbstractController
     {
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
-            'method' => 'GET'
+            'method' => 'GET',
         ]);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid() && $room->getName()!=''){
-            $roomSearch = $roomRepository->findBy(
-                ['name' => $room->getName()],
-                ['name' => 'ASC']
-            );
 
-            return $this->render('rooms/index.html.twig',
-                [
+        // Vérifier si le formulaire est soumis, valide et contient un nom
+        if ($form->isSubmitted() && $form->isValid()) {
+            $name = $room->getName();
+
+            if (!empty($name)) {
+                $roomSearch = $roomRepository->findByNameStartingWith($name);
+
+                return $this->render('rooms/index.html.twig', [
                     'rooms' => $roomSearch,
-                    'room' => $form,
+                    'room' => $form->createView(),
                 ]);
+            }
         }
-        return $this->render('rooms/index.html.twig',
-            [
-                'room'  => $form->createView(),
-                'rooms' => $roomRepository->findAll(),
-            ]);
 
+        // Si le formulaire n'est pas soumis ou invalide, afficher toutes les salles
+        return $this->render('rooms/index.html.twig', [
+            'room'  => $form->createView(),
+            'rooms' => $roomRepository->findAll(),
+        ]);
     }
 
    
