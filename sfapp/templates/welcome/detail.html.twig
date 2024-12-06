@@ -9,8 +9,12 @@ x{% endblock %}
 
     <!-- Contenu principal centré -->
     <div class="d-flex justify-content-center align-items-center vh-60 flex-column">
-        <h1>Détails de la salle {{ room.name }}</h1>
-
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ path('app_welcome') }}" class="btn btn-violet text-white">
+                &#8592; Retour
+            </a>
+            <h1>Détails de la salle {{ room.name }}</h1>
+        </div>
 
     <div class="d-flex justify-content-around circles-wrapper">
         <div class="circle-container">
@@ -21,7 +25,6 @@ x{% endblock %}
                         <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
                             <path id="wave-path" d="" fill="#56CCCA"></path>
                         </svg>
-
                     </div>
 
                 </div>
