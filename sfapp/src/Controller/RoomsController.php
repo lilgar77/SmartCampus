@@ -35,7 +35,6 @@ class RoomsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $room->getName() !== '') {
-            // Requête partielle pour les noms qui commencent par l'entrée de l'utilisateur
             $query = $entityManager->createQueryBuilder()
                 ->select('r')
                 ->from(Room::class, 'r')
@@ -52,7 +51,6 @@ class RoomsController extends AbstractController
             ]);
         }
 
-        // Si aucune recherche, retourne toutes les salles
         return $this->render('rooms/index.html.twig', [
             'room'  => $form->createView(),
             'rooms' => $roomRepository->findAll(),
