@@ -1,0 +1,11 @@
+parameters:
+    level: 10
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/controller/WelcomeController.php
+        - templates/welcome/detail.html.twig
+        - assets/
+
+
