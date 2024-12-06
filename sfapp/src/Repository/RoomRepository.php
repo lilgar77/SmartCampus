@@ -37,6 +37,16 @@ class RoomRepository extends ServiceEntityRepository
         return null; // Retourne null si ce n'est pas un Room
     }
 
+    public function findByNameStartingWith(string $name): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.name LIKE :name')
+            ->setParameter('name', $name . '%')
+            ->orderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return Room[] Un tableau indexé contenant des entités Room.
      */
