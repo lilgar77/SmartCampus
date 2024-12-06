@@ -26,31 +26,37 @@ class RoomsController extends AbstractController
 {
 
     #[Route('/rooms', name: 'app_rooms')]
-    public function index(Request $request, RoomRepository $roomRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, RoomRepository $roomRepository): Response
     {
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
             'method' => 'GET'
         ]);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid() && $room->getName()!=''){
-            $roomSearch = $roomRepository->findBy(
-                ['name' => $room->getName()],
-                ['name' => 'ASC']
-            );
 
-            return $this->render('rooms/index.html.twig',
-                [
-                    'rooms' => $roomSearch,
-                    'room' => $form,
-                ]);
-        }
-        return $this->render('rooms/index.html.twig',
-            [
+        if ($form->isSubmitted() && $form->isValid() && $room->getName() !== '') {
+            // Requête partielle pour les noms qui commencent par l'entrée de l'utilisateur
+            $query = $entityManager->createQueryBuilder()
+                ->select('r')
+                ->from(Room::class, 'r')
+                ->where('r.name LIKE :name')
+                ->setParameter('name', $room->getName() . '%')
+                ->orderBy('r.name', 'ASC')
+                ->getQuery();
+
+            $roomSearch = $query->getResult();
+
+            return $this->render('rooms/index.html.twig', [
+                'rooms' => $roomSearch,
                 'room'  => $form->createView(),
-                'rooms' => $roomRepository->findAll(),
             ]);
+        }
 
+        // Si aucune recherche, retourne toutes les salles
+        return $this->render('rooms/index.html.twig', [
+            'room'  => $form->createView(),
+            'rooms' => $roomRepository->findAll(),
+        ]);
     }
 
 
