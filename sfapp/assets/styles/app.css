@@ -162,7 +162,7 @@ body.modal-open .background-container {
     background: #ffffff;
     border-radius: 10px;
     overflow: hidden;
-    border: 2px solid #000000;
+    border: 6px solid #000000;
     z-index: 1; /* Superposé par rapport à la boule */
 }
 
@@ -179,7 +179,7 @@ body.modal-open .background-container {
     width: 80px;
     height: 80px;
     background: #CC5658;
-    border: 2px solid #000000;
+    border: 6px solid #000000;
     border-radius: 50%;
     position: relative;
     top: -65px; /* Place la boule à l’intersection avec la jauge */
@@ -248,7 +248,7 @@ body.modal-open .background-container {
     fill: url(#co2-gradient); /* Gradient pour le remplissage */
     font-weight: bold;
     stroke: black; /* Contour noir */
-    stroke-width: 2; /* Épaisseur du contour */
+    stroke-width: 4; /* Épaisseur du contour */
     transition: fill 0.5s ease, stroke 0.5s ease; /* Transition douce */
 }
 
