@@ -27,6 +27,7 @@ class BuildingRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->andWhere('b.NameBuilding = :NameBuilding')
             ->setParameter('NameBuilding', $name)
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
     }

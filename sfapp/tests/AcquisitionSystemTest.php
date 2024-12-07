@@ -39,7 +39,7 @@ class AcquisitionSystemTest extends WebTestCase
                 'acquisition_systeme[humidity]' => 50,
                 'acquisition_systeme[name]' => 'TestSA-001',
                 'acquisition_systeme[wording]' => 'Salle de réunion',
-                'acquisition_systeme[macAdress]' => '00:00:00:00:00:01',
+                'acquisition_systeme[macAdress]' => '00:00:00:00:00:05',
                 'acquisition_systeme[etat]' => 1,
             ]
         );
@@ -60,8 +60,12 @@ class AcquisitionSystemTest extends WebTestCase
     {
         $client = static::createClient();
 
-        // Retrieve the ID of the AcquisitionSystem based on its name for editing
-        $this->id_AS = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('TestSA-001')->getId();
+        $acquisitionSystem = $client->getContainer()->get('doctrine')
+            ->getRepository(AcquisitionSystem::class)
+            ->findASByName('TestSA-001');
+
+        $this->assertNotNull($acquisitionSystem, 'Acquisition System not found.');
+        $this->id_AS = $acquisitionSystem->getId();
 
         // Load the edit form for the selected AcquisitionSystem
         $crawler = $client->request('GET', '/acquisitionsyteme/'. $this->id_AS .'/edit');
@@ -74,7 +78,7 @@ class AcquisitionSystemTest extends WebTestCase
                 'acquisition_systeme[humidity]' => 55,
                 'acquisition_systeme[name]' => 'TestSA-Updated',
                 'acquisition_systeme[wording]' => 'Salle updated',
-                'acquisition_systeme[macAdress]' => '00:00:00:00:00:00',
+                'acquisition_systeme[macAdress]' => '00:00:00:00:00:04',
                 'acquisition_systeme[etat]' => 2,
             ]
         );
@@ -96,7 +100,12 @@ class AcquisitionSystemTest extends WebTestCase
         $client = static::createClient();
 
         // Retrieve the ID of the AcquisitionSystem that is to be deleted
-        $this->id_AS = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('TestSA-Updated')->getId();
+        $acquisitionSystem = $client->getContainer()->get('doctrine')
+            ->getRepository(AcquisitionSystem::class)
+            ->findASByName('TestSA-Updated');
+
+        $this->assertNotNull($acquisitionSystem, 'Acquisition System not found.');
+        $this->id_AS = $acquisitionSystem->getId();
 
         // Send a POST request to delete the system
         $crawler = $client->request('POST', '/acquisitionsyteme/'. $this->id_AS);
