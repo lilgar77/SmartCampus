@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const maxTemp = 40;
         const minTemp = -10;
         const clampedTemp = Math.max(minTemp, Math.min(maxTemp, temp));
-        const height = ((clampedTemp - minTemp) / (maxTemp - minTemp)) * 150;
+        const height = ((clampedTemp - minTemp) / (maxTemp - minTemp)) * 250;
         thermometerLevel.style.height = `${height}px`;
 
         thermometerLevel.style.background =
