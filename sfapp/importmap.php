@@ -18,4 +18,9 @@ return [
         'path' => 'app.js',
         'preload' => true,
     ],
+
+    'room' => [
+        'path' => 'js/room.js',
+        'entrypoint' => true,
+    ]
 ];
