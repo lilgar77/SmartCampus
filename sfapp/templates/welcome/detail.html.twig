@@ -31,15 +31,15 @@ x{% endblock %}
                 <div class="legend">
                     <div class="legend-item">
                         <span class="legend-color green"></span>
-                        <span>Valeurs normales</span>
+                        <span> <70% ou sinon la température est inférieur à 20°C</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color yellow"></span>
-                        <span>Valeurs moyennes</span>
+                        <span> >70% et la température est entre 20 et 25°C</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color red"></span>
-                        <span>Valeurs critiques</span>
+                        <span> >70% et la température est supérieur à 25°C</span>
                     </div>
                 </div>
             </div>
@@ -54,15 +54,15 @@ x{% endblock %}
                 <div class="legend-thermometer">
                     <div class="legend-item">
                         <span class="legend-color green"></span>
-                        <span>Valeurs normales</span>
+                        <span>Entre 17 et 21°C</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color yellow"></span>
-                        <span>Valeurs moyennes</span>
+                        <span>Entre 22 et 26°C ou entre 16 et 12°C</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color red"></span>
-                        <span>Valeurs critiques</span>
+                        <span>Moins de 12°C ou plus de 26°C</span>
                     </div>
                 </div>
             </div>
@@ -89,15 +89,15 @@ x{% endblock %}
                 <div class="legend">
                     <div class="legend-item">
                         <span class="legend-color green"></span>
-                        <span>Valeurs normales</span>
+                        <span>Entre 400 et 1000 ppm</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color yellow"></span>
-                        <span>Valeurs moyennes</span>
+                        <span>Entre 1000 et 1400 ppm</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color red"></span>
-                        <span>Valeurs critiques</span>
+                        <span>Moins de 400 ppm ou plus de 1400 ppm </span>
                     </div>
                 </div>
             </div>
@@ -108,7 +108,7 @@ x{% endblock %}
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                const humidity = parseFloat('{{ room.idAS.humidity }}'); // Récupérer l'humidité
+                const humidity = parseFloat('{{ room.idAS.humidity }}');
                 const wavePath = document.getElementById('wave-path');
                 const colorText = document.querySelector('.circle-info-wave');
                 const temp = parseFloat('{{ room.idAS.temperature }}');
@@ -136,16 +136,13 @@ x{% endblock %}
                     }
                 }
 
-                // Met à jour la couleur dès le chargement
                 updateTextColor();
 
                 if (!isNaN(humidity)) {
-                    // Calcul de la hauteur en fonction de l'humidité (max hauteur : 200)
                     const height = Math.min(200, Math.max(0, (1 - humidity / 100) * 150));
 
 
-
-                    // Générer un chemin SVG avec une oscillation pour un effet naturel
+                    
                     function generateWavePath(offset) {
                         const waveHeight = height;
                         return `
