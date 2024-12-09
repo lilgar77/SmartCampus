@@ -3,8 +3,11 @@
 {% block title %}Welcome to Smart Campus{% endblock %}
 
 {% block head %}
-x{% endblock %}
-
+    <script src="{{ asset('assets/app.js') }}" defer></script>
+{% endblock %}
+{% block javascripts %}
+    {{ importmap("room") }}
+{% endblock %}
 {% block body %}
 
     <!-- Contenu principal centré -->
@@ -15,6 +18,7 @@ x{% endblock %}
             </a>
             <h1>Détails de la salle {{ room.name }}</h1>
         </div>
+
 
     <div class="d-flex justify-content-around circles-wrapper">
         <div class="circle-container">
@@ -28,7 +32,20 @@ x{% endblock %}
                     </div>
 
                 </div>
-
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span> <70% ou sinon la température est inférieur à 20°C</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span> >70% et la température est entre 20 et 25°C</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span> >70% et la température est supérieur à 25°C</span>
+                    </div>
+                </div>
             </div>
 
             <div class="circle-item">
@@ -37,7 +54,20 @@ x{% endblock %}
                         <div class="thermometer-level"></div>
                     </div>
                     <div class="thermometer-bulb"> <p class="circle-info-temp"> {{ room.idAS.temperature }}°C</p></div>
-
+                </div>
+                <div class="legend-thermometer">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span>Entre 17 et 21°C</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span>Entre 22 et 26°C ou entre 16 et 12°C</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span>Moins de 12°C ou plus de 26°C</span>
+                    </div>
                 </div>
             </div>
 
@@ -60,196 +90,36 @@ x{% endblock %}
                     </svg>
                 </div>
                 <p class="circle-info-cloud"> {{ room.idAS.CO2 }} ppm</p>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span>Entre 400 et 1000 ppm</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span>Entre 1000 et 1400 ppm</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span>Moins de 400 ppm ou plus de 1400 ppm </span>
+                    </div>
+                </div>
             </div>
         </div>
 
-
     </div>
 
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const humidity = parseFloat('{{ room.idAS.humidity }}'); // Récupérer l'humidité
-                const wavePath = document.getElementById('wave-path');
-                const colorText = document.querySelector('.circle-info-wave');
-                const temp = parseFloat('{{ room.idAS.temperature }}');
 
-                function updateTextColor() {
-
-                    if(humidity >= 70)
-                    {
-                        if(temp < 20)
-                        {
-                            colorText.style.color = '#93CC56';
-                        }
-                        else if(temp >= 20 && temp <= 25)
-                        {
-                            colorText.style.color = '#edc11d';
-                        }
-                        else
-                        {
-                            colorText.style.color = 'red';
-
-                        }
-                    }
-                    else{
-                        colorText.style.color = '#93CC56';
-                    }
-                }
-
-                // Met à jour la couleur dès le chargement
-                updateTextColor();
-
-                if (!isNaN(humidity)) {
-                    // Calcul de la hauteur en fonction de l'humidité (max hauteur : 200)
-                    const height = Math.min(200, Math.max(0, (1 - humidity / 100) * 150));
-
-
-
-                    // Générer un chemin SVG avec une oscillation pour un effet naturel
-                    function generateWavePath(offset) {
-                        const waveHeight = height;
-                        return `
-                M0 ${waveHeight + Math.sin(offset) * 10}
-                Q50 ${waveHeight - 10 + Math.cos(offset) * 10}, 100 ${waveHeight + Math.sin(offset) * 10}
-                T200 ${waveHeight + Math.cos(offset) * 10}
-                V200 H0 Z
-            `;
-                    }
-
-                    // Animation de la vague
-                    let offset = 0;
-                    function animateWave() {
-                        offset += 0.1; // Ajuster la vitesse de l'oscillation
-                        wavePath.setAttribute('d', generateWavePath(offset));
-                        requestAnimationFrame(animateWave);
-                    }
-
-                    // Initialiser la vague
-                    wavePath.setAttribute('d', generateWavePath(0));
-                    animateWave();
-                }
-            });
-
-            document.addEventListener('DOMContentLoaded', () => {
-                const temp = parseFloat('{{ room.idAS.temperature }}'); // Récupérer la température
-                const thermometerLevel = document.querySelector('.thermometer-level');
-                const colorText = document.querySelector('.circle-info-temp');// Niveau de la jauge
-
-
-                function updateTextColor() {
-
-
-                    if(temp >= 17 && temp <= 21)
-                    {
-                        colorText.style.color = '#93CC56';
-                    }
-                    else if((temp > 21 && temp <= 26) || (temp < 17 && temp >= 12))
-                    {
-                        colorText.style.color = '#edc11d';
-                    }
-                    else
-                    {
-                        colorText.style.color = '#b22222';
-                    }
-
-
-                }
-
-                updateTextColor();
-
-                if (!isNaN(temp)) {
-                    // Calculer la hauteur du niveau (150px = max, température max : 40°C)
-                    const maxTemp = 40; // Température maximale attendue
-                    const minTemp = -10; // Température minimale attendue
-                    const clampedTemp = Math.max(minTemp, Math.min(maxTemp, temp));
-                    let height
-                    if(clampedTemp >= 35){
-                        height = ((clampedTemp + minTemp) / (maxTemp + minTemp)) * 320;
-                    }
-                    else if(clampedTemp < 35 && clampedTemp >= 30)
-                    {
-                        height = ((clampedTemp + minTemp) / (maxTemp + minTemp)) * 330;
-                    }
-                    else if(clampedTemp < 30 && clampedTemp >= 25)
-                    {
-                        height = ((clampedTemp + minTemp) / (maxTemp + minTemp)) * 360;
-                    }
-                    else if(clampedTemp < 25 && clampedTemp >= 20)
-                    {
-                        height = ((clampedTemp + minTemp) / (maxTemp + minTemp)) * 420;
-                    }
-                    else if(clampedTemp < 20)
-                    {
-                        height = ((clampedTemp - minTemp) / (maxTemp + minTemp)) * 150;
-                    }// Limiter entre min et max
-                     // Échelle entre -10 et 40°C
-                    thermometerLevel.style.height = `${height}px`;
-
-                    // Définir la couleur du niveau selon la température
-                    if (temp < 0) {
-                        thermometerLevel.style.background = 'blue';
-                    } else if (temp >= 0 && temp <= 15) {
-                        thermometerLevel.style.background = '#edc11d'; // Jaune
-                    } else if (temp > 15 && temp <= 25) {
-                        thermometerLevel.style.background = 'orange';
-                    } else if (temp > 25 && temp <= 30) {
-                        thermometerLevel.style.background = 'orangered';
-                    } else if (temp > 30) {
-                        thermometerLevel.style.background = 'red';
-                    }
-                }
-            });
-
-            document.addEventListener('DOMContentLoaded', () => {
-                const co2Value = parseFloat('{{ room.idAS.CO2 }}'); // Récupérer la valeur de CO2
-                const gradient = document.getElementById('co2-gradient');
-                const colorText = document.querySelector('.circle-info-cloud');// Niveau de la jauge
-
-
-                function updateTextColor() {
-
-
-                    if(co2Value >= 400 && co2Value <= 1000)
-                    {
-                        colorText.style.color = '#93CC56';
-                    }
-                    else if(co2Value > 1000 && co2Value <= 1400)
-                    {
-                        colorText.style.color = '#edc11d';
-                    }
-                    else
-                    {
-                        colorText.style.color = '#b22222';
-                    }
-
-
-                }
-
-                updateTextColor();
-
-                if (!isNaN(co2Value)) {
-                    // Limiter les valeurs entre un minimum et un maximum
-                    const maxCO2 = 1500; // Valeur maximale attendue
-                    const minCO2 = 400; // Valeur minimale
-                    const clampedCO2 = Math.max(minCO2, Math.min(maxCO2, co2Value)); // Limiter entre min et max
-
-                    // Calculer le pourcentage d'offset pour l'animation
-                    const offsetPercentage = (1 - clampedCO2 / maxCO2) * 100; // Calcul pour remplir par le bas
-
-                    // Mettre à jour les stops du gradient pour animer le remplissage
-                    const stops = gradient.querySelectorAll('stop');
-                    stops[0].setAttribute('offset', `${offsetPercentage}%`); // Zone non remplie
-                    stops[1].setAttribute('offset', `${offsetPercentage}%`); // Zone remplie
-
-                    // Console pour le debugging
-                    console.log(`CO2: ${co2Value} ppm, Offset: ${offsetPercentage}%`);
-                }
-            });
-        </script>
 
 
     </div>
+
+    <script>
+        window.roomCO2 = {{ room.idAS.CO2 }};
+        window.roomTemp = {{ room.idAS.temperature }};
+        window.roomHumidity = {{ room.idAS.humidity }};
+    </script>
 
 
 
