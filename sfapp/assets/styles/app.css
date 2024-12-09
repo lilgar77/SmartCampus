@@ -60,6 +60,9 @@ body.modal-open .background-container {
     z-index: 10;
 }
 
+.form-check-input:checked {
+    background-color: #6a0dad;
+}
 .navbar-custom {
     width: 40%;  /* Ajustez la largeur selon vos besoins */
     margin: 0 auto;  /* Centre la navbar */

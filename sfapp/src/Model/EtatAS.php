@@ -3,8 +3,9 @@ namespace App\Model;
 
 enum EtatAS: string
 {
-    case REPAIRED = 'À réparer';
-    case INSTALL = 'installé';
-    case UNINSTALL = 'désinstallé';
-    case AVAILABLE = 'disponible';
+    case A_Reparer = 'À réparer';
+    case Installer = 'Installer';
+    case A_Desinstaller = 'À Désinstaller';
+    case Disponible = 'Disponible';
+    case En_Installation=' En cours d\'installation';
 }

@@ -57,14 +57,31 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        // Vérifie si une redirection cible est définie (comme après un login ou autre).
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
+        };
+
+        // Vérification du rôle de l'utilisateur.
+        // Supposons que `ROLE_TECHNICIEN` est correctement défini.
+        if ($this->hasRole($token->getUser(), 'ROLE_TECHNICIEN')) {
+            return new RedirectResponse($this->urlGenerator->generate('app_technician'));
         }
 
-        // For example:
-         return new RedirectResponse($this->urlGenerator->generate('app_welcome'));
-        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        else if($this->hasRole($token->getUser(), 'ROLE_ADMIN')){
+            return new RedirectResponse($this->urlGenerator->generate('app_rooms'));
     }
+
+        // Redirection par défaut si aucun rôle spécifique n'est trouvé.
+        return new RedirectResponse($this->urlGenerator->generate('app_welcome'));
+    }
+
+// Fonction utilitaire pour vérifier les rôles (si nécessaire).
+    private function hasRole($user, string $role): bool
+    {
+        return in_array($role, $user->getRoles());
+    }
+
 
     protected function getLoginUrl(Request $request): string
     {

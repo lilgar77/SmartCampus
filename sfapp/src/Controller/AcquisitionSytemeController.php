@@ -13,7 +13,9 @@
 namespace App\Controller;
 
 use App\Entity\AcquisitionSystem;
+use App\Entity\Installation;
 use App\Form\AcquisitionSystemeType;
+use App\Model\EtatAS;
 use App\Repository\AcquisitionSystemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,8 +61,16 @@ class AcquisitionSytemeController extends AbstractController
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            if($acquisitionSystem->getEtat()== EtatAS::En_Installation)
+            {
+                $installation = new Installation();
+                $installation->setSA($acquisitionSystem);
+                $installation->setRoom($acquisitionSystem->getRoom());
+                $entityManager->persist($installation);
+                $entityManager->flush();
+            }
             $entityManager->persist($acquisitionSystem);
             $entityManager->flush();
 
@@ -111,6 +121,12 @@ class AcquisitionSytemeController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if($acquisitionSystem->getEtat()== EtatAS::En_Installation && $acquisitionSystem->getRoom()!=null){
+                $installation = new Installation();
+                $installation->setSA($acquisitionSystem);
+                $installation->setRoom($acquisitionSystem->getRoom());
+                $entityManager->persist($installation);
+            }
             $entityManager->flush();
 
             $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" modifié avec succès ');
