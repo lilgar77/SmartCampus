@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\AcquisitionSystem;
+use App\Repository\UserRepository;
 
 class AcquisitionSystemTest extends WebTestCase
 {
@@ -13,6 +14,12 @@ class AcquisitionSystemTest extends WebTestCase
     public function testSomething(): void
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // le même que dans les fixtures
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+
+        $client->loginUser($admin);
         $crawler = $client->request('GET', '/acquisitionsysteme');
 
         // Check if the response was successful (status 200)
