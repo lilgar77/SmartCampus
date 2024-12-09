@@ -1,0 +1,10 @@
+parameters:
+    level: 10
+    paths:
+        - bin/
+        - src/Controller/TechnicianController.php
+        - src/Entity/Installation.php
+        - templates/technician
+    ignoreErrors:
+        - '#Property App\\Entity\\.*::\$id \(int\|null\) is never assigned int#'
+    reportUnmatchedIgnoredErrors: false
