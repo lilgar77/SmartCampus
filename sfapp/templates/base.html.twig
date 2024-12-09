@@ -27,22 +27,24 @@
     <div class="position-fixed top-0 start-0 quarter-circle-start background-container"></div>
     <div class="position-fixed bottom-0 end-0 quarter-circle-end background-container"></div>
 
-    <div class="loginlogout">
-        {% if app.user %}
-            <span>
-                {{ app.user.username }}
-            </span>
-            <a href="{{ path('app_logout') }}" class=" mx-3 text-link
-            {% if app.request.attributes.get('_route') == 'app_login' %}text-dark text-decoration-underline active{% endif %}">Déconnexion</a>
-        {% else %}
-            <a href="{{ path('app_login') }}" class=" mx-3 text-link
-            {% if app.request.attributes.get('_route') == 'app_login' %}text-dark text-decoration-underline active{% endif %}">Connexion</a>
-        {% endif %}
+    <div class="d-flex justify-content-end align-items-center p-3">
+        <!-- Login/Logout -->
+        <div class="loginlogout me-3">
+            {% if app.user %}
+                <span class="me-2">{{ app.user.username }}</span>
+                <a href="{{ path('app_logout') }}" class="text-link
+                {% if app.request.attributes.get('_route') == 'app_login' %}text-dark text-decoration-underline active{% endif %}">Déconnexion</a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="text-link
+                {% if app.request.attributes.get('_route') == 'app_login' %}text-dark text-decoration-underline active{% endif %}">Connexion</a>
+            {% endif %}
+        </div>
+        <!-- User Icon -->
+        <div class="icon">
+            <i class="bi bi-person" style="font-size: 5rem;"></i>
+        </div>
     </div>
-    <div class="icon">
-        <i class="bi bi-person" style="font-size: 4rem;"></i>
 
-    </div>
     <div class="d-flex justify-content-center align-items-center vh-0">
         <img src="{{ asset('images/logo.png') }}" alt="Logo du campus">
     </div>
