@@ -31,10 +31,10 @@ class RoomRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         if ($result instanceof Room) {
-            return $result; // Retourne l'objet Room
+            return $result;
         }
 
-        return null; // Retourne null si ce n'est pas un Room
+        return null;
     }
 
     /**
