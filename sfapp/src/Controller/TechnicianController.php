@@ -22,9 +22,10 @@ class TechnicianController extends AbstractController
 
         foreach ($installations as $installation) {
             $acquisitionSystem = $installation->getAS();
-            if ($acquisitionSystem && $acquisitionSystem->getEtat() != EtatAS::En_Installation) {
+            if ($acquisitionSystem && ($acquisitionSystem->getEtat() != EtatAS::En_Installation && $acquisitionSystem->getEtat() != EtatAS::A_Reparer)) {
                 $entityManager->remove($installation);
             }
+
         }
         $entityManager->flush();
 
