@@ -28,7 +28,20 @@ x{% endblock %}
                     </div>
 
                 </div>
-
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span>Valeurs normales</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span>Valeurs moyennes</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span>Valeurs critiques</span>
+                    </div>
+                </div>
             </div>
 
             <div class="circle-item">
@@ -37,7 +50,20 @@ x{% endblock %}
                         <div class="thermometer-level"></div>
                     </div>
                     <div class="thermometer-bulb"> <p class="circle-info-temp"> {{ room.idAS.temperature }}°C</p></div>
-
+                </div>
+                <div class="legend-thermometer">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span>Valeurs normales</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span>Valeurs moyennes</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span>Valeurs critiques</span>
+                    </div>
                 </div>
             </div>
 
@@ -60,9 +86,22 @@ x{% endblock %}
                     </svg>
                 </div>
                 <p class="circle-info-cloud"> {{ room.idAS.CO2 }} ppm</p>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span>Valeurs normales</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span>Valeurs moyennes</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span>Valeurs critiques</span>
+                    </div>
+                </div>
             </div>
         </div>
-
 
     </div>
 

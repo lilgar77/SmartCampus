@@ -124,6 +124,7 @@ body.modal-open .background-container {
 }
 
 .progress-circle-container {
+    margin-top: 70px;
     position: relative;
     width: 250px;
     height: 250px;
@@ -156,6 +157,7 @@ body.modal-open .background-container {
 
 
 .thermometer-container {
+    margin-top: -10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -163,7 +165,6 @@ body.modal-open .background-container {
     height: 400px;
     width: 100px;
     position: relative;
-    margin: 10px;
 }
 
 .thermometer {
@@ -213,7 +214,12 @@ body.modal-open .background-container {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    position: relative; /* Pour permettre des ajustements fins */
+    position: relative;
+    border-radius: 8px;
+    border: 6px solid  #C0C0C0;
+    height: 500px;
+    width: 400px;
+        /* Effet d'ombre légère */ /* Fond légèrement gris *//* Pour permettre des ajustements fins */
 }
 
 .circle-info-wave {
@@ -242,6 +248,7 @@ body.modal-open .background-container {
 }
 
 .co2-container {
+    margin-top: -35px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -281,6 +288,53 @@ body.modal-open .background-container {
     align-items: center; /* Aligner verticalement */
     width: 100%; /* Occuper toute la largeur */
     margin: 10px 0;
-    margin-left: 130px;
-    gap: 170px;/* Espacement au-dessus et en dessous */
+    margin-left: 10px;
+    gap: 40px;/* Espacement au-dessus et en dessous */
+}
+
+/* Conteneur de la légende */
+.legend {
+    display: flex; /* Disposer les items horizontalement */
+    justify-content: center; /* Centrer la légende */
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px; /* Espacement au-dessus */
+    gap: 20px; /* Espacement entre chaque élément de la légende */
+}
+
+.legend-thermometer {
+    display: flex; /* Disposer les items horizontalement */
+    justify-content: center; /* Centrer la légende */
+    align-items: center;
+    flex-direction: column;
+    margin-top: -45px; /* Espacement au-dessus */
+    gap: 20px; /* Espacement entre chaque élément de la légende */
+}
+
+/* Chaque item de la légende */
+.legend-item {
+    display: flex; /* Disposition en ligne */
+    align-items: center; /* Centrer les ronds et le texte */
+    gap: 10px; /* Espacement entre le rond et le texte */
+    font-size: 16px; /* Taille de texte */
+}
+
+/* Couleurs des ronds */
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; /* Forme ronde */
+    border: 2px solid black; /* Contour noir */
+}
+
+.legend-color.green {
+    background-color: green;
+}
+
+.legend-color.yellow {
+    background-color: yellow;
+}
+
+.legend-color.red {
+    background-color: red;
 }
