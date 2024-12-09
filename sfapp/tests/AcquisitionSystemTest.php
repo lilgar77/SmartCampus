@@ -10,7 +10,7 @@ class AcquisitionSystemTest extends WebTestCase
     private ?int $id_AS; // Variable to store the AcquisitionSystem ID for later use
 
     // Test case for accessing the Acquisition System list page
-    public function testSomething(): void
+    public function testLaPageDesSystemesDAquisitionEstDisponible(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/acquisitionsysteme');
