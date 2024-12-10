@@ -33,40 +33,6 @@ class FloorTest extends WebTestCase
         // Verify the page contains the correct heading
         $this->assertSelectorTextContains('h1', 'Liste des Etages');
     }
-
-    public function testSetup()
-    {
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // Ensure the admin user exists
-        $admin = $userRepository->findOneByEmail('admin@admin.com');
-        $this->assertNotNull($admin, 'Admin user not found.');
-
-        // Log in as the admin
-        $client->loginUser($admin);
-
-        // Load the edit form for the selected Building
-        $crawler = $client->request('GET', '/building/add');
-
-        // Fill in the form with updated data
-        $form = $crawler->selectButton('Ajouter un batiment')->form([
-            'building[NameBuilding]' => 'Informatique',
-            'building[AdressBuilding]' => 'Rue',
-        ]);
-
-        // Submit the form
-        $client->submit($form);
-
-        // Verify redirection after form submission
-        $this->assertResponseRedirects('/building');
-        $client->followRedirect();
-
-        // Verify successful response after following the redirect
-        $this->assertResponseIsSuccessful();
-    }
-
-
     public function testAddFloor()
     {
         $client = static::createClient();
@@ -88,7 +54,7 @@ class FloorTest extends WebTestCase
 
         // Fill in the form fields with test data
         $form = $crawler->selectButton('Ajouter un Etage')->form([
-            'floor[numberFloor]' => '1',
+            'floor[numberFloor]' => '4',
             'floor[IdBuilding]' => $id_Building,
         ]);
 
@@ -100,7 +66,7 @@ class FloorTest extends WebTestCase
         $client->followRedirect();
 
         // Check if the floor is added
-        $this->assertSelectorTextContains('div.alert', 'Étage "1" ajouté avec succès');
+        $this->assertSelectorTextContains('div.alert', 'Étage "4" ajouté avec succès');
     }
 
     public function testEditFloor()
@@ -115,7 +81,7 @@ class FloorTest extends WebTestCase
         // Log in as the admin
         $client->loginUser($admin);
         // Retrieve the ID of the Floor based on its id for editing
-        $this->id_Floor = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(1)->getId();
+        $this->id_Floor = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(4)->getId();
 
         // Load the edit form for the selected Floor
         $crawler = $client->request('GET', '/floor/'. $this->id_Floor.'/edit');
@@ -123,7 +89,7 @@ class FloorTest extends WebTestCase
         // Check if the response was successful (status 200)
         $this->assertResponseIsSuccessful();
 
-        $id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
+        $id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Tech de co')->getId();
 
         // Fill in the form with updated data
         $form = $crawler->selectButton('Sauvegarder les modifications')->form([
@@ -170,11 +136,6 @@ class FloorTest extends WebTestCase
 
         // Check for success message after deletion
         $this->assertSelectorTextContains('div.alert', 'Étage "8" supprimé avec succès');
-
-        $id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
-        $crawler = $client->request('POST', '/building/'. $id_Building);
-
-
 
 
     }
