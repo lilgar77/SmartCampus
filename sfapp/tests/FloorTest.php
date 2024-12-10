@@ -5,6 +5,7 @@ namespace App\Tests;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\Building;
 use App\Entity\Floor;
+use App\Repository\UserRepository;
 
 class FloorTest extends WebTestCase
 {
@@ -14,19 +15,36 @@ class FloorTest extends WebTestCase
     public function testSomething(): void
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
+
+        // Request the page
         $crawler = $client->request('GET', '/floor');
 
-        // Check if the response was successful (status 200)
+        // Check if the response was successful
         $this->assertResponseIsSuccessful();
 
-        // Verify the page contains the correct head
+        // Verify the page contains the correct heading
         $this->assertSelectorTextContains('h1', 'Liste des Etages');
     }
 
     public function testSetup()
     {
-
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
 
         // Load the edit form for the selected Building
         $crawler = $client->request('GET', '/building/add');
@@ -39,16 +57,27 @@ class FloorTest extends WebTestCase
 
         // Submit the form
         $client->submit($form);
+
         // Verify redirection after form submission
         $this->assertResponseRedirects('/building');
         $client->followRedirect();
 
+        // Verify successful response after following the redirect
+        $this->assertResponseIsSuccessful();
     }
 
 
     public function testAddFloor()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
 
         // Load the form page for adding a new system
         $id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
@@ -77,6 +106,14 @@ class FloorTest extends WebTestCase
     public function testEditFloor()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
         // Retrieve the ID of the Floor based on its id for editing
         $this->id_Floor = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(1)->getId();
 
@@ -109,6 +146,14 @@ class FloorTest extends WebTestCase
     public function testDeleteFloor()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
 
         // Retrieve the ID of the Floor based on its id for editing
         $this->id_Floor = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(8)->getId();

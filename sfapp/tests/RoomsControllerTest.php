@@ -22,9 +22,6 @@ class RoomsControllerTest extends WebTestCase
         $admin = $userRepository->findOneByEmail('admin@admin.com');
 
         $client->loginUser($admin);
-
-        //creation building end floor
-        $client = static::createClient();
         $crawler = $client->request('GET', '/building/add');
         $form = $crawler->selectButton('Ajouter un batiment')->form([
             'building[NameBuilding]' => 'info',
@@ -82,13 +79,6 @@ class RoomsControllerTest extends WebTestCase
 
 
         $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // le même que dans les fixtures
-        $admin = $userRepository->findOneByEmail('admin@admin.com');
-
-        $client->loginUser($admin);
-
         $userRepository = static::getContainer()->get(UserRepository::class);
 
         // le même que dans les fixtures
