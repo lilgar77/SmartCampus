@@ -2,20 +2,20 @@
 
 namespace App\Tests;
 
-use App\Entity\Building;
+use App\Entity\Floor;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminBuildingTest extends WebTestCase
+class AdminFloorTest extends WebTestCase
 {
-    public function testAjoutDeBatimentNecessiteAuthentification(): void
+    public function testAjoutEtageNecessiteAuthentification(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/building/add');
+        $client->request('GET', '/floor/add');
         $this->assertResponseRedirects('/login');
     }
-    public function testAjoutDeBatimentAccessibleAuxAdmins(): void
+    public function testAjoutEtageAccessibleAuxAdmins(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
 
@@ -26,10 +26,10 @@ class AdminBuildingTest extends WebTestCase
         $admin = $userRepository->findOneByEmail('admin@admin.com');
 
         $client->loginUser($admin);
-        $client->request('GET', '/building/add');
+        $client->request('GET', '/floor/add');
         $this->assertResponseIsSuccessful();
     }
-    public function testListeDeBatimentAccessibleAuxAdmins(): void
+    public function testListeEtageAccessibleAuxAdmins(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
 
@@ -40,10 +40,10 @@ class AdminBuildingTest extends WebTestCase
         $admin = $userRepository->findOneByEmail('admin@admin.com');
 
         $client->loginUser($admin);
-        $client->request('GET', '/building');
+        $client->request('GET', '/floor');
         $this->assertResponseIsSuccessful();
     }
-    public function testModifDeSalleAccessibleAuxAdmins(): void
+    public function testModifEtageAccessibleAuxAdmins(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
 
@@ -54,11 +54,11 @@ class AdminBuildingTest extends WebTestCase
         $admin = $userRepository->findOneByEmail('admin@admin.com');
 
         $client->loginUser($admin);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
-        $client->request('GET', '/building/'.$identifier.'/edit');
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(1)->getId();
+        $client->request('GET', '/floor/'.$identifier.'/edit');
         $this->assertResponseIsSuccessful();
     }
-    public function testAjoutDeBatimentInterditAuxTechniciens(): void
+    public function testAjoutEtageInterditAuxTechniciens(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
 
@@ -69,10 +69,10 @@ class AdminBuildingTest extends WebTestCase
         $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
 
         $client->loginUser($technicien);
-        $client->request('GET', '/building/add');
+        $client->request('GET', '/floor/add');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
-    public function testListeDeBatimentInterditAuxTechniciens(): void
+    public function testListeEtageInterditAuxTechniciens(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
 
@@ -83,10 +83,10 @@ class AdminBuildingTest extends WebTestCase
         $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
 
         $client->loginUser($technicien);
-        $client->request('GET', '/building');
+        $client->request('GET', '/floor');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
-    public function testModifDeBatimentInterditAuxTechniciens(): void
+    public function testModifEtageInterditAuxTechniciens(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
 
@@ -97,9 +97,10 @@ class AdminBuildingTest extends WebTestCase
         $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
 
         $client->loginUser($technicien);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
-        $client->request('GET', '/building/'.$identifier.'/edit');
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(1)->getId();
+        $client->request('GET', '/floor/'.$identifier.'/edit');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 }
+
 
