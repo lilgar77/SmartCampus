@@ -25,7 +25,7 @@
                 </div>
                 <div class="mb-3">
                     {{ form_label(ASForm.etat, 'État', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(ASForm.etat, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(ASForm.etat, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
                     {{ form_errors(ASForm.etat, {'attr': {'class': 'text-danger'}}) }}
                 </div>
                 <div class="mb-3">
