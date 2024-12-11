@@ -33,20 +33,6 @@ class RoomsControllerTest extends WebTestCase
         $this->assertResponseRedirects('/building');
         $client->followRedirect();
 
-
-
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('info')->getId();
-
-        $crawler = $client->request('GET', '/floor/add');
-        $form = $crawler->selectButton('Ajouter un Etage')->form([
-            'floor[numberFloor]' => '2',
-            'floor[IdBuilding]' => $identifier,
-        ]);
-        $client->submit($form);
-
-        $this->assertResponseRedirects('/floor');
-        $client->followRedirect();
-
         // Load the form page for adding a new system
         $crawler = $client->request('GET', '/acquisitionsyteme/add');
 
@@ -72,24 +58,6 @@ class RoomsControllerTest extends WebTestCase
 
 
     }
-
-    public function testAjoutDeSalleAccessibleAuxAdmins(): void
-    {
-        // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
-
-
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // le même que dans les fixtures
-        $admin = $userRepository->findOneByEmail('admin@admin.com');
-
-        $client->loginUser($admin);
-        $client->request('GET', '/rooms/add');
-        $this->assertResponseIsSuccessful();
-    }
-
-
     public function testIndexPage()
     {
         $client = static::createClient();

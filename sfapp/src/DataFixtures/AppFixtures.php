@@ -81,7 +81,13 @@ class AppFixtures extends Fixture
         $room->setBuilding($building);
         $room->setIdAS($acquisitionSystem);
 
+        $room2 = new Room();
+        $room2->setName('D101');
+        $room2->setFloor($floor4);
+        $room2->setBuilding($building);
+
         $manager->persist($room);
+        $manager->persist($room2);
 
         $user = new User();
         $user->setEmail('admin@admin.com');
