@@ -12,6 +12,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AcquisitionSystem;
 use App\Repository\RoomRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,6 +87,7 @@ class RoomsController extends AbstractController
     #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
     public function delete(Request $request, Room $room, EntityManagerInterface $entityManager): Response
     {
+
         $entityManager->remove($room);
         $entityManager->flush();
 
