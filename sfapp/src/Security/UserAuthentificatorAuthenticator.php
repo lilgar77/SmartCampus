@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -51,7 +52,8 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($username),
             new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $csrfToken),            ]
+                new CsrfTokenBadge('authenticate', $csrfToken),
+            ]
         );
     }
 
@@ -60,28 +62,27 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
         // Vérifie si une redirection cible est définie (comme après un login ou autre).
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
-        };
-
-        // Vérification du rôle de l'utilisateur.
-        // Supposons que `ROLE_TECHNICIEN` est correctement défini.
-        if ($this->hasRole($token->getUser(), 'ROLE_TECHNICIEN')) {
-            return new RedirectResponse($this->urlGenerator->generate('app_technician'));
         }
 
-        else if($this->hasRole($token->getUser(), 'ROLE_ADMIN')){
-            return new RedirectResponse($this->urlGenerator->generate('app_rooms'));
-    }
+        // Vérification du rôle de l'utilisateur.
+        $user = $token->getUser();
+        if ($user instanceof UserInterface) { // Ensure the user is not null and is an instance of UserInterface
+            if ($this->hasRole($user, 'ROLE_TECHNICIEN')) {
+                return new RedirectResponse($this->urlGenerator->generate('app_technician'));
+            } elseif ($this->hasRole($user, 'ROLE_ADMIN')) {
+                return new RedirectResponse($this->urlGenerator->generate('app_rooms'));
+            }
+        }
 
         // Redirection par défaut si aucun rôle spécifique n'est trouvé.
         return new RedirectResponse($this->urlGenerator->generate('app_welcome'));
     }
 
-// Fonction utilitaire pour vérifier les rôles (si nécessaire).
-    private function hasRole($user, string $role): bool
+    // Corrected the parameter type hint to match the correct UserInterface
+    private function hasRole(UserInterface $user, string $role): bool
     {
         return in_array($role, $user->getRoles());
     }
-
 
     protected function getLoginUrl(Request $request): string
     {
