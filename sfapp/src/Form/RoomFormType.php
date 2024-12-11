@@ -13,9 +13,6 @@ use App\Entity\Building;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
-/**
- * @extends AbstractType<\App\Entity\Room>
- */
 class RoomFormType extends AbstractType
 {
 

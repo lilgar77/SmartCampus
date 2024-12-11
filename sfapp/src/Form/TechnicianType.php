@@ -9,7 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @template TData
- * @extends AbstractType<TData>
  */
 class TechnicianType extends AbstractType
 {
