@@ -15,10 +15,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TechnicianController extends AbstractController
 {
-    #[IsGranted("ROLE_TECHNICIEN")]
     #[Route('/technician', name: 'app_technician')]
     public function index(EntityManagerInterface $entityManager,InstallationRepository $installationRepository): Response
     {
+        if (!$this->isGranted('ROLE_TECHNICIEN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $installation=$entityManager->getRepository(Installation::class)->findAll();
         foreach ($installation as $installations) {
             if ($installations->getAS()->getEtat() != EtatAS::En_Installation) {
@@ -32,10 +34,12 @@ class TechnicianController extends AbstractController
         ]);
 
     }
-    #[IsGranted("ROLE_TECHNICIEN")]
     #[Route('/technician/{id}/detail', name: 'app_technician_detail')]
     public function detail(Request $request,  EntityManagerInterface $entityManager, InstallationRepository $installationRepository): Response
     {
+        if (!$this->isGranted('ROLE_TECHNICIEN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $form = $this->createForm(TechnicianType::class);
         $form->handleRequest($request);
 
