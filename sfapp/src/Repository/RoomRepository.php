@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\AcquisitionSystem;
 use App\Entity\Room;
+use App\Model\EtatAS;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -56,19 +56,22 @@ class RoomRepository extends ServiceEntityRepository
         return $rooms;
     }
 
+
     /**
-     * @return Room[] Un tableau indexé contenant des entités Room.
+     * @return Room[] Un tableau contenant des entités Room avec un système d'acquisition "installé".
      */
     public function findRoomWithAs(): array
     {
-        $result = $this->createQueryBuilder('r')
-            ->andWhere('r.id_AS IS NOT NULL')
+        /** @var Room[] $room */
+        $room = $this->createQueryBuilder('r')
+            ->leftJoin('r.id_AS', 'acs')
+            ->andWhere('acs IS NOT NULL')
+            ->andWhere('acs.etat = :etat')
+            ->setParameter('etat', EtatAS::Installer)
             ->getQuery()
             ->getResult();
 
-
-        /** @var Room[] $result */
-        return $result;
+        return $room;
     }
 
 
