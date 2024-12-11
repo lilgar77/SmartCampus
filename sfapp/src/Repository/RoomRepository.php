@@ -3,16 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Room;
+use App\Model\EtatAS;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+
 /**
  * @extends ServiceEntityRepository<Room>
- *
- * @method Room|null find($id, $lockMode = null, $lockVersion = null)
- * @method Room|null findOneBy(array $criteria, array $orderBy = null)
- * @method Room[]    findAll()
- * @method Room[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class RoomRepository extends ServiceEntityRepository
 {
@@ -21,40 +18,61 @@ class RoomRepository extends ServiceEntityRepository
         parent::__construct($registry, Room::class);
     }
 
-    public function findRoomByName($name): ?Room
+    /**
+     * @param string $name
+     * @return Room|null
+     */
+    public function findRoomByName(string $name): ?Room
     {
-        return $this->createQueryBuilder('r')
+        $result = $this->createQueryBuilder('r')
             ->andWhere('r.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
             ->getOneOrNullResult();
+
+        if ($result instanceof Room) {
+            return $result;
+        }
+
+        return null;
     }
 
-
-
-
-//    /**
-//     * @return Room[] Returns an array of Room objects
-//     */
-   public function findByExampleField($value): array
+    /**
+     * Trouve les entités Room dont le nom commence par une chaîne donnée.
+     *
+     * @param string $name La chaîne utilisée pour rechercher les entités.
+     * @return Room[] Un tableau indexé contenant des entités Room.
+     */
+    public function findByNameStartingWith(string $name): array
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+        /** @var Room[] $rooms */
+        $rooms = $this->createQueryBuilder('r')
+            ->where('r.name LIKE :name')
+            ->setParameter('name', $name . '%')
+            ->orderBy('r.name', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+
+        return $rooms;
     }
 
-//    public function findOneBySomeField($value): ?Room
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+
+    /**
+     * @return Room[] Un tableau contenant des entités Room avec un système d'acquisition "installé".
+     */
+    public function findRoomWithAs(): array
+    {
+        /** @var Room[] $room */
+        $room = $this->createQueryBuilder('r')
+            ->leftJoin('r.id_AS', 'acs')
+            ->andWhere('acs IS NOT NULL')
+            ->andWhere('acs.etat = :etat')
+            ->setParameter('etat', EtatAS::Installer)
+            ->getQuery()
+            ->getResult();
+
+        return $room;
+    }
+
+
 }

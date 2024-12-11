@@ -151,10 +151,6 @@ class AcquisitionSystem
 
         return $this;
     }
-    public function __toString(): string
-    {
-        return $this->etat;
-    }
 
     public function getName(): ?string
     {
@@ -166,6 +162,11 @@ class AcquisitionSystem
         $this->Name = $Name;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->Name ?? '';
     }
 
 }

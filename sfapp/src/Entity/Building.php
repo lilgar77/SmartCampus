@@ -5,11 +5,10 @@ namespace App\Entity;
 use App\Repository\BuildingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-//Entity uniqueness
+// Entity uniqueness
 #[UniqueEntity(
     fields: ['NameBuilding','AdressBuilding'],
     message: 'Ce Batiment est déjà utilisée.'
@@ -28,15 +27,22 @@ class Building
     #[ORM\Column(length: 255)]
     private ?string $AdressBuilding = null;
 
+    /**
+     * @var Collection<int, Floor>
+     */
     #[ORM\OneToMany(targetEntity: Floor::class, mappedBy: 'IdBuilding')]
     private Collection $floors;
 
+    /**
+     * @var Collection<int, Room>
+     */
     #[ORM\OneToMany(targetEntity: Room::class, mappedBy: 'building')]
     private Collection $rooms;
 
     public function __construct()
     {
         $this->floors = new ArrayCollection();
+        $this->rooms = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,6 +82,16 @@ class Building
         return $this->floors;
     }
 
+    /**
+     * @param Collection<int, Floor> $floors
+     */
+    public function setFloors(Collection $floors): self
+    {
+        $this->floors = $floors;
+
+        return $this;
+    }
+
     public function addFloor(Floor $floor): self
     {
         if (!$this->floors->contains($floor)) {
@@ -85,8 +101,6 @@ class Building
 
         return $this;
     }
-
-
 
     public function removeFloor(Floor $floor): self
     {
@@ -107,10 +121,20 @@ class Building
         return $this->rooms;
     }
 
+    /**
+     * @param Collection<int, Room> $rooms
+     */
+    public function setRooms(Collection $rooms): self
+    {
+        $this->rooms = $rooms;
+
+        return $this;
+    }
+
     public function addRoom(Room $room): self
     {
-        if (!$this->floors->contains($room)) {
-            $this->floors[] = $room;
+        if (!$this->rooms->contains($room)) {
+            $this->rooms[] = $room;
             $room->setBuilding($this);
         }
 
@@ -130,6 +154,6 @@ class Building
 
     public function __toString(): string
     {
-        return $this->NameBuilding;
+        return $this->NameBuilding ?? '';
     }
 }

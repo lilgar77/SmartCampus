@@ -2,17 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\AcquisitionSystem;
 use App\Entity\Floor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Floor>
- *
- * @method Floor|null find($id, $lockMode = null, $lockVersion = null)
- * @method Floor|null findOneBy(array $criteria, array $orderBy = null)
- * @method Floor[]    findAll()
- * @method Floor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class FloorRepository extends ServiceEntityRepository
 {
@@ -21,13 +17,23 @@ class FloorRepository extends ServiceEntityRepository
         parent::__construct($registry, Floor::class);
     }
 
-    public function findFloorByNumber($name): ?Floor
+    /**
+     * @param string $numberFloor
+     * @return Floor|null
+     */
+    public function findFloorByNumber(string $numberFloor): ?Floor
     {
-        return $this->createQueryBuilder('f')
+        $result = $this->createQueryBuilder('f')
             ->andWhere('f.numberFloor = :numberFloor')
-            ->setParameter('numberFloor', $name)
+            ->setParameter('numberFloor', $numberFloor)
             ->getQuery()
             ->getOneOrNullResult();
+
+        if ($result instanceof Floor) {
+            return $result;
+        }
+
+        return null;
     }
 
 

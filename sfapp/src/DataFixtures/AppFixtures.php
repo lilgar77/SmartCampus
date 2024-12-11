@@ -9,9 +9,18 @@ use App\Entity\AcquisitionSystem;
 use App\Model\EtatAS;
 use App\Entity\Building;
 use App\Entity\Floor;
+use App\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
     public function load(ObjectManager $manager): void
     {
 
@@ -22,16 +31,17 @@ class AppFixtures extends Fixture
         $acquisitionSystem->setName('C3-PO');
         $acquisitionSystem->setWording('Salle de réunion');
         $acquisitionSystem->setMacAdress('00:00:00:00:00:00');
-        $acquisitionSystem->setEtat(EtatAS::AVAILABLE);
+        $acquisitionSystem->setEtat(EtatAS::Disponible);
         $manager->persist($acquisitionSystem);
 
         $acquisitionSystem2 = new AcquisitionSystem();
         $acquisitionSystem2->setTemperature(25);
         $acquisitionSystem2->setCo2(500);
         $acquisitionSystem2->setHumidity(60);
+        $acquisitionSystem2->setName('R2-D2');
         $acquisitionSystem2->setWording('Salle de réunion 2');
         $acquisitionSystem2->setMacAdress('00:00:00:00:00:01');
-        $acquisitionSystem2->setEtat(EtatAS::INSTALL);
+        $acquisitionSystem2->setEtat(EtatAS::Disponible);
         $manager->persist($acquisitionSystem2);
 
         $building = new Building();
@@ -71,8 +81,31 @@ class AppFixtures extends Fixture
         $room->setBuilding($building);
         $room->setIdAS($acquisitionSystem);
 
-        $manager->persist($room);
+        $room2 = new Room();
+        $room2->setName('D101');
+        $room2->setFloor($floor4);
+        $room2->setBuilding($building);
 
+        $manager->persist($room);
+        $manager->persist($room2);
+
+        $user = new User();
+        $user->setEmail('admin@admin.com');
+        $user->setUsername('admin');
+        $plaintextPassword = 'admin';
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $plaintextPassword);
+        $user->setPassword($hashedPassword);
+        $user->setRoles(['ROLE_ADMIN']);
+        $manager->persist($user);
+
+        $user = new User();
+        $user->setEmail('technicien@technicien.com');
+        $user->setUsername('technicien');
+        $plaintextPassword = 'technicien';
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $plaintextPassword);
+        $user->setPassword($hashedPassword);
+        $user->setRoles(['ROLE_TECHNICIEN']);
+        $manager->persist($user);
 
 
         $manager->flush();

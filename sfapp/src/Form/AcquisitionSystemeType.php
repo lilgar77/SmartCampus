@@ -21,7 +21,12 @@ class AcquisitionSystemeType extends AbstractType
         $builder
             ->add('temperature')
             ->add('CO2')
-            ->add('name')
+            ->add('name', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom est obligatoire.',
+                    ],) ],
+                ])
             ->add('humidity')
             ->add('wording')
             ->add('macAdress', null, [
@@ -38,13 +43,14 @@ class AcquisitionSystemeType extends AbstractType
             ])
             ->add('etat', ChoiceType::class, [
                 'choices' => [
-                    'Dispo' => EtatAS::AVAILABLE,
-                    'désinstallé' => EtatAS::UNINSTALL,
-                    'installé' => EtatAS::INSTALL,
-                    'À réparer' => EtatAS::REPAIRED,
+                    'Dispo' => EtatAS::Disponible,
+                    'Désinstaller' => EtatAS::A_Desinstaller,
+                    'Installer' => EtatAS::Installer,
+                    'À réparer' => EtatAS::A_Reparer,
+                    'En cours d\'installation' => EtatAS::En_Installation,
                 ],
-                'choice_label' => function($choice) {
-                    return $choice->name;
+                'choice_label' => function (EtatAS $choice): string {
+                    return (string) ($choice->name ?? '');
                 },
             ])
             ->add('room', EntityType::class, [

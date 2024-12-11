@@ -7,13 +7,9 @@ use App\Entity\Building;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+
 /**
  * @extends ServiceEntityRepository<Building>
- *
- * @method Building|null find($id, $lockMode = null, $lockVersion = null)
- * @method Building|null findOneBy(array $criteria, array $orderBy = null)
- * @method Building[]    findAll()
- * @method Building[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class BuildingRepository extends ServiceEntityRepository
 {
@@ -22,13 +18,24 @@ class BuildingRepository extends ServiceEntityRepository
         parent::__construct($registry, Building::class);
     }
 
-    public function findBuildingByName($name): ?Building
+    /**
+     * @param string $name
+     * @return Building|null
+     */
+    public function findBuildingByName(string $name): ?Building
     {
-        return $this->createQueryBuilder('b')
+        $result = $this->createQueryBuilder('b')
             ->andWhere('b.NameBuilding = :NameBuilding')
             ->setParameter('NameBuilding', $name)
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+
+        if ($result instanceof Building) {
+            return $result;
+        }
+
+        return null;
     }
 
 //    /**

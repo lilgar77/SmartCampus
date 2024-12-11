@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to Smart Campus{% endblock %}
+
+{% block head %}
+    <script src="{{ asset('assets/app.js') }}" defer></script>
+{% endblock %}
+{% block javascripts %}
+    {{ importmap("room") }}
+{% endblock %}
+{% block body %}
+
+    <!-- Contenu principal centré -->
+    <div class="d-flex justify-content-center align-items-center vh-60 flex-column">
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ path('app_welcome') }}" class="btn btn-violet text-white">
+                &#8592; Retour
+            </a>
+            <h1>Détails de la salle {{ room.name }}</h1>
+        </div>
+
+
+    <div class="d-flex justify-content-around circles-wrapper">
+        <div class="circle-container">
+            <div class="circle-item">
+                <div class="progress-circle-container">
+                    <div class="progress-circle">
+                        <div class="circle-info-wave ">{{ room.idAS.humidity }}%</div>
+                        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                            <path id="wave-path" d="" fill="#56CCCA"></path>
+                        </svg>
+                    </div>
+
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span> <70% ou sinon la température est inférieur à 20°C</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span> >70% et la température est entre 20 et 25°C</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span> >70% et la température est supérieur à 25°C</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="circle-item">
+                <div class="thermometer-container">
+                    <div class="thermometer">
+                        <div class="thermometer-level"></div>
+                    </div>
+                    <div class="thermometer-bulb"> <p class="circle-info-temp"> {{ room.idAS.temperature }}°C</p></div>
+                </div>
+                <div class="legend-thermometer">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span>Entre 17 et 21°C</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span>Entre 22 et 26°C ou entre 16 et 12°C</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span>Moins de 12°C ou plus de 26°C</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="circle-item">
+                <div class="co2-container">
+                    <svg viewBox="0 0 200 100" class="co2-svg">
+                        <defs>
+                            <!-- Gradient dynamique -->
+                            <linearGradient id="co2-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                                <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 1" />
+                                <stop offset="100%" style="stop-color: #93CC56; stop-opacity: 1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Texte avec contour noir -->
+                        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
+                              fill="url(#co2-gradient)" stroke="black" stroke-width="2"
+                              font-size="70" font-family="Arial, sans-serif" class="co2-text">
+                            CO2
+                        </text>
+                    </svg>
+                </div>
+                <p class="circle-info-cloud"> {{ room.idAS.CO2 }} ppm</p>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-color green"></span>
+                        <span>Entre 400 et 1000 ppm</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color yellow"></span>
+                        <span>Entre 1000 et 1400 ppm</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color red"></span>
+                        <span>Moins de 400 ppm ou plus de 1400 ppm </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    </div>
+
+    <script>
+        window.roomCO2 = {{ room.idAS.CO2 }};
+        window.roomTemp = {{ room.idAS.temperature }};
+        window.roomHumidity = {{ room.idAS.humidity }};
+    </script>
+
+
+
+
+    <!-- Scripts JavaScript de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

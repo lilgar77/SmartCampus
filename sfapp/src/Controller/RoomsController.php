@@ -1,7 +1,18 @@
 <?php
+###############################################################
+##  @Name of file :RoomsController.php                       ##
+##  @brief :Controller for the rooms.                        ##
+##          Integration of different routes for the rooms    ##
+##  @Function :                                              ##
+##      - index (Page that displays rooms)                   ##
+##      - add  (Page that adds rooms)                        ##
+##      - delete (Page that deletes rooms)                   ##
+##      - edit   (Page that edits rooms)                     ##
+###############################################################
 
 namespace App\Controller;
 
+use App\Entity\AcquisitionSystem;
 use App\Repository\RoomRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,44 +22,53 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Room;
 use App\Form\SearchRoomFormType;
 use App\Form\RoomFormType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RoomsController extends AbstractController
 {
+    
     #[Route('/rooms', name: 'app_rooms')]
     public function index(Request $request, RoomRepository $roomRepository): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
-            'method' => 'GET'
+            'method' => 'GET',
         ]);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid() && $room->getName()!=''){
-            $roomSearch = $roomRepository->findBy(
-                ['name' => $room->getName()],
-                ['name' => 'ASC']
-            );
 
-            return $this->render('rooms/index.html.twig',
-                [
+        // Vérifier si le formulaire est soumis, valide et contient un nom
+        if ($form->isSubmitted() && $form->isValid()) {
+            $name = $room->getName();
+
+            if (!empty($name)) {
+                $roomSearch = $roomRepository->findByNameStartingWith($name);
+
+                return $this->render('rooms/index.html.twig', [
                     'rooms' => $roomSearch,
-                    'room' => $form,
+                    'room' => $form->createView(),
                 ]);
-
-
+            }
         }
-        return $this->render('rooms/index.html.twig',
-            [
-                'room'  => $form->createView(),
-                'rooms' => $roomRepository->findAll(),
-            ]);
 
+        // Si le formulaire n'est pas soumis ou invalide, afficher toutes les salles
+        return $this->render('rooms/index.html.twig', [
+            'room'  => $form->createView(),
+            'rooms' => $roomRepository->findAll(),
+        ]);
     }
 
+   
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
         $room = new Room();
         $form = $this->createForm(RoomFormType::class, $room);
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -66,9 +86,13 @@ class RoomsController extends AbstractController
         ]);
     }
 
+    
     #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
     public function delete(Request $request, Room $room, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $entityManager->remove($room);
         $entityManager->flush();
 
@@ -78,9 +102,13 @@ class RoomsController extends AbstractController
         return $this->redirectToRoute('app_rooms');
     }
 
+    
     #[Route('/rooms/{id}/edit', name: 'app_room_edit')]
     public function edit(Room $room, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $form = $this->createForm(RoomFormType::class, $room);
 
         $form->handleRequest($request);

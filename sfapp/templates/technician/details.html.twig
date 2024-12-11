@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TechnicianController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+    <div class="background-container">
+        <div class="container mt-4">
+            <div class="card shadow-lg p-4 rounded-4">
+                <h1 class="h3 text-center mb-3">Formulaire d'installation</h1>
+                <p class="text-center text-muted mb-4">
+                    Veuillez suivre les étapes ci-dessous pour finaliser l'installation du
+                    <strong>{{ installations.AS }}</strong> dans la salle <strong>{{ installations.Room }}</strong>.
+                </p>
+                {{ form_start(technicianForm) }}
+                <div class="steps-container">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox1, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox1, 'Avoir le matériel (microcontrôleur, capteurs)', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox2, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox2, 'Vérifier la salle', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox3, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox3, 'Faire les branchements correspondants', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox4, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox4, 'Installer le script', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox5, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox5, 'Vérifier le Wifi', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="text-center">
+                    <a href="{{ path('app_technician')}}" class="btn btn-secondary">
+                        Annuler l'installation
+                    </a>
+                    <button type="submit" class="btn btn-violet text-white" data-bs-target="#deleteModal{{ installations.id }}">Valider l'installation</button>
+
+                </div>
+                {{ form_end(technicianForm) }}
+
+
+        </div>
+    </div>
+
+
+
+{% endblock %}

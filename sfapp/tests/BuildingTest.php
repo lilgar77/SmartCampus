@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use App\Entity\AcquisitionSystem;
 use App\Entity\Building;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BuildingTest extends WebTestCase
@@ -12,6 +13,15 @@ class BuildingTest extends WebTestCase
     public function testBuildingPage(): void
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
+
         $crawler = $client->request('GET', '/building');
 
         $this->assertResponseIsSuccessful();
@@ -20,6 +30,15 @@ class BuildingTest extends WebTestCase
     // Test to add a new Building
     public function testAddBuilding(): void {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
+
         $crawler = $client->request('GET', '/building/add');
 
         $this->assertResponseIsSuccessful();
@@ -40,6 +59,15 @@ class BuildingTest extends WebTestCase
 
     public function testEditBuilding(): void {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
+
         $this->id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Droit')->getId();
 
         $crawler = $client->request('GET', '/building/'.$this->id_Building.'/edit');
@@ -60,6 +88,15 @@ class BuildingTest extends WebTestCase
     public function testDeleteBuilding(): void
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // Ensure the admin user exists
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+        $this->assertNotNull($admin, 'Admin user not found.');
+
+        // Log in as the admin
+        $client->loginUser($admin);
+
 
         // Retrieve the ID of the AcquisitionSystem that is to be deleted
         $this->id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Droit')->getId();

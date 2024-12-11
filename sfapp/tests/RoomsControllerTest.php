@@ -7,14 +7,21 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\Floor;
 use App\Entity\AcquisitionSystem;
 use App\Entity\Room;
+use App\Repository\UserRepository;
 
 class RoomsControllerTest extends WebTestCase
 {
 
     public function testsetUpData()
     {
-        //creation building end floor
         $client = static::createClient();
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // le même que dans les fixtures
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+
+        $client->loginUser($admin);
         $crawler = $client->request('GET', '/building/add');
         $form = $crawler->selectButton('Ajouter un batiment')->form([
             'building[NameBuilding]' => 'info',
@@ -24,20 +31,6 @@ class RoomsControllerTest extends WebTestCase
         $client->submit($form);
 
         $this->assertResponseRedirects('/building');
-        $client->followRedirect();
-
-
-
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('info')->getId();
-
-        $crawler = $client->request('GET', '/floor/add');
-        $form = $crawler->selectButton('Ajouter un Etage')->form([
-            'floor[numberFloor]' => '2',
-            'floor[IdBuilding]' => $identifier,
-        ]);
-        $client->submit($form);
-
-        $this->assertResponseRedirects('/floor');
         $client->followRedirect();
 
         // Load the form page for adding a new system
@@ -65,10 +58,16 @@ class RoomsControllerTest extends WebTestCase
 
 
     }
-
     public function testIndexPage()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // le même que dans les fixtures
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+
+        $client->loginUser($admin);
+
         $crawler = $client->request('GET', '/rooms');
 
         $this->assertResponseIsSuccessful();
@@ -78,6 +77,13 @@ class RoomsControllerTest extends WebTestCase
     public function testAddRoom()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // le même que dans les fixtures
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+
+        $client->loginUser($admin);
+
         $crawler = $client->request('GET', '/rooms/add');
 
         $this->assertResponseIsSuccessful();
@@ -108,6 +114,13 @@ class RoomsControllerTest extends WebTestCase
     public function testEditRoom()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // le même que dans les fixtures
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+
+        $client->loginUser($admin);
+
         $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('Test Room')->getId();
         $crawler = $client->request('GET', '/rooms/'.$identifier.'/edit');
 
@@ -129,6 +142,13 @@ class RoomsControllerTest extends WebTestCase
     public function testDeleteRoom()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        // le même que dans les fixtures
+        $admin = $userRepository->findOneByEmail('admin@admin.com');
+
+        $client->loginUser($admin);
+
         $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('Test Room Updated')->getId();
         $crawler = $client->request('POST', '/rooms/'.$identifier);
 
