@@ -27,10 +27,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AcquisitionSytemeController extends AbstractController
 {
 
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $acquisitionSystems = $acquisitionSystemRepository->findAll();
 
         return $this->render('acquisition_syteme/index.html.twig', [
@@ -39,10 +41,12 @@ class AcquisitionSytemeController extends AbstractController
     }
 
     
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
     public function addAS(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $acquisitionSystem = new AcquisitionSystem();
 
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
@@ -81,10 +85,12 @@ class AcquisitionSytemeController extends AbstractController
     }
 
     
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/{id}', name: 'app_acquisition_syteme_delete', methods: ['POST'])]
     public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $entityManager->remove($acquisitionSystem);
         $entityManager->flush();
 
@@ -94,10 +100,12 @@ class AcquisitionSytemeController extends AbstractController
     }
 
     
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/{id}/edit', name: 'app_acquisition_syteme_edit')]
     public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
 
         $form->handleRequest($request);

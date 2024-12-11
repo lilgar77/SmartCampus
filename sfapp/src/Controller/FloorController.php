@@ -24,20 +24,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class FloorController extends AbstractController
 {
    
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor', name: 'app_floor')]
     public function index(FloorRepository $floorRepository): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         return $this->render('floor/index.html.twig', [
             'floors' => $floorRepository->findAll(),
         ]);
     }
 
     
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/add', name: 'app_floor_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $floor = new Floor();
         $form = $this->createForm(FloorType::class, $floor);
 
@@ -60,10 +64,12 @@ class FloorController extends AbstractController
     }
 
     
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/{id}', name: 'app_floor_delete', methods: ['POST'])]
     public function delete(Floor $floor, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $entityManager->remove($floor);
         $entityManager->flush();
 
@@ -73,10 +79,12 @@ class FloorController extends AbstractController
     }
 
     
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/{id}/edit', name: 'app_floor_edit')]
     public function edit(Floor $floor, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $form = $this->createForm(FloorType::class, $floor);
 
         $form->handleRequest($request);

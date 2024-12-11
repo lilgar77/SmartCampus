@@ -24,20 +24,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class BuildingController extends AbstractController
 {
    
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building', name: 'app_building')]
     public function index(BuildingRepository $buildingRepository): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         return $this->render('building/index.html.twig', [
             'buildings' => $buildingRepository->findAll(),
         ]);
     }
 
    
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/add', name: 'app_building_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $building = new Building();
         $form = $this->createForm(BuildingType::class, $building);
 
@@ -72,10 +76,12 @@ class BuildingController extends AbstractController
     }
 
    
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/{id}/edit', name: 'app_building_edit')]
     public function edit(Building $building, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $form = $this->createForm(BuildingType::class, $building);
 
         $form->handleRequest($request);
