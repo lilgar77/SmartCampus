@@ -50,7 +50,13 @@ class AcquisitionSytemeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            if($acquisitionSystem->getEtat()== EtatAS::En_Installation || $acquisitionSystem->getEtat()== EtatAS::A_Reparer)
+
+            $acquisitionSystem->setEtat(EtatAS::Disponible);
+
+            if(($acquisitionSystem->getEtat()== EtatAS::En_Installation
+                || $acquisitionSystem->getEtat()== EtatAS::A_Reparer
+                || $acquisitionSystem->getEtat()== EtatAS::A_Desinstaller)
+                && $acquisitionSystem->getRoom()!=null)
             {
                 $installation = new Installation();
                 $installation->setSA($acquisitionSystem);
@@ -96,7 +102,11 @@ class AcquisitionSytemeController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if(($acquisitionSystem->getEtat()== EtatAS::En_Installation || $acquisitionSystem->getEtat()== EtatAS::A_Reparer ) && $acquisitionSystem->getRoom()!=null){
+            if(($acquisitionSystem->getEtat()== EtatAS::En_Installation
+                    || $acquisitionSystem->getEtat()== EtatAS::A_Reparer
+                    || $acquisitionSystem->getEtat()== EtatAS::A_Desinstaller)
+                    && $acquisitionSystem->getRoom()!=null){
+
                 $installation = new Installation();
                 $installation->setSA($acquisitionSystem);
                 $installation->setRoom($acquisitionSystem->getRoom());

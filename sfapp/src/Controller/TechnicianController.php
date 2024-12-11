@@ -22,8 +22,14 @@ class TechnicianController extends AbstractController
         $installations = $entityManager->getRepository(Installation::class)->findAll();
 
         foreach ($installations as $installation) {
+
             $acquisitionSystem = $installation->getAS();
-            if ($acquisitionSystem && ($acquisitionSystem->getEtat() != EtatAS::En_Installation && $acquisitionSystem->getEtat() != EtatAS::A_Reparer)) {
+
+            if ($acquisitionSystem &&
+                ($acquisitionSystem->getEtat() != EtatAS::En_Installation
+                    && $acquisitionSystem->getEtat() != EtatAS::A_Reparer
+                    && $acquisitionSystem->getEtat() != EtatAS::A_Desinstaller) && $acquisitionSystem->getRoom() == null)
+            {
                 $entityManager->remove($installation);
             }
 
