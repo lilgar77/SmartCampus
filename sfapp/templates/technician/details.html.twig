@@ -9,42 +9,54 @@
 </style>
     <div class="background-container">
         <div class="container mt-4">
-            <div class="card shadow-sm p-4">
-                <h1 class="h3 mb-4 text-center">Formulaire d'installation</h1>
-                <h2 class="h4 mb-4 text-center">Pour rappel: Vous devez installer le {{ installations.AS }} dans la salle {{ installations.Room }}</h2>
+            <div class="card shadow-lg p-4 rounded-4">
+                <h1 class="h3 text-center mb-3">Formulaire d'installation</h1>
+                <p class="text-center text-muted mb-4">
+                    Veuillez suivre les étapes ci-dessous pour finaliser l'installation du
+                    <strong>{{ installations.AS }}</strong> dans la salle <strong>{{ installations.Room }}</strong>.
+                </p>
                 {{ form_start(technicianForm) }}
-                <div class="mb-1">
-                    {{ form_widget(technicianForm.checkbox1, {'attr': {'class': 'form-check-input'}}) }}
-                    {{ form_label(technicianForm.checkbox1, 'Avoir le matériel (microcontroleur, capteurs)', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_errors(technicianForm.checkbox1, {'attr': {'class': 'text-danger'}}) }}
-                </div>
-                <div class="mb-1">
-                    {{ form_widget(technicianForm.checkbox2, {'attr': {'class': 'form-check-input'}}) }}
-                    {{ form_label(technicianForm.checkbox2, 'Verifier la salle', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_errors(technicianForm.checkbox2, {'attr': {'class': 'text-danger'}}) }}
-                </div>
-                <div class="mb-1">
-                    {{ form_widget(technicianForm.checkbox3, {'attr': {'class': 'form-check-input'}}) }}
-                    {{ form_label(technicianForm.checkbox3, 'Faire les branchements correspondants', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_errors(technicianForm.checkbox3, {'attr': {'class': 'text-danger'}}) }}
-                </div>
-                <div class="mb-1">
-                    {{ form_widget(technicianForm.checkbox4, {'attr': {'class': 'form-check-input'}}) }}
-                    {{ form_label(technicianForm.checkbox4, 'Installer le Script', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_errors(technicianForm.checkbox4, {'attr': {'class': 'text-danger'}}) }}
-                </div>
-
-                <div class="mb-2">
-                    {{ form_widget(technicianForm.checkbox5, {'attr': {'class': 'form-check-input'}}) }}
-                    {{ form_label(technicianForm.checkbox5, 'Verifier le Wifi', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_errors(technicianForm.checkbox5, {'attr': {'class': 'text-danger'}}) }}
+                <div class="steps-container">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox1, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox1, 'Avoir le matériel (microcontrôleur, capteurs)', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox2, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox2, 'Vérifier la salle', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox3, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox3, 'Faire les branchements correspondants', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox4, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox4, 'Installer le script', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <div class="form-check">
+                                {{ form_widget(technicianForm.checkbox5, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(technicianForm.checkbox5, 'Vérifier le Wifi', {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-success" data-bs-target="#deleteModal{{ installations.id }}">Valider l'installation</button>
                     <a href="{{ path('app_technician')}}" class="btn btn-secondary">
                         Annuler l'installation
                     </a>
+                    <button type="submit" class="btn btn-success" data-bs-target="#deleteModal{{ installations.id }}">Valider l'installation</button>
+
                 </div>
                 {{ form_end(technicianForm) }}
 

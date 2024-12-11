@@ -50,11 +50,12 @@ class AcquisitionSytemeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            if($acquisitionSystem->getEtat()== EtatAS::En_Installation)
+            if($acquisitionSystem->getEtat()== EtatAS::En_Installation || $acquisitionSystem->getEtat()== EtatAS::A_Reparer)
             {
                 $installation = new Installation();
                 $installation->setSA($acquisitionSystem);
                 $installation->setRoom($acquisitionSystem->getRoom());
+                $installation->setComment($acquisitionSystem->getWording());
                 $entityManager->persist($installation);
                 $entityManager->flush();
             }
@@ -95,10 +96,11 @@ class AcquisitionSytemeController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($acquisitionSystem->getEtat()== EtatAS::En_Installation && $acquisitionSystem->getRoom()!=null){
+            if(($acquisitionSystem->getEtat()== EtatAS::En_Installation || $acquisitionSystem->getEtat()== EtatAS::A_Reparer ) && $acquisitionSystem->getRoom()!=null){
                 $installation = new Installation();
                 $installation->setSA($acquisitionSystem);
                 $installation->setRoom($acquisitionSystem->getRoom());
+                $installation->setComment($acquisitionSystem->getWording());
                 $entityManager->persist($installation);
             }
             $entityManager->flush();
