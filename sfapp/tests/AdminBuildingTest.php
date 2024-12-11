@@ -13,7 +13,7 @@ class AdminBuildingTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/building/add');
-        $this->assertResponseRedirects('/login');
+        $this->assertResponseRedirects('/403');
     }
     public function testAjoutDeBatimentAccessibleAuxAdmins(): void
     {
@@ -70,7 +70,7 @@ class AdminBuildingTest extends WebTestCase
 
         $client->loginUser($technicien);
         $client->request('GET', '/building/add');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
     public function testListeDeBatimentInterditAuxTechniciens(): void
     {
@@ -84,7 +84,7 @@ class AdminBuildingTest extends WebTestCase
 
         $client->loginUser($technicien);
         $client->request('GET', '/building');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
     public function testModifDeBatimentInterditAuxTechniciens(): void
     {
@@ -99,7 +99,7 @@ class AdminBuildingTest extends WebTestCase
         $client->loginUser($technicien);
         $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
         $client->request('GET', '/building/'.$identifier.'/edit');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
 }
 

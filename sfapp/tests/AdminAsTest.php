@@ -13,7 +13,7 @@ class AdminAsTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/acquisitionsyteme/add');
-        $this->assertResponseRedirects('/login');
+        $this->assertResponseRedirects('/403');
     }
     public function testAjoutDeSaAccessibleAuxAdmins(): void
     {
@@ -70,7 +70,7 @@ class AdminAsTest extends WebTestCase
 
         $client->loginUser($technicien);
         $client->request('GET', '/acquisitionsyteme/add');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
     public function testListeDeSaInterditAuxTechniciens(): void
     {
@@ -84,7 +84,7 @@ class AdminAsTest extends WebTestCase
 
         $client->loginUser($technicien);
         $client->request('GET', '/acquisitionsysteme');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
     public function testModifDeSaInterditAuxTechniciens(): void
     {
@@ -99,7 +99,7 @@ class AdminAsTest extends WebTestCase
         $client->loginUser($technicien);
         $identifier = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('R2-D2')->getId();
         $client->request('GET', '/acquisitionsyteme/'.$identifier.'/edit');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
 }
 

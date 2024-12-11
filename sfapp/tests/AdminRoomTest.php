@@ -13,7 +13,7 @@ class AdminRoomTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/rooms/add');
-        $this->assertResponseRedirects('/login');
+        $this->assertResponseRedirects('/403');
     }
     public function testAjoutDeSalleAccessibleAuxAdmins(): void
     {
@@ -70,7 +70,7 @@ class AdminRoomTest extends WebTestCase
 
         $client->loginUser($technicien);
         $client->request('GET', '/rooms/add');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
     public function testListeDeSalleInterditAuxTechniciens(): void
     {
@@ -84,7 +84,7 @@ class AdminRoomTest extends WebTestCase
 
         $client->loginUser($technicien);
         $client->request('GET', '/rooms');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
     public function testModifDeSalleInterditAuxTechniciens(): void
     {
@@ -99,6 +99,6 @@ class AdminRoomTest extends WebTestCase
         $client->loginUser($technicien);
         $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('D101')->getId();
         $client->request('GET', '/rooms/'.$identifier.'/edit');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
 }

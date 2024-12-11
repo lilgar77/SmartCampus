@@ -13,7 +13,7 @@ class AdminFloorTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/floor/add');
-        $this->assertResponseRedirects('/login');
+        $this->assertResponseRedirects('/403');
     }
     public function testAjoutEtageAccessibleAuxAdmins(): void
     {
@@ -70,7 +70,7 @@ class AdminFloorTest extends WebTestCase
 
         $client->loginUser($technicien);
         $client->request('GET', '/floor/add');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
     public function testListeEtageInterditAuxTechniciens(): void
     {
@@ -84,7 +84,7 @@ class AdminFloorTest extends WebTestCase
 
         $client->loginUser($technicien);
         $client->request('GET', '/floor');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
     public function testModifEtageInterditAuxTechniciens(): void
     {
@@ -99,7 +99,7 @@ class AdminFloorTest extends WebTestCase
         $client->loginUser($technicien);
         $identifier = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(1)->getId();
         $client->request('GET', '/floor/'.$identifier.'/edit');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseRedirects('/403');
     }
 }
 
