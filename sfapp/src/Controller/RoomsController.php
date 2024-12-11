@@ -26,10 +26,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class RoomsController extends AbstractController
 {
     
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms', name: 'app_rooms')]
     public function index(Request $request, RoomRepository $roomRepository): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
             'method' => 'GET',
