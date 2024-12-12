@@ -6,10 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @template TData
- */
 class TechnicianType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -17,23 +15,48 @@ class TechnicianType extends AbstractType
         $builder
             ->add('checkbox1', CheckboxType::class, [
                 'label' => 'Option 1',
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\IsTrue([
+                        'message' => 'Vous devez cocher toutes les cases pour valider.',
+                    ]),
+                ],
             ])
             ->add('checkbox2', CheckboxType::class, [
                 'label' => 'Option 2',
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\IsTrue([
+                        'message' => 'Vous devez cocher toutes les cases pour valider.',
+                    ]),
+                ],
             ])
             ->add('checkbox3', CheckboxType::class, [
                 'label' => 'Option 3',
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\IsTrue([
+                        'message' => 'Vous devez cocher toutes les cases pour valider.',
+                    ]),
+                ],
             ])
             ->add('checkbox4', CheckboxType::class, [
                 'label' => 'Option 4',
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\IsTrue([
+                        'message' => 'Vous devez cocher toutes les cases pour valider.',
+                    ]),
+                ],
             ])
             ->add('checkbox5', CheckboxType::class, [
                 'label' => 'Option 5',
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\IsTrue([
+                        'message' => 'Vous devez cocher toutes les cases pour valider.',
+                    ]),
+                ],
             ]);
     }
 
