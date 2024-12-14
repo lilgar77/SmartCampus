@@ -310,8 +310,8 @@ body.modal-open .background-container {
 /* Conteneur de la légende */
 .legend {
     display: flex; /* Disposer les items horizontalement */
-    justify-content: center; /* Centrer la légende */
-    align-items: center;
+    justify-content: flex-start; /* Aligner la légende à gauche */
+    align-items: flex-start; /* Aligner les items à gauche verticalement */
     flex-direction: column;
     margin-top: 20px; /* Espacement au-dessus */
     gap: 20px; /* Espacement entre chaque élément de la légende */
@@ -319,8 +319,8 @@ body.modal-open .background-container {
 
 .legend-thermometer {
     display: flex; /* Disposer les items horizontalement */
-    justify-content: center; /* Centrer la légende */
-    align-items: center;
+    justify-content: flex-start; /* Aligner la légende à gauche */
+    align-items: flex-start; /* Aligner les items à gauche verticalement */
     flex-direction: column;
     margin-top: -45px; /* Espacement au-dessus */
     gap: 20px; /* Espacement entre chaque élément de la légende */
@@ -329,9 +329,10 @@ body.modal-open .background-container {
 /* Chaque item de la légende */
 .legend-item {
     display: flex; /* Disposition en ligne */
-    align-items: center; /* Centrer les ronds et le texte */
+    align-items: center; /* Centrer verticalement le rond et le texte */
     gap: 10px; /* Espacement entre le rond et le texte */
     font-size: 16px; /* Taille de texte */
+    text-align: left; /* Alignement du texte à gauche */
 }
 
 /* Couleurs des ronds */
