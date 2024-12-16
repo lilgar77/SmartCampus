@@ -18,22 +18,30 @@ class TechnicianType extends AbstractType
             ->add('checkbox1', CheckboxType::class, [
                 'label' => 'Option 1',
                 'required' => false,
+                'attr' => [
+                    'style' => 'display: none;',
+                ],
             ])
             ->add('checkbox2', CheckboxType::class, [
                 'label' => 'Option 2',
                 'required' => false,
+                'attr' => [
+                    'style' => 'display: none;',
+                ],
             ])
             ->add('checkbox3', CheckboxType::class, [
                 'label' => 'Option 3',
                 'required' => false,
+                'attr' => [
+                    'style' => 'display: none;',
+                ],
             ])
             ->add('checkbox4', CheckboxType::class, [
                 'label' => 'Option 4',
                 'required' => false,
-            ])
-            ->add('checkbox5', CheckboxType::class, [
-                'label' => 'Option 5',
-                'required' => false,
+                'attr' => [
+                    'style' => 'display: none;',
+                ],
             ]);
     }
 

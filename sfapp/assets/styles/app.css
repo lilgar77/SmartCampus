@@ -12,6 +12,11 @@ body.modal-open .background-container {
     filter: blur(4px);
 }
 
+.bg-purple {
+    background-color: #6f42c1 !important; /* Violet Bootstrap */
+    color: white;
+}
+
 .quarter-circle-start{
     width: 200px;
     height: 200px;

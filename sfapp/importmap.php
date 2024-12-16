@@ -23,4 +23,5 @@ return [
         'path' => 'js/room.js',
         'entrypoint' => true,
     ]
+
 ];
