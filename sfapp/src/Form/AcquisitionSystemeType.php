@@ -53,12 +53,6 @@ class AcquisitionSystemeType extends AbstractType
                     return (string) ($choice->name ?? '');
                 },
             ])
-            ->add('room', EntityType::class, [
-                'class' => Room::class,
-                'choice_label' => 'name',
-                'placeholder' => 'Aucune salle',
-                'required' => false,
-            ])
         ;
     }
 

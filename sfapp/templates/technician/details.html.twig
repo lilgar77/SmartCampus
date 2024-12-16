@@ -1,69 +1,144 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TechnicianController!{% endblock %}
+{% block title %}Formulaire d'installation{% endblock %}
+
+
+
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-    <div class="background-container">
-        <div class="container mt-4">
-            <div class="card shadow-lg p-4 rounded-4">
-                <h1 class="h3 text-center mb-3">Formulaire d'installation</h1>
-                <p class="text-center text-muted mb-4">
-                    Veuillez suivre les étapes ci-dessous pour finaliser l'installation du
-                    <strong>{{ installations.AS }}</strong> dans la salle <strong>{{ installations.Room }}</strong>.
-                </p>
-                {{ form_start(technicianForm) }}
-                <div class="steps-container">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex align-items-center">
-                            <div class="form-check">
-                                {{ form_widget(technicianForm.checkbox1, {'attr': {'class': 'form-check-input'}}) }}
-                                {{ form_label(technicianForm.checkbox1, 'Avoir le matériel (microcontrôleur, capteurs)', {'label_attr': {'class': 'form-check-label'}}) }}
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <div class="form-check">
-                                {{ form_widget(technicianForm.checkbox2, {'attr': {'class': 'form-check-input'}}) }}
-                                {{ form_label(technicianForm.checkbox2, 'Vérifier la salle', {'label_attr': {'class': 'form-check-label'}}) }}
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <div class="form-check">
-                                {{ form_widget(technicianForm.checkbox3, {'attr': {'class': 'form-check-input'}}) }}
-                                {{ form_label(technicianForm.checkbox3, 'Faire les branchements correspondants', {'label_attr': {'class': 'form-check-label'}}) }}
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <div class="form-check">
-                                {{ form_widget(technicianForm.checkbox4, {'attr': {'class': 'form-check-input'}}) }}
-                                {{ form_label(technicianForm.checkbox4, 'Installer le script', {'label_attr': {'class': 'form-check-label'}}) }}
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <div class="form-check">
-                                {{ form_widget(technicianForm.checkbox5, {'attr': {'class': 'form-check-input'}}) }}
-                                {{ form_label(technicianForm.checkbox5, 'Vérifier le Wifi', {'label_attr': {'class': 'form-check-label'}}) }}
-                            </div>
-                        </li>
-                    </ul>
+    <div class="container mt-4">
+        <div class="card shadow-lg p-4 rounded-4">
+            <h1 class="h3 text-center mb-3">Formulaire d'installation</h1>
+            <p class="text-center text-muted mb-4">
+                Veuillez suivre les étapes ci-dessous pour finaliser l'installation du
+                <strong>{{ installations.AS }}</strong> dans la salle <strong>{{ installations.Room }}</strong>.
+            </p>
+
+            {{ form_start(technicianForm) }}
+
+            <!-- Barre de progression -->
+            <div class="progress mb-4">
+                <div class="progress-bar bg-purple fw-bold" role="progressbar" style="width: 25%;" id="progress-bar">
+                    Étape 1 sur 4
+                </div>
+            </div>
+
+            <!-- Carrousel des étapes -->
+            <div id="stepsCarousel" class="carousel slide" data-bs-interval="false">
+                <div class="carousel-inner">
+                    <!-- Étape 1 -->
+                    <div class="carousel-item active">
+                        <p>Installer les différents capteurs sur le microcontrôleur :</p>
+                        <p>
+                            <a href="https://forge.iut-larochelle.fr/2024-2025-but-info2-a-sae34/l1/l11/smart-campus-archi/-/wikis/Documentation-Architecture" target="_blank">
+                                ➡️ Lien du tuto d'installation
+                            </a>
+                        </p>
+                        <p>Après avoir fait cela, vous pouvez passer à l'étape 2.</p>
+                        <div class="form-check">
+                            {{ form_widget(technicianForm.checkbox1, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(technicianForm.checkbox1, ' ', {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                    </div>
+                    <!-- Étape 2 -->
+                    <div class="carousel-item">
+                        <p>Intégrer le programme dans le microcontrôleur :</p>
+                        <p>
+                            Pour compiler et injecter un programme dans le microcontrôleur, veuillez suivre les instructions détaillées dans le tutoriel suivant :
+                        </p>
+                        <p>
+                            <a href="https://docs.platformio.org/en/latest/tutorials/espressif32/arduino_debugging_unit_testing.html" target="_blank">
+                                ➡️ Tutoriel pour compiler et injecter un programme avec PlatformIO
+                            </a>
+                        </p>
+                        <p>Une fois cette étape terminée, vous pouvez passer à l'étape 3.</p>
+                        <div class="form-check">
+                            {{ form_widget(technicianForm.checkbox2, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(technicianForm.checkbox2, ' ', {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                    </div>
+                    <!-- Étape 3 -->
+                    <div class="carousel-item">
+                        <p>Vérifier l'état de la LED du système d'acquisition :</p>
+                        <ul>
+                            <li>
+                                La LED doit être <strong>VERTE</strong> si le système fonctionne correctement.
+                            </li>
+                            <li>
+                                Si la LED est <strong>ROUGE</strong>, cela indique un problème de branchement. Vérifiez et corrigez les connexions avant de continuer.
+                            </li>
+                        </ul>
+                        <p>Une fois la LED verte, vous pouvez passer à l'étape 4.</p>
+                        <div class="form-check">
+                            {{ form_widget(technicianForm.checkbox3, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(technicianForm.checkbox3, ' ', {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                    </div>
+                    <!-- Étape 4 -->
+                    <div class="carousel-item">
+                        <h5 class="mb-3">Vérification sur la page de test</h5>
+                        <p>Accédez à la page de test pour vous assurer que tout fonctionne correctement :</p>
+                        <p>
+                            <a href="{{ path('app_welcome_details', {id: installations.Room.id}) }}" target="_blank" class="btn btn-link text-decoration-none">
+                                ➡️ Ouvrir la Page de Test
+                            </a>
+                        </p>
+                        <p>Si tout est en ordre, on peut valider cette étape.</p>
+                        <div class="form-check mt-3">
+                            {{ form_widget(technicianForm.checkbox4, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(technicianForm.checkbox4, ' ', {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                    </div>
                 </div>
 
-                <div class="text-center">
-                    <a href="{{ path('app_technician')}}" class="btn btn-secondary">
-                        Annuler l'installation
-                    </a>
-                    <button type="submit" class="btn btn-violet text-white" data-bs-target="#deleteModal{{ installations.id }}">Valider l'installation</button>
-
+                <!-- Boutons Précédent et Suivant -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button id="prev-button" class="btn btn-secondary" type="button" data-bs-target="#stepsCarousel" data-bs-slide="prev" disabled>
+                        Précédent
+                    </button>
+                    <button id="next-button" class="btn btn-violet text-white" type="button" data-bs-target="#stepsCarousel" data-bs-slide="next">
+                        Suivant
+                    </button>
                 </div>
-                {{ form_end(technicianForm) }}
+            </div>
 
+            <!-- Bouton Annuler -->
+            <div class="text-center mt-4">
+                <a href="{{ path('app_technician')}}" class="btn btn-secondary">
+                    Annuler l'installation
+                </a>
+            </div>
 
+            {{ form_end(technicianForm) }}
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const progressBar = document.getElementById('progress-bar');
+            const carousel = document.getElementById('stepsCarousel');
+            const prevButton = document.getElementById('prev-button');
+            const nextButton = document.getElementById('next-button');
+            const stepsCount = 4;
 
+            carousel.addEventListener('slide.bs.carousel', function (event) {
+                const currentIndex = event.to;
+                const progress = ((currentIndex + 1) / stepsCount) * 100;
 
+                progressBar.style.width = progress + '%';
+                progressBar.textContent = `Étape ${currentIndex + 1} sur ${stepsCount}`;
+
+                prevButton.disabled = currentIndex === 0;
+                if (currentIndex === stepsCount - 1) {
+                    nextButton.textContent = 'Valider l\'installation';
+                    nextButton.type = 'submit';
+                    nextButton.removeAttribute('data-bs-slide');
+                } else {
+                    nextButton.textContent = 'Suivant';
+                    nextButton.type = 'button';
+                    nextButton.setAttribute('data-bs-slide', 'next'); 
+                }
+            });
+        });
+    </script>
 {% endblock %}
