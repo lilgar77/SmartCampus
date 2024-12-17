@@ -15,47 +15,30 @@ class TechnicianType extends AbstractType
         $builder
             ->add('checkbox1', CheckboxType::class, [
                 'label' => 'Option 1',
-                'required' => true,
-                'constraints' => [
-                    new Assert\IsTrue([
-                        'message' => 'Vous devez cocher toutes les cases pour valider.',
-                    ]),
+                'required' => false,
+                'attr' => [
+                    'style' => 'display: none;',
                 ],
             ])
             ->add('checkbox2', CheckboxType::class, [
                 'label' => 'Option 2',
-                'required' => true,
-                'constraints' => [
-                    new Assert\IsTrue([
-                        'message' => 'Vous devez cocher toutes les cases pour valider.',
-                    ]),
+                'required' => false,
+                'attr' => [
+                    'style' => 'display: none;',
                 ],
             ])
             ->add('checkbox3', CheckboxType::class, [
                 'label' => 'Option 3',
-                'required' => true,
-                'constraints' => [
-                    new Assert\IsTrue([
-                        'message' => 'Vous devez cocher toutes les cases pour valider.',
-                    ]),
+                'required' => false,
+                'attr' => [
+                    'style' => 'display: none;',
                 ],
             ])
             ->add('checkbox4', CheckboxType::class, [
                 'label' => 'Option 4',
-                'required' => true,
-                'constraints' => [
-                    new Assert\IsTrue([
-                        'message' => 'Vous devez cocher toutes les cases pour valider.',
-                    ]),
-                ],
-            ])
-            ->add('checkbox5', CheckboxType::class, [
-                'label' => 'Option 5',
-                'required' => true,
-                'constraints' => [
-                    new Assert\IsTrue([
-                        'message' => 'Vous devez cocher toutes les cases pour valider.',
-                    ]),
+                'required' => false,
+                'attr' => [
+                    'style' => 'display: none;',
                 ],
             ]);
     }

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\AcquisitionSystem;
+use App\Model\EtatAS;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Controller\RoomsController;
@@ -33,5 +34,15 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
         }
 
         return null;
+    }
+
+    public function findAvailableSystems(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.etat = :available')
+            ->setParameter('available', EtatAS::Disponible)
+            ->orderBy('a.Name', 'ASC') // Optionnel, pour trier les résultats
+            ->getQuery()
+            ->getResult();
     }
 }

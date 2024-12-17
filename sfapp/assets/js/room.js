@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function animateWave(waveHeight) {
         let offset = 0;
         function update() {
-            offset += 0.1;
+            offset += 0.05;
             wavePath.setAttribute('d', generateWavePath(offset, waveHeight));
             requestAnimationFrame(update);
         }
