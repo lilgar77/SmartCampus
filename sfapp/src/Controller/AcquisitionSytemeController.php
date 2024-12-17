@@ -14,7 +14,10 @@ namespace App\Controller;
 
 use App\Entity\AcquisitionSystem;
 use App\Entity\Installation;
+use App\Entity\Room;
 use App\Form\AcquisitionSystemeType;
+use App\Form\SearchAquisitionSystemeType;
+use App\Form\SearchRoomFormType;
 use App\Model\EtatAS;
 use App\Repository\AcquisitionSystemRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,19 +31,54 @@ class AcquisitionSytemeController extends AbstractController
 {
 
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
-    public function listeAS(AcquisitionSystemRepository $acquisitionSystemRepository): Response
+    public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $acquisitionSystems = $acquisitionSystemRepository->findAll();
+
+        // Créer le formulaire
+        $form = $this->createForm(SearchAquisitionSystemeType::class, null, [
+            'method' => 'GET',
+        ]);
+        $form->handleRequest($request);
+
+        // Construire la requête pour filtrer les AcquisitionSystems
+        $queryBuilder = $acquisitionSystemRepository->createQueryBuilder('a');
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            // Filtrer par état
+            if (!empty($data['etat'])) {
+                $queryBuilder->andWhere('a.etat = :etat')
+                    ->setParameter('etat', $data['etat']);
+            }
+
+            // Filtrer par nom de la salle (Room)
+            if (!empty($data['Room'])) {
+                $queryBuilder->innerJoin('a.room', 'r')
+                    ->andWhere('r.name LIKE :roomName') // Recherche partielle
+                    ->setParameter('roomName', '%' . $data['Room'] . '%');
+            }
+
+            // Filtrer par nom du SA
+            if (!empty($data['Name'])) {
+                $queryBuilder->andWhere('a.Name LIKE :Name')
+                    ->setParameter('Name', '%' . $data['Name'] . '%');
+            }
+        }
+
+        // Exécuter la requête
+        $ASSearch = $queryBuilder->getQuery()->getResult();
 
         return $this->render('acquisition_syteme/index.html.twig', [
-            'acquisition_systems' => $acquisitionSystems,
+            'acquisition_systems' => $ASSearch,
+            'AS' => $form->createView(),
         ]);
     }
 
-    
+
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
     public function addAS(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -54,7 +92,6 @@ class AcquisitionSytemeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-
             $acquisitionSystem->setEtat(EtatAS::Disponible);
 
             if(($acquisitionSystem->getEtat()== EtatAS::En_Installation
