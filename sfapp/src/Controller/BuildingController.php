@@ -31,7 +31,7 @@ class BuildingController extends AbstractController
             return $this->redirectToRoute('app_error_403');
         }
         return $this->render('building/index.html.twig', [
-            'buildings' => $buildingRepository->findAll(),
+            'buildings' => $buildingRepository->sortBuildings(),
         ]);
     }
 

@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\AcquisitionSystem;
 use App\Entity\Floor;
-use App\Entity\Room;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

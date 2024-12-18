@@ -33,7 +33,7 @@ class AcquisitionSytemeController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $acquisitionSystems = $acquisitionSystemRepository->findAll();
+        $acquisitionSystems = $acquisitionSystemRepository->sortAcquisitionSystem();
 
         return $this->render('acquisition_syteme/index.html.twig', [
             'acquisition_systems' => $acquisitionSystems,

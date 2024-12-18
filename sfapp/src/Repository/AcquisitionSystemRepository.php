@@ -45,4 +45,17 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @return AcquisitionSystem[] Un tableau contenant des entités AcquisitionSystem avec un système d'acquisition "installé".
+     */
+    public function sortAcquisitionSystem() : array
+    {
+        /** @var AcquisitionSystem[] $acquisitionSystem */
+        $acquisitionSystem = $this->createQueryBuilder('b')
+            ->orderBy('b.Name', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $acquisitionSystem;
+    }
 }
