@@ -6,7 +6,7 @@ use App\Entity\AcquisitionSystem;
 use App\Model\EtatAS;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Controller\RoomsController;
+
 /**
  * @extends ServiceEntityRepository<AcquisitionSystem>
  */
@@ -23,26 +23,56 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
      */
     public function findASByName(string $name): ?AcquisitionSystem
     {
-        $result =  $this->createQueryBuilder('a')
+        $result = $this->createQueryBuilder('a')
             ->andWhere('a.Name = :name')
             ->setParameter('name', $name)
             ->getQuery()
             ->getOneOrNullResult();
 
-        if ($result instanceof AcquisitionSystem) {
-            return $result;
-        }
-
-        return null;
+        return $result instanceof AcquisitionSystem ? $result : null;
     }
 
+    /**
+     * @return AcquisitionSystem[]
+     */
     public function findAvailableSystems(): array
     {
-        return $this->createQueryBuilder('a')
+        $result = $this->createQueryBuilder('a')
             ->where('a.etat = :available')
             ->setParameter('available', EtatAS::Disponible)
-            ->orderBy('a.Name', 'ASC') // Optionnel, pour trier les résultats
+            ->orderBy('a.Name', 'ASC')
             ->getQuery()
             ->getResult();
+
+        // Assertion du type pour PHPStan
+        /** @var AcquisitionSystem[] $result */
+        return $result;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return AcquisitionSystem[]
+     */
+    public function findByFilters(array $data): array
+    {
+        $queryBuilder = $this->createQueryBuilder('a');
+
+        // Filtrer par état
+        if (!empty($data['etat'])) {
+            $queryBuilder->where('a.etat = :etat')
+                ->setParameter('etat', $data['etat']);
+        }
+
+        // Filtrer par nom du SA
+        if (!empty($data['Name'] && is_string($data['Name']))) {
+            $queryBuilder->andWhere('a.Name LIKE :Name')
+                ->setParameter('Name', '%' . $data['Name'] . '%');
+        }
+
+        $result = $queryBuilder->getQuery()->getResult();
+
+        // Assertion du type pour PHPStan
+        /** @var AcquisitionSystem[] $result */
+        return $result;
     }
 }

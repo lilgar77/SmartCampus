@@ -13,7 +13,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\Building;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class RoomFormType extends AbstractType
 {
 
