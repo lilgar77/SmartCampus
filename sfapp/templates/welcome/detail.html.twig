@@ -2,12 +2,8 @@
 
 {% block title %}Welcome to Smart Campus{% endblock %}
 
-{% block head %}
-    <script src="{{ asset('assets/app.js') }}" defer></script>
-{% endblock %}
-{% block javascripts %}
-    {{ importmap("room") }}
-{% endblock %}
+
+
 {% block body %}
 
     <!-- Contenu principal centré -->
@@ -16,7 +12,7 @@
             <a href="{{ path('app_welcome') }}" class="btn btn-violet text-white">
                 &#8592; Retour
             </a>
-            <h1>Détails de la salle {{ room.name }}</h1>
+            <h1>Détails de la salle {{ room.name }} ({{ lastCapturehum.dateCapture }})</h1>
         </div>
 
         <div class="d-flex justify-content-around circles-wrapper">
@@ -25,7 +21,7 @@
                     <div class="progress-circle-container">
                         <div class="progress-circle">
                             <div class="circle-info-wave">
-                                {{ lastCapture.hum ?? 0 }}%
+                                {{ lastCapturehum.valeur}}%
                             </div>
                             <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
                                 <path id="wave-path" d="" fill="#56CCCA"></path>
@@ -55,7 +51,7 @@
                         </div>
                         <div class="thermometer-bulb">
                             <p class="circle-info-temp">
-                                {{ lastCapture.temp ?? 0 }}°C
+                                {{ lastCapturetemp.valeur ?? 0 }}°C
                             </p>
                         </div>
                     </div>
@@ -94,7 +90,7 @@
                         </svg>
                     </div>
                     <p class="circle-info-cloud">
-                        {{ lastCapture.CO2 ?? 0 }} ppm
+                        {{ lastCaptureco2.valeur ?? 0 }} ppm
                     </p>
                     <div class="legend">
                         <div class="legend-item">
@@ -114,12 +110,13 @@
             </div>
         </div>
 
-        {% if data.error is defined %}
-            <p>Erreur : {{ data.error }}</p>
+        {% if dataTemp.error is defined or dataHum.error is defined or dataCo2.error is defined %}
+            <p>Erreur : {{ dataTemp.error ?? dataHum.error ?? dataCo2.error }}</p>
         {% else %}
             <h1>Résultats de la journée:</h1>
 
-            <!-- Tableau stylisé avec une largeur de 80% -->
+            <!-- Tableau pour les températures -->
+            <h3>Température</h3>
             <table class="table table-striped table-bordered table-hover" style="width: 70%; margin: 0 auto;">
                 <thead class="table-violet sticky-header">
                 <tr>
@@ -129,10 +126,52 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for item in data %}
+                {% for item in dataTemp %}
                     <tr>
                         <td>{{ item.nom }}</td>
-                        <td>{{ item.valeur }}</td>
+                        <td>{{ item.valeur }} °C</td>
+                        <td>{{ item.dateCapture }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Tableau pour les humidités -->
+            <h3>Humidité</h3>
+            <table class="table table-striped table-bordered table-hover" style="width: 70%; margin: 0 auto;">
+                <thead class="table-violet sticky-header">
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Valeur</th>
+                    <th scope="col">Date de Capture</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in dataHum %}
+                    <tr>
+                        <td>{{ item.nom }}</td>
+                        <td>{{ item.valeur }} %</td>
+                        <td>{{ item.dateCapture }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Tableau pour les niveaux de CO2 -->
+            <h3>CO2</h3>
+            <table class="table table-striped table-bordered table-hover" style="width: 70%; margin: 0 auto;">
+                <thead class="table-violet sticky-header">
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Valeur</th>
+                    <th scope="col">Date de Capture</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in dataCo2 %}
+                    <tr>
+                        <td>{{ item.nom }}</td>
+                        <td>{{ item.valeur }} ppm</td>
                         <td>{{ item.dateCapture }}</td>
                     </tr>
                 {% endfor %}
@@ -141,14 +180,14 @@
         {% endif %}
     </div>
 
+
     <script>
-        window.roomCO2 = {{ room.idAS.CO2 ?? 0 }};
-        window.roomTemp = {{ room.idAS.temperature ?? 0 }};
-        window.roomHumidity = {{ room.idAS.humidity ?? 0 }};
+        window.roomCO2 = {{ lastCaptureco2.valeur }};
+        window.roomTemp = {{ lastCapturetemp.valeur }};
+        window.roomHumidity = {{ lastCapturehum.valeur }};
+
     </script>
 
-    <!-- Scripts JavaScript de Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 {% endblock %}
