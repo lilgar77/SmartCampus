@@ -36,13 +36,32 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
         return null;
     }
 
+    /**
+     * @return AcquisitionSystem[] Returns an array of AcquisitionSystem objects
+     */
     public function findAvailableSystems(): array
     {
-        return $this->createQueryBuilder('a')
+        $result = $this->createQueryBuilder('a')
             ->where('a.etat = :available')
             ->setParameter('available', EtatAS::Disponible)
             ->orderBy('a.Name', 'ASC') // Optionnel, pour trier les résultats
             ->getQuery()
             ->getResult();
+        /** @var AcquisitionSystem[] $result */
+        return $result;
+    }
+
+    /**
+     * @return AcquisitionSystem[] Un tableau contenant des entités AcquisitionSystem avec un système d'acquisition "installé".
+     */
+    public function sortAcquisitionSystem() : array
+    {
+        /** @var AcquisitionSystem[] $acquisitionSystem */
+        $acquisitionSystem = $this->createQueryBuilder('b')
+            ->orderBy('b.Name', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $acquisitionSystem;
     }
 }
+
