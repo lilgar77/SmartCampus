@@ -1,8 +1,6 @@
 body {
     background-color: white;
 }
-
-
 .text-link{
     text-decoration-color: mediumpurple;
     color : mediumpurple;
@@ -24,7 +22,6 @@ body.modal-open .background-container {
     background-color: mediumpurple;
     /* Forme de base de quart de cercle */
 }
-
 /* Spécifique pour chaque coin */
 .position-fixed.top-0.start-0 {
     top: 0;
