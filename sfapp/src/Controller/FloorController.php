@@ -23,7 +23,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class FloorController extends AbstractController
 {
-   
+
     #[Route('/floor', name: 'app_floor')]
     public function index(FloorRepository $floorRepository): Response
     {
@@ -35,7 +35,7 @@ class FloorController extends AbstractController
         ]);
     }
 
-    
+
     #[Route('/floor/add', name: 'app_floor_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
