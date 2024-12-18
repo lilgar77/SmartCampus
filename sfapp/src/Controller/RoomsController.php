@@ -55,13 +55,10 @@ class RoomsController extends AbstractController
 
         return $this->render('rooms/index.html.twig', [
             'room'  => $form->createView(),
-            'rooms' => $roomRepository->createQueryBuilder('sortedRooms')
-                ->orderBy('sortedRooms.name', 'ASC')
-                ->getQuery()
-                ->getResult(),
+            'rooms' => $roomRepository->sortRooms(),
         ]);
     }
-       
+
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
