@@ -16,7 +16,7 @@ class ApiService
         $this->client = $client;
     }
 
-    public function getCapturesByInterval(string $date1, string $date2, int $page): array
+    public function getCapturesByInterval(string $date1, string $date2, string $name, int $page): array
     {
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/interval';
 
@@ -30,6 +30,7 @@ class ApiService
         $query = [
             'date1' => $date1,
             'date2' => $date2,
+            'nom' => $name,
             'page'  => $page,
         ];
 
@@ -49,7 +50,7 @@ class ApiService
         }
     }
 
-    public function getLastCapture(string $nomsa): array
+    public function getLastCapture(string $name): array
     {
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/last';
 
@@ -61,7 +62,7 @@ class ApiService
         ];
 
         $query = [
-            'nomsa' => $nomsa,
+            'nom' => $name,
             'limit' => 1,
             'page'  => 1,
         ];
