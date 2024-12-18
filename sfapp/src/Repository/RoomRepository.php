@@ -68,6 +68,7 @@ class RoomRepository extends ServiceEntityRepository
             ->andWhere('acs IS NOT NULL')
             ->andWhere('acs.etat = :etat')
             ->setParameter('etat', EtatAS::Installer)
+            ->orderBy('r.name', 'ASC')
             ->getQuery()
             ->getResult();
 
