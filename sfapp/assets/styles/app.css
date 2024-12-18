@@ -12,6 +12,10 @@ body.modal-open .background-container {
     filter: blur(4px);
 }
 
+.ml-20 {
+    left: 20%;
+}
+
 .bg-purple {
     background-color: #6f42c1 !important; /* Violet Bootstrap */
     color: white;
