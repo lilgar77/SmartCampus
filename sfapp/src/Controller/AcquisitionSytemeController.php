@@ -43,7 +43,7 @@ class AcquisitionSytemeController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        $ASSearch = [];
+        $ASSearch=$acquisitionSystemRepository->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
