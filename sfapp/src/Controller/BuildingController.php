@@ -63,10 +63,12 @@ class BuildingController extends AbstractController
     }
 
     
-    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/{id}', name: 'app_building_delete', methods: ['POST'])]
     public function delete(Building $building, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error_403');
+        }
         $entityManager->remove($building);
         $entityManager->flush();
 
