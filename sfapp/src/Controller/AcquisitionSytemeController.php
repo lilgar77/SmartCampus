@@ -47,8 +47,6 @@ class AcquisitionSytemeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            // Assertion pour indiquer que $data est de type array<string, mixed>
-            /** @var array<string, mixed> $data */
             $ASSearch = $acquisitionSystemRepository->findByFilters($data);
         }
 

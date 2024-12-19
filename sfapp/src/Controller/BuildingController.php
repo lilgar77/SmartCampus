@@ -38,20 +38,14 @@ class BuildingController extends AbstractController
         ]);
         $form->handleRequest($request);
 
+        $buildingSearch=$buildingRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
             $nameBuilding = $building->getNameBuilding();
 
             if (!empty($nameBuilding)) {
                 $buildingSearch = $buildingRepository->findBuildingByName($nameBuilding);
-
-                return $this->render('building/index.html.twig', [
-                    'buildings' => $buildingSearch,
-                    'building' => $form->createView(),
-                ]);
             }
         }
-
-        $buildingSearch=$buildingRepository->findAll();
 
         return $this->render('building/index.html.twig', [
             'buildings' => $buildingSearch,
