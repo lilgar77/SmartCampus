@@ -48,10 +48,6 @@
                     </span>
                     {{ form_widget(building.NameBuilding, { 'attr': {'class': 'form-control', 'placeholder': 'Rechercher un batiment...', 'style': 'border: none; border-radius: 0 25px 25px 0;'} }) }}
                 </div>
-                <button type="submit" class="btn ms-2"
-                        style="background-color: #6a0dad; color: #fff; border-radius: 25px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);">
-                    Rechercher
-                </button>
                 <a href="{{ path('app_building_add') }}">
                     <button type="button" class="btn" style="background-color: #6a0dad; color: #fff; white-space: nowrap;">
                         Ajouter un Bâtiment
