@@ -68,11 +68,23 @@ class RoomRepository extends ServiceEntityRepository
             ->andWhere('acs IS NOT NULL')
             ->andWhere('acs.etat = :etat')
             ->setParameter('etat', EtatAS::Installer)
+            ->orderBy('r.name', 'ASC')
             ->getQuery()
             ->getResult();
 
         return $room;
     }
 
-
+    /**
+     * @return Room[] Un tableau contenant des entités Room avec un système d'acquisition "installé".
+     */
+    public function sortRooms() : array
+    {
+        /** @var Room[] $room */
+        $room = $this->createQueryBuilder('r')
+            ->orderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $room;
+    }
 }

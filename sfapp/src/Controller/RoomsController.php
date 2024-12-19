@@ -53,14 +53,12 @@ class RoomsController extends AbstractController
             }
         }
 
-        // Si le formulaire n'est pas soumis ou invalide, afficher toutes les salles
         return $this->render('rooms/index.html.twig', [
             'room'  => $form->createView(),
-            'rooms' => $roomRepository->findAll(),
+            'rooms' => $roomRepository->sortRooms(),
         ]);
     }
 
-   
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
