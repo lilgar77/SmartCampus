@@ -20,7 +20,7 @@
                 <div class="row">
                     {% for as in AS %}
                         <div class="col-12 col-md-4 mb-4">
-                            <a class="text-decoration-none text-dark">
+                            <a href="{{ path('app_diagnostic_details', {id: as.id}) }}" class="text-decoration-none text-dark">
                                 <div class="room-card card shadow-sm">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ as.Name }}</h5>
