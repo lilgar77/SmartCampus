@@ -12,7 +12,6 @@
 
 namespace App\Controller;
 
-use App\Entity\AcquisitionSystem;
 use App\Repository\RoomRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,41 +21,31 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Room;
 use App\Form\SearchRoomFormType;
 use App\Form\RoomFormType;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RoomsController extends AbstractController
 {
-    
     #[Route('/rooms', name: 'app_rooms')]
     public function index(Request $request, RoomRepository $roomRepository): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
             'method' => 'GET',
         ]);
         $form->handleRequest($request);
 
-        // Vérifier si le formulaire est soumis, valide et contient un nom
+        $roomSearch=$roomRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
-            $name = $room->getName();
 
-            if (!empty($name)) {
-                $roomSearch = $roomRepository->findByNameStartingWith($name);
-
-                return $this->render('rooms/index.html.twig', [
-                    'rooms' => $roomSearch,
-                    'room' => $form->createView(),
-                ]);
-            }
+            $roomSearch = $roomRepository->findByCriteria($room);
         }
 
-        // Si le formulaire n'est pas soumis ou invalide, afficher toutes les salles
         return $this->render('rooms/index.html.twig', [
+            'rooms' => $roomSearch,
             'room'  => $form->createView(),
-            'rooms' => $roomRepository->findAll(),
         ]);
     }
 
