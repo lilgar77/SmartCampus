@@ -18,16 +18,16 @@
 
             <div class="container">
                 <div class="row">
-                    {% for room in rooms %}
+                    {% for as in AS %}
                         <div class="col-12 col-md-4 mb-4">
-                            <a href="{{ path('app_welcome_details', {id: room.id}) }}" class="text-decoration-none text-dark">
+                            <a class="text-decoration-none text-dark">
                                 <div class="room-card card shadow-sm">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ room.idAS.name }}</h5>
+                                        <h5 class="card-title">{{ as.Name }}</h5>
                                         <p class="card-text">
-                                            <strong>Relier à:</strong> {{ room.name }}<br>
-                                            <strong>Étage:</strong> {{ room.floor.numberFloor }}<br>
-                                            <strong>Bâtiment:</strong> {{ room.building.NameBuilding }} ({{ room.building.AdressBuilding }})<br>
+                                            <strong>Relier à:</strong> {{ as.room.name }}<br>
+                                            <strong>Étage:</strong> {{ as.room.floor.numberFloor }}<br>
+                                            <strong>Bâtiment:</strong> {{ as.room.building.NameBuilding }} ({{ as.room.building.AdressBuilding }})<br>
                                         </p>
                                     </div>
                                 </div>
