@@ -1,8 +1,6 @@
 body {
     background-color: white;
 }
-
-
 .text-link{
     text-decoration-color: mediumpurple;
     color : mediumpurple;
@@ -12,27 +10,22 @@ body.modal-open .background-container {
     filter: blur(4px);
 }
 
+.ml-20 {
+    left: 20%;
+}
+
 .bg-purple {
     background-color: #6f42c1 !important; /* Violet Bootstrap */
     color: white;
 }
 
-.quarter-circle-start{
+.quarter-circle{
     width: 200px;
     height: 200px;
     border-radius: 0 100% 0 0;
     background-color: mediumpurple;
     /* Forme de base de quart de cercle */
 }
-
-.quarter-circle-end{
-    width: 200px;
-    height: 200px;
-    border-radius: 0 100% 0 0;
-    background-color: mediumpurple;
-    /* Forme de base de quart de cercle */
-}
-
 /* Spécifique pour chaque coin */
 .position-fixed.top-0.start-0 {
     top: 0;
@@ -368,7 +361,6 @@ body.modal-open .background-container {
     display: flex; /* Applique la disposition flex au lien */
     align-items: center; /* Aligne verticalement */
 }
-
 
 .list-group-item{
     text-decoration: none; /* Supprime le surlignage */

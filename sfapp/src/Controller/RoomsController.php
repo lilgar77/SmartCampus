@@ -49,7 +49,6 @@ class RoomsController extends AbstractController
         ]);
     }
 
-   
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {

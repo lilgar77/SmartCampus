@@ -33,7 +33,7 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return AcquisitionSystem[]
+     * @return AcquisitionSystem[] Returns an array of AcquisitionSystem objects
      */
     public function findAvailableSystems(): array
     {
@@ -44,7 +44,6 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
 
-        // Assertion du type pour PHPStan
         /** @var AcquisitionSystem[] $result */
         return $result;
     }
@@ -69,10 +68,11 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
                 ->setParameter('Name', '%' . $data['Name'] . '%');
         }
 
-        $result = $queryBuilder->getQuery()->getResult();
+        $result = $queryBuilder->orderBy('a.Name', 'ASC')->getQuery()->getResult();
 
-        // Assertion du type pour PHPStan
         /** @var AcquisitionSystem[] $result */
         return $result;
     }
+
 }
+

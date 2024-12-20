@@ -31,7 +31,7 @@ class FloorController extends AbstractController
             return $this->redirectToRoute('app_error_403');
         }
         return $this->render('floor/index.html.twig', [
-            'floors' => $floorRepository->findAll(),
+            'floors' => $floorRepository->sortFloors(),
         ]);
     }
 

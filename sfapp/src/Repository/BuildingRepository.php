@@ -35,6 +35,19 @@ class BuildingRepository extends ServiceEntityRepository
         return $buildings;
     }
 
+    /**
+     * @return Building[] Un tableau contenant des entités Building avec un système d'acquisition "installé".
+     */
+    public function sortBuildings() : array
+    {
+        /** @var Building[] $building */
+        $building = $this->createQueryBuilder('b')
+            ->orderBy('b.NameBuilding', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $building;
+    }
+
 //    /**
 //     * @return Building[] Returns an array of Building objects
 //     */

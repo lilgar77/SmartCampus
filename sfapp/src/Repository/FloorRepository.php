@@ -36,6 +36,20 @@ class FloorRepository extends ServiceEntityRepository
         return null;
     }
 
+    /**
+     * @return Floor[] Un tableau contenant des entités Floor avec un système d'acquisition "installé".
+     */
+    public function sortFloors() : array
+    {
+        /** @var Floor[] $floor */
+        $floor = $this->createQueryBuilder('f')
+            ->orderBy('LENGTH(f.numberFloor)', 'ASC') // Trier d'abord par longueur (pour gérer les nombres)
+            ->addOrderBy('f.numberFloor', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $floor;
+    }
+
 
 //    /**
 //     * @return Floor[] Returns an array of Floor objects
