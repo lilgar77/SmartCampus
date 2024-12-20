@@ -76,15 +76,37 @@ class RoomRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Room[] Un tableau contenant des entités Room avec un système d'acquisition "installé".
+     * @param Room $criteria
+     * @return Room[]
      */
-    public function sortRooms() : array
+    public function findByCriteria(Room $criteria): array
     {
-        /** @var Room[] $room */
-        $room = $this->createQueryBuilder('r')
-            ->orderBy('r.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-        return $room;
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->leftJoin('r.building', 'b')
+            ->leftJoin('r.floor', 'f'); // Join the Floor entity
+
+        if ($criteria->getName()) {
+            $queryBuilder->andWhere('r.name LIKE :name')
+                ->setParameter('name', '%' . $criteria->getName() . '%');
+        }
+
+        if ($criteria->getFloor()) {
+            $queryBuilder
+                ->andWhere('f.numberFloor LIKE :floor')
+                ->setParameter('floor', '%' . $criteria->getFloor()->getNumberFloor() . '%');
+        }
+
+        if ($criteria->getBuilding()) {
+            $queryBuilder
+                ->andWhere('b.NameBuilding LIKE :building')
+                ->setParameter('building', '%' . $criteria->getBuilding()->getNameBuilding() . '%');
+        }
+
+        $result = $queryBuilder->orderBy('r.name', 'ASC')->getQuery()->getResult();
+
+        // Cast the result to an array of Room entities
+        /** @var Room[] $result */
+        return $result;
     }
+
 }

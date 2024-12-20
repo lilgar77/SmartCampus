@@ -14,7 +14,10 @@ namespace App\Controller;
 
 use App\Entity\AcquisitionSystem;
 use App\Entity\Installation;
+use App\Entity\Room;
 use App\Form\AcquisitionSystemeType;
+use App\Form\SearchAquisitionSystemeType;
+use App\Form\SearchRoomFormType;
 use App\Model\EtatAS;
 use App\Repository\AcquisitionSystemRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,19 +31,33 @@ class AcquisitionSytemeController extends AbstractController
 {
 
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
-    public function listeAS(AcquisitionSystemRepository $acquisitionSystemRepository): Response
+    public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $acquisitionSystems = $acquisitionSystemRepository->sortAcquisitionSystem();
+
+        // Créer le formulaire
+        $form = $this->createForm(SearchAquisitionSystemeType::class, null, [
+            'method' => 'GET',
+        ]);
+        $form->handleRequest($request);
+
+        $ASSearch=$acquisitionSystemRepository->findAll();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $ASSearch = $acquisitionSystemRepository->findByFilters($data);
+        }
 
         return $this->render('acquisition_syteme/index.html.twig', [
-            'acquisition_systems' => $acquisitionSystems,
+            'acquisition_systems' => $ASSearch,
+            'AS' => $form->createView(),
         ]);
     }
 
-    
+
+
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
     public function addAS(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -54,7 +71,6 @@ class AcquisitionSytemeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-
             $acquisitionSystem->setEtat(EtatAS::Disponible);
 
             if(($acquisitionSystem->getEtat()== EtatAS::En_Installation
