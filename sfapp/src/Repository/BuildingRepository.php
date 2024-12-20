@@ -20,22 +20,19 @@ class BuildingRepository extends ServiceEntityRepository
 
     /**
      * @param string $name
-     * @return Building|null
+     * @return Building[]
      */
-    public function findBuildingByName(string $name): ?Building
+    public function findBuildingByName(string $name): ?array
     {
-        $result = $this->createQueryBuilder('b')
-            ->andWhere('b.NameBuilding = :NameBuilding')
-            ->setParameter('NameBuilding', $name)
-            ->setMaxResults(1)
+        /** @var Building[] $buildings */
+        $buildings = $this->createQueryBuilder('b')
+            ->where('b.NameBuilding LIKE :NameBuilding')
+            ->setParameter('NameBuilding', '%' . $name . '%')
+            ->orderBy('b.NameBuilding', 'ASC')
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
 
-        if ($result instanceof Building) {
-            return $result;
-        }
-
-        return null;
+        return $buildings;
     }
 
     /**

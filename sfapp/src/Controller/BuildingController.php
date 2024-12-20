@@ -11,6 +11,7 @@
 ##################################################################
 namespace App\Controller;
 
+use App\Form\SearchBuldingType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,13 +26,30 @@ class BuildingController extends AbstractController
 {
    
     #[Route('/building', name: 'app_building')]
-    public function index(BuildingRepository $buildingRepository): Response
+    public function index(Request $request, BuildingRepository $buildingRepository): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
+        $building = new Building();
+        $form = $this->createForm(SearchBuldingType::class, $building, [
+            'method' => 'GET',
+        ]);
+        $form->handleRequest($request);
+
+        $buildingSearch=$buildingRepository->findAll();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $nameBuilding = $building->getNameBuilding();
+
+            if (!empty($nameBuilding)) {
+                $buildingSearch = $buildingRepository->findBuildingByName($nameBuilding);
+            }
+        }
+
         return $this->render('building/index.html.twig', [
-            'buildings' => $buildingRepository->sortBuildings(),
+            'buildings' => $buildingSearch,
+            'building' => $form->createView(),
         ]);
     }
 

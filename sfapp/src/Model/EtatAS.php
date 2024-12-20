@@ -8,4 +8,5 @@ enum EtatAS: string
     case A_Desinstaller = 'À Désinstaller';
     case Disponible = 'Disponible';
     case En_Installation=' En cours d\'installation';
+
 }
