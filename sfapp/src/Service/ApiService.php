@@ -8,6 +8,7 @@ class ApiService
     private HttpClientInterface $client;
 
     private $dbname = 'sae34bdl1eq1';
+
     private $username = 'l1eq1';
     private $userpass = 'dicvex-Zofsip-4juqru';
 
@@ -16,13 +17,13 @@ class ApiService
         $this->client = $client;
     }
 
-    public function getCapturesByInterval(string $date1, string $date2, string $name, int $page): array
+    public function getCapturesByInterval(string $date1, string $date2, string $name, int $page, string $dbname): array
     {
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/interval';
 
         $headers = [
             'accept'   => 'application/ld+json',
-            'dbname'   => $this->dbname,
+            'dbname'   => $dbname,
             'username' => $this->username,
             'userpass' => $this->userpass,
         ];
@@ -50,13 +51,13 @@ class ApiService
         }
     }
 
-    public function getLastCapture(string $name): array
+    public function getLastCapture(string $name, string $dbname): array
     {
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/last';
 
         $headers = [
             'accept'   => 'application/ld+json',
-            'dbname'   => $this->dbname,
+            'dbname'   => $dbname,
             'username' => $this->username,
             'userpass' => $this->userpass,
         ];
