@@ -16,20 +16,7 @@
 {% if dataTemp.error is defined or dataHum.error is defined or dataCo2.error is defined %}
     <p>Erreur : {{ dataTemp.error ?? dataHum.error ?? dataCo2.error }}</p>
 {% else %}
-    <h1 class="text-center mb-4">Résultats de la journée:</h1>
 
-    </div>
-    <div class="d-flex justify-content-center mb-4">
-        <div style="width: 30%; text-align: center; margin-right: 5%;">
-            <h5>Température (°C)</h5>
-            <canvas id="tempChart" style="width: 100%; height: 350px;"></canvas>
-        </div>
-
-        <div style="width: 30%; text-align: center;">
-            <h5>Humidité (%)</h5>
-            <canvas id="humChart" style="width: 100%; height: 350px;"></canvas>
-        </div>
-    </div>
 
 {% endif %}
 
@@ -68,7 +55,7 @@
                         </h2>
                         <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
                             <div class="accordion-body">
-                                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables.
+                                <canvas id="humChart" style="width: 100%; height: 350px;"></canvas>
                             </div>
                         </div>
                     </div>
@@ -85,8 +72,7 @@
                         </h2>
                         <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
                             <div class="accordion-body">
-                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables.
-                            </div>
+                                <canvas id="tempChart" style="width: 100%; height: 350px;"></canvas>                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,7 +140,6 @@
             let redThresholdCo2 = 0;
             let yellowThresholdCo2 = 0;
             let greenThresholdCo2 = 0;
-            let total = 300;
 
             for (let i = 0; i < co2Data.length; i++) {
                  if(co2Data[i] >= 400 && co2Data[i] < 1000)
@@ -170,8 +155,60 @@
                      redThresholdCo2++;
                  }
                  else{
-                     total++;
+                     redThresholdCo2++;
                  }
+            }
+
+
+            // Données pour les graphiques
+            let darkBlueThresholdTemp = 0;
+            let lightBlueThresholdTemp = 0;
+            let redThresholdTemp = 0;
+            let yellowThresholdTemp = 0;
+            let orangeThresholdTemp = 0;
+            let greenThresholdTemp = 0;
+
+            for (let i = 0; i < tempData.length; i++) {
+                if(tempData[i] < 10.0)
+                {
+                    darkBlueThresholdTemp++;
+                }
+                else if(tempData[i] >= 10.0 && tempData[i] < 17.0)
+                {
+                    lightBlueThresholdTemp++;
+                }
+                else if(tempData[i] >= 17.0 && tempData[i] <= 21.0)
+                {
+                    greenThresholdTemp++;
+                }
+                else if(tempData[i] > 21.0 && tempData[i] < 25.0){
+                    yellowThresholdTemp++;
+                }
+                else if(tempData[i] >= 25.0 && tempData[i] < 35.0){
+                    orangeThresholdTemp++;
+                }
+                else if(tempData[i] >= 35.0 ){
+                    redThresholdTemp++;
+                }
+            }
+
+            // Données pour les graphiques
+            let redThresholdHum = 0;
+            let yellowThresholdHum = 0;
+            let greenThresholdHum = 0;
+
+            for (let i = 0; i < humData.length; i++) {
+                if(humData[i] >= 70.0 && tempData[i] >= 25)
+                {
+                    redThresholdHum++;
+                }
+                else if(humData[i] >= 70.0 && (tempData[i] >= 20 && tempData[i] <25))
+                {
+                    yellowThresholdCo2++;
+                }
+                else{
+                    greenThresholdHum++;
+                }
             }
 
 
@@ -214,39 +251,57 @@
             const humChartCtx = document.getElementById('humChart').getContext('2d');
 
             const tempChart = new Chart(tempChartCtx, {
-                type: 'line',  // ou 'bar'
+                type: 'pie',  // ou 'bar'
                 data: {
-                    labels: labels,
+                    labels: ['Température inférieure à 10°C', 'Température entre 10 et 17°C', 'Température entre 17 et 21°C', 'Température entre 21 et 25°C','Température entre 25 et 35°C', 'Température supérieure à 35°C'],
                     datasets: [{
-                        label: 'Température (°C)',
-                        data: tempData,
-                        borderColor: 'rgb(255, 99, 132)',
-                        tension: 0.1
+                        data: [darkBlueThresholdTemp, lightBlueThresholdTemp, greenThresholdTemp, yellowThresholdTemp, orangeThresholdTemp, redThresholdTemp],
+                        backgroundColor: [
+                            'rgb(6,20,112)',  // vert
+                            'rgb(8,138,209)',  // jaune
+                            'rgb(41,112,6)',
+                            'rgb(184,177,2)',  // jaune
+                            'rgb(209,92,8)',  // jaune
+                            'rgb(255,0,55)',   // rouge
+                        ],
+                        hoverOffset: 1
                     }]
                 },
                 options: {
-                    responsive: true,
-                    scales: {
-                        y: { beginAtZero: true }
+                    responsive: true, // Le graphique s'adapte à la taille de l'écran
+                    plugins: {
+                        legend: {
+                            position: 'top', // Position de la légende (top, bottom, left, right)
+                        },
+                        tooltip: {
+                            enabled: false, // Active les infobulles
+                        },
                     }
                 }
             });
 
             const humChart = new Chart(humChartCtx, {
-                type: 'line',  // ou 'bar'
+                type: 'pie',  // ou 'bar'
                 data: {
-                    labels: labels,
+                    labels: ['Gros risques de moisissure', 'Risques de moisissure', 'Très peu de risques de moisissure'],
                     datasets: [{
-                        label: 'Humidité (%)',
-                        data: humData,
-                        borderColor: 'rgb(54, 162, 235)',
-                        tension: 0.1
+                        data: [redThresholdHum, yellowThresholdHum, greenThresholdHum],
+                        backgroundColor: [
+                            'rgb(255,0,55)',
+                            'rgb(184,177,2)',
+                            'rgb(41,112,6)',
+                        ],
                     }]
                 },
                 options: {
-                    responsive: true,
-                    scales: {
-                        y: { beginAtZero: true }
+                    responsive: true, // Le graphique s'adapte à la taille de l'écran
+                    plugins: {
+                        legend: {
+                            position: 'top', // Position de la légende (top, bottom, left, right)
+                        },
+                        tooltip: {
+                            enabled: false, // Active les infobulles
+                        },
                     }
                 }
             });
