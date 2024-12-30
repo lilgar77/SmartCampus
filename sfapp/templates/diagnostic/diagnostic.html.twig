@@ -7,127 +7,50 @@
 
 {% block body %}
 
-    <!-- Contenu principal centré -->
-    <div class="d-flex justify-content-center align-items-center vh-60 flex-column">
-        <h1>Diagnostic</h1>
+<!-- Contenu principal centré -->
+<div class="d-flex justify-content-center align-items-center vh-60 flex-column">
+    <h1>Diagnostic</h1>
+</div>
+
+
+{% if dataTemp.error is defined or dataHum.error is defined or dataCo2.error is defined %}
+    <p>Erreur : {{ dataTemp.error ?? dataHum.error ?? dataCo2.error }}</p>
+{% else %}
+    <h1 class="text-center mb-4">Résultats de la journée:</h1>
+
+    </div>
+    <div class="d-flex justify-content-center mb-4">
+        <div style="width: 30%; text-align: center; margin-right: 5%;">
+            <h5>Température (°C)</h5>
+            <canvas id="tempChart" style="width: 100%; height: 350px;"></canvas>
+        </div>
+
+        <div style="width: 30%; text-align: center;">
+            <h5>Humidité (%)</h5>
+            <canvas id="humChart" style="width: 100%; height: 350px;"></canvas>
+        </div>
     </div>
 
-    <div class="container mt-4">
-        <div class="card shadow-sm p-4">
-            <h1 class="h3 mb-4 text-center background-container"> {{ as.Name }}</h1>
+{% endif %}
 
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <div class="accordion" id="accordionPanelsStayOpenExampleOne">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
-                                    GRAPHIQUE CO2
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <div>
-                                        <canvas id="myChart"></canvas>
-                                    </div>
-                                    <script>
-                                        const ctx = document.getElementById('myChart').getContext('2d');
-                                        const chart = new Chart(ctx, {
-                                            type: 'pie', // Type de graphique changé en 'pie'
-                                            data: {
-                                                labels: ['Red','Yellow', 'Green'], // Labels des segments
-                                                datasets: [{
-                                                    label: 'Dataset Example',
-                                                    data: [12, 16, 50], // Valeurs des segments
-                                                    backgroundColor: [ // Couleurs de chaque segment
-                                                        'rgb(255,0,55)',
-                                                        'rgb(232,223,0)',
-                                                        'rgb(112,241,52)',
 
-                                                    ],
-                                                    hoverOffset: 4 // Décalage lors du survol
-                                                }]
-                                            },
-                                            options: {
-                                                responsive: true, // Le graphique s'adapte à la taille de l'écran
-                                                plugins: {
-                                                    legend: {
-                                                        position: 'top', // Position de la légende (top, bottom, left, right)
-                                                    },
-                                                    tooltip: {
-                                                        enabled: true, // Active les infobulles
-                                                    },
-                                                }
-                                            }
-                                        });
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="container mt-4">
+    <div class="card shadow-sm p-4">
+        <h1 class="h3 mb-4 text-center background-container"> {{ as.Name }}</h1>
 
-                <div class="col-md-4 mb-3">
-                    <div class="accordion" id="accordionPanelsStayOpenExampleTwo">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-                                    GRAPHIQUE HUMIDITE
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <div class="accordion" id="accordionPanelsStayOpenExampleThree">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
-                                    GRAPHIQUE TEMPERATURE
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <div class="accordion" id="accordionPanelsStayOpenExampleFour">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
-                                    Rappel des 5 dernières alertes
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    refsdgdgsreqfgyhtdresxcgtdrgxcgtrgfdxrtgf
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="accordion" id="accordionPanelsStayOpenExampleFive">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseFive">
-                                    Analyse
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    zsedrftghsqdfghjkdsfgh
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="accordion" id="accordionPanelsStayOpenExampleOne">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                                GRAPHIQUE CO2
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div>
+                                    <canvas id="co2Chart" style="width: 100%; height: 350px;"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -135,6 +58,200 @@
                 </div>
             </div>
 
+            <div class="col-md-4 mb-3">
+                <div class="accordion" id="accordionPanelsStayOpenExampleTwo">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                GRAPHIQUE HUMIDITE
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="accordion" id="accordionPanelsStayOpenExampleThree">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                GRAPHIQUE TEMPERATURE
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="accordion" id="accordionPanelsStayOpenExampleFour">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
+                                Rappel des 5 dernières alertes
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                refsdgdgsreqfgyhtdresxcgtdrgxcgtrgfdxrtgf
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="accordion" id="accordionPanelsStayOpenExampleFive">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseFive">
+                                Analyse
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                zsedrftghsqdfghjkdsfgh
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+
+        <script>
+            // Données pour les graphiques
+            const labels = [];
+            {% for item in dataTemp %}
+            labels.push('{{ item.dateCapture }}');
+            {% endfor %}
+
+            const tempData = [];
+            {% for item in dataTemp %}
+            tempData.push({{ item.valeur }});
+            {% endfor %}
+
+            const humData = [];
+            {% for item in dataHum %}
+            humData.push({{ item.valeur }});
+            {% endfor %}
+
+            const co2Data = [];
+            {% for item in dataCo2 %}
+            co2Data.push({{ item.valeur }});
+            {% endfor %}
+
+            // Données pour les graphiques
+            let redThresholdCo2 = 0;
+            let yellowThresholdCo2 = 0;
+            let greenThresholdCo2 = 0;
+            let total = 300;
+
+            for (let i = 0; i < co2Data.length; i++) {
+                 if(co2Data[i] >= 400 && co2Data[i] < 1000)
+                 {
+                     greenThresholdCo2++;
+                 }
+                 else if(co2Data[i] >= 1000 && co2Data[i] < 1400)
+                 {
+                     yellowThresholdCo2++;
+                 }
+                 else if(co2Data[i] >= 1400)
+                 {
+                     redThresholdCo2++;
+                 }
+                 else{
+                     total++;
+                 }
+            }
+
+
+
+
+
+
+            // Créer le graphique CO2
+            const co2ChartCtx = document.getElementById('co2Chart').getContext('2d');
+
+            const co2Chart = new Chart(co2ChartCtx, {
+                type: 'pie',  // ou 'bar'
+                data: {
+                    labels: ['Taux de CO2 entre 400 et 1000 ppm', 'Taux de CO2 entre 1000 et 1400 ppm', 'Taux de CO2 au dessus de 1400 ppm'],
+                    datasets: [{
+                        data: [greenThresholdCo2, yellowThresholdCo2, redThresholdCo2],
+                        backgroundColor: [
+                            'rgb(41,112,6)',  // vert
+                            'rgb(184,177,2)',  // jaune
+                            'rgb(255,0,55)',   // rouge
+                        ],
+                        hoverOffset: 1
+                    }]
+                },
+                options: {
+                    responsive: true, // Le graphique s'adapte à la taille de l'écran
+                    plugins: {
+                        legend: {
+                            position: 'top', // Position de la légende (top, bottom, left, right)
+                        },
+                        tooltip: {
+                            enabled: false, // Active les infobulles
+                        },
+                    }
+                }
+            });
+
+            // Créer les graphiques
+            const tempChartCtx = document.getElementById('tempChart').getContext('2d');
+            const humChartCtx = document.getElementById('humChart').getContext('2d');
+
+            const tempChart = new Chart(tempChartCtx, {
+                type: 'line',  // ou 'bar'
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Température (°C)',
+                        data: tempData,
+                        borderColor: 'rgb(255, 99, 132)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            const humChart = new Chart(humChartCtx, {
+                type: 'line',  // ou 'bar'
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Humidité (%)',
+                        data: humData,
+                        borderColor: 'rgb(54, 162, 235)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+        </script>
+
     </div>
-{% endblock %}
+    {% endblock %}
