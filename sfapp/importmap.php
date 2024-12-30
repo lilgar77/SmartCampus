@@ -22,6 +22,10 @@ return [
     'room' => [
         'path' => 'js/room.js',
         'entrypoint' => true,
+    ],
+    'graphdetail' => [
+        'path' => 'js/graphdetail.js',
+        'entrypoint' => true,
     ]
 
 ];
