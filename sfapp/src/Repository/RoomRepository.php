@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RoomRepository extends ServiceEntityRepository
 {
+
+    // Database name for each room
     private array $roomdb = [
         'D205' => ['dbname' => 'sae34bdk1eq1', 'nomsa' => 'ESP-004',],
         'D206' => ['dbname' => 'sae34bdk1eq2', 'nomsa' => 'ESP-008',],
