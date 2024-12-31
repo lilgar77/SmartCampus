@@ -104,7 +104,9 @@
                         </h2>
                         <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse">
                             <div class="accordion-body">
-                                zsedrftghsqdfghjkdsfgh
+                                <p id="analyse-text-co2"> CO2 :La moyenne de co2 est dans la normale (Pas de problème) </p>
+                                <p id="analyse-text-hum"> Humidité : Il y a très peu de risques de moisissure</p>
+                                <p id="analyse-text-temp"> Température : La température moyenne est confortable</p>
                             </div>
                         </div>
                     </div>
@@ -213,8 +215,73 @@
 
 
 
+            const textElementCo2 = document.getElementById('analyse-text-co2');
+            const textElementHum = document.getElementById('analyse-text-hum');
+            const textElementTemp = document.getElementById('analyse-text-temp');
 
+            const ThresholdCo2Max = Math.max(greenThresholdCo2, yellowThresholdCo2, redThresholdCo2);
 
+            switch (ThresholdCo2Max) {
+                case greenThresholdCo2:
+                    textElementCo2.textContent = "Le niveau de CO2 est dans le seuil vert (faible). 🌱 La qualité de l'air est bonne, et l'aération est suffisante. Continuez à maintenir une bonne ventilation.";
+                    break;
+                case yellowThresholdCo2:
+                    textElementCo2.textContent = "Le niveau de CO2 est dans le seuil jaune (modéré). ⚠️ Cela indique que la qualité de l'air commence à se dégrader. \n\n**Raisons potentielles** : \n- La salle est occupée depuis un moment. \n- La ventilation est insuffisante ou limitée. \n\n**Solutions** : \n- Aérez la pièce en ouvrant les fenêtres si possible. \n- Faites une pause pour permettre un renouvellement d'air. \n- Vérifiez si le système de ventilation fonctionne correctement.";
+                    break;
+                case redThresholdCo2:
+                    textElementCo2.textContent = "Le niveau de CO2 est dans le seuil rouge (élevé). 🚨 La qualité de l'air est mauvaise et peut affecter le confort et la concentration des occupants. \n\n**Raisons potentielles** : \n- La salle est sur-occupée. \n- Aucune ventilation efficace n'est présente. \n- Les fenêtres sont fermées depuis trop longtemps. \n\n**Solutions** : \n- Aérez immédiatement en ouvrant toutes les fenêtres disponibles. \n- Si possible, réduisez le nombre de personnes dans la pièce. \n- Vérifiez et entretenez les équipements de ventilation ou utilisez un purificateur d'air.";
+                    break;
+                default:
+                    textElementCo2.textContent = "Impossible de déterminer le seuil de CO2. Veuillez vérifier les données.";
+            }
+
+            const ThresholdTempMax = Math.max(
+                darkBlueThresholdTemp,
+                lightBlueThresholdTemp,
+                greenThresholdTemp,
+                yellowThresholdTemp,
+                orangeThresholdTemp,
+                redThresholdTemp
+            );
+
+            switch (ThresholdTempMax) {
+                case darkBlueThresholdTemp:
+                    textElementTemp.textContent = "La température est très basse (seuil bleu foncé). ❄️ Il fait anormalement froid dans la pièce, ce qui peut causer de l'inconfort ou une baisse de concentration. \n\n**Raisons potentielles** : \n- Chauffage défectueux ou inexistant. \n- Mauvaise isolation thermique. \n\n**Solutions** : \n- Vérifiez si le chauffage fonctionne correctement. \n- Utilisez des solutions temporaires comme des radiateurs d'appoint. \n- Améliorez l'isolation si nécessaire.";
+                    break;
+                case lightBlueThresholdTemp:
+                    textElementTemp.textContent = "La température est basse (seuil bleu clair). 🌬️ La pièce est fraîche, mais pas critique. Cela pourrait devenir inconfortable sur le long terme. \n\n**Raisons potentielles** : \n- Chauffage insuffisant. \n- Courants d'air ou ventilation excessive. \n\n**Solutions** : \n- Augmentez légèrement la température du chauffage. \n- Vérifiez l'étanchéité des fenêtres et des portes.";
+                    break;
+                case greenThresholdTemp:
+                    textElementTemp.textContent = "La température est dans un seuil idéal (seuil vert). 🌡️ Les conditions thermiques sont optimales pour le confort et la concentration. Aucune action n'est nécessaire.";
+                    break;
+                case yellowThresholdTemp:
+                    textElementTemp.textContent = "La température est modérée (seuil jaune). ⚠️ Elle commence à être légèrement élevée, ce qui pourrait causer un certain inconfort, surtout sur le long terme. \n\n**Raisons potentielles** : \n- Chauffage trop élevé. \n- Aération insuffisante. \n\n**Solutions** : \n- Baissez légèrement la température du chauffage. \n- Aérez la pièce pour équilibrer la température.";
+                    break;
+                case orangeThresholdTemp:
+                    textElementTemp.textContent = "La température est élevée (seuil orange). 🟠 La pièce est chaude, ce qui peut provoquer de l'inconfort et une baisse de productivité. \n\n**Raisons potentielles** : \n- Surchauffage dû à un radiateur mal réglé. \n- Manque de ventilation ou pièce exposée directement au soleil. \n\n**Solutions** : \n- Réduisez le chauffage ou éteignez-le temporairement. \n- Aérez pour faire circuler l'air plus frais. \n- Utilisez des rideaux ou stores pour limiter l'exposition au soleil.";
+                    break;
+                case redThresholdTemp:
+                    textElementTemp.textContent = "La température est critique (seuil rouge). 🚨 Il fait trop chaud dans la pièce, ce qui peut entraîner des risques pour la santé (comme des malaises). \n\n**Raisons potentielles** : \n- Absence de ventilation. \n- Canicule ou chauffage excessif non contrôlé. \n\n**Solutions** : \n- Aérez immédiatement pour faire entrer de l'air frais. \n- Réduisez ou éteignez les sources de chaleur. \n- Si possible, utilisez un ventilateur ou une climatisation.";
+                    break;
+                default:
+                    textElementTemp.textContent = "Impossible de déterminer le seuil de température. Veuillez vérifier les données.";
+            }
+
+            const ThresholdHumMax = Math.max(redThresholdHum, yellowThresholdHum, greenThresholdHum);
+
+            switch (ThresholdHumMax) {
+                case greenThresholdHum:
+                    textElementHum.textContent = "Le niveau d'humidité est idéal (seuil vert). 💧 L'air est confortable et équilibré. Aucune action n'est nécessaire. Maintenez ces conditions pour un environnement sain.";
+                    break;
+                case yellowThresholdHum:
+                    textElementHum.textContent = "Le niveau d'humidité est modéré (seuil jaune). ⚠️ L'air est légèrement trop sec ou trop humide, ce qui peut causer un léger inconfort à long terme. \n\n**Raisons potentielles** : \n- Manque de ventilation ou chauffage excessif (si l'air est sec). \n- Absence de déshumidification (si l'air est humide). \n\n**Solutions** : \n- Si l'air est sec : utilisez un humidificateur ou placez des récipients d'eau près des radiateurs. \n- Si l'air est trop humide : aérez régulièrement ou utilisez un déshumidificateur.";
+                    break;
+                case redThresholdHum:
+                    textElementHum.textContent = "Le niveau d'humidité est critique (seuil rouge). 🚨 Un excès ou un manque important d'humidité peut nuire à la santé et au confort. \n\n**Raisons potentielles** : \n- Humidité trop élevée : condensation, infiltration d'eau ou mauvaise ventilation. \n- Humidité trop basse : chauffage excessif ou air trop sec en hiver. \n\n**Solutions** : \n- Si l'air est trop humide : utilisez un déshumidificateur, réparez les éventuelles infiltrations et ventilez fréquemment. \n- Si l'air est trop sec : installez un humidificateur ou utilisez des solutions naturelles comme des plantes ou des récipients d'eau.";
+                    break;
+                default:
+                    textElementHum.textContent = "Impossible de déterminer le seuil d'humidité. Veuillez vérifier les données.";
+            }
 
             // Créer le graphique CO2
             const co2ChartCtx = document.getElementById('co2Chart').getContext('2d');
