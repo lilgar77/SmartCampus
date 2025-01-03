@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Room;
+use App\Form\SearchRoomFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RoomRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 // use services api
 use App\Service\ApiService;
@@ -20,11 +23,20 @@ class WelcomeController extends AbstractController
     }
 
     #[Route('/', name: 'app_welcome')]
-    public function index(RoomRepository $roomRepository): Response
+    public function index(Request $request, RoomRepository $roomRepository): Response
     {
         // Récupération de toutes les salles
-        $rooms = $roomRepository->findRoomWithAs();
+        $room = new Room();
+        $form = $this->createForm(SearchRoomFormType::class, $room, [
+            'method' => 'GET',
+            'include_name' => false,
+        ]);
+        $form->handleRequest($request);
 
+        $rooms = $roomRepository->findRoomWithAsDefault();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $rooms = $roomRepository->findRoomWithAs($room);
+        }
 
         $getLastCapture = function(string $type) {
             return $this->apiService->getLastCapture($type)[0] ?? null;
@@ -37,6 +49,7 @@ class WelcomeController extends AbstractController
 
         return $this->render('welcome/index.html.twig', [
             'controller_name' => 'WelcomeController',
+            'room'  => $form->createView(),
             'rooms' => $rooms,
             'lastCapturetemp' => $lastCapturetemp,
             'lastCapturehum' => $lastCapturehum,

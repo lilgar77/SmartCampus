@@ -60,14 +60,20 @@ class RoomRepository extends ServiceEntityRepository
     /**
      * @return Room[] Un tableau contenant des entités Room avec un système d'acquisition "installé".
      */
-    public function findRoomWithAs(): array
+    public function findRoomWithAs(Room $criteria): array
     {
         /** @var Room[] $room */
         $room = $this->createQueryBuilder('r')
             ->leftJoin('r.id_AS', 'acs')
+            ->leftJoin('r.building', 'b')
+            ->leftJoin('r.floor', 'f')
             ->andWhere('acs IS NOT NULL')
             ->andWhere('acs.etat = :etat')
             ->setParameter('etat', EtatAS::Installer)
+            ->andWhere('f.numberFloor LIKE :floor')
+            ->setParameter('floor', '%' . $criteria->getFloor()->getNumberFloor() . '%')
+            ->andWhere('b.NameBuilding LIKE :building')
+            ->setParameter('building', '%' . $criteria->getBuilding()->getNameBuilding() . '%')
             ->orderBy('r.name', 'ASC')
             ->getQuery()
             ->getResult();
@@ -109,4 +115,24 @@ class RoomRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function findRoomWithAsDefault(): array
+    {
+        /** @var Room[] $room */
+        $room = $this->createQueryBuilder('r')
+            ->leftJoin('r.id_AS', 'acs')
+            ->leftJoin('r.building', 'b')
+            ->leftJoin('r.floor', 'f')
+            ->andWhere('acs IS NOT NULL')
+            ->andWhere('acs.etat = :etat')
+            ->setParameter('etat', EtatAS::Installer)
+            ->andWhere('f.numberFloor LIKE :floor')
+            ->setParameter('floor', 0)
+            ->andWhere('b.NameBuilding LIKE :building')
+            ->setParameter('building', 'informatique')
+            ->orderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $room;
+    }
 }

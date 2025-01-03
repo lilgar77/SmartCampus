@@ -6,6 +6,76 @@
 {% endblock %}
 
 {% block body %}
+    <style>
+        .slide_up{
+            animation: slideUp 1s ease-in-out;
+        }
+
+        .slide_down {
+            animation: slideDown 1s ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+    <script>
+        function showPopup(element) {
+            const popup = element.querySelector('.popup-details');
+            popup.style.display = 'block';
+        }
+
+        function hidePopup(element) {
+            const popup = element.querySelector('.popup-details');
+            popup.style.display = 'none';
+        }
+
+
+        function onHandleChangeFloor(slide){
+            const form = document.querySelector('.form');
+            const floor = document.querySelector('.row');
+            const floorInput = document.querySelector('select[name="search_room_form[floor]"]');
+            let currentValue=parseInt(floorInput.value) || 0;
+
+            if(floor) {
+                if (slide === 'slide_down') {
+
+                    if(currentValue>=25){
+                        floor.classList.add('slide_down');
+                        currentValue--;
+                    }
+
+                }
+                if (slide === 'slide_up') {
+
+                    if(currentValue<=27){
+                        floor.classList.add('slide_up');
+                        currentValue++;
+                    }
+                }
+                floorInput.value=currentValue
+                floorInput.closest('form').submit();
+            }
+        }
+    </script>
 
     <!-- Contenu principal centré -->
     <div class="d-flex justify-content-center align-items-center vh-60 flex-column">
@@ -15,48 +85,69 @@
     <div class="container mt-4">
         <div class="card shadow-sm p-4">
             <h1 class="h3 mb-4 text-center background-container">Liste des Salles</h1>
+            <div class="d-flex justify-content-center mb-4">
+                {{ form_start(room, { 'attr': {'class': 'd-flex w-75 align-items-center gap-5 '} }) }}
+                <div class="d-flex align-items-center form" style="flex: 0.5;">
+                    Etage:
+                    {{ form_widget(room.floor, { 'attr': {'class': 'form-control', 'onchange':'this.form.submit()', 'style': 'background-color: #6a0dad; color: white; border:none; border-radius:15px 0px 0px 15px;'}}) }}
+                    <div class="d-flex flex-column">
+                        <button class="input-group-text" onclick="onHandleChangeFloor('slide_down')" style="background-color: #6a0dad; color: white; border-radius: 0px 15px 0px 0px; border: none; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-caret-up-fill"></i>
+                        </button>
+                        <button class="input-group-text" onclick="onHandleChangeFloor('slide_up')" style=" background-color: #6a0dad; color: white; border-radius: 0px 0px 15px 0px; border: none; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-caret-down-fill"></i>
+                        </button>
+                    </div>
+                </div>
 
-            <div class="container">
-                <div class="row">
+                <div class="d-flex align-items-center" style="flex: 0.5;">
+                    Batiment:
+                    {{ form_widget(room.building, { 'attr': {'class': 'form-control', 'onchange': 'this.form.submit()', 'style': 'background-color: #6a0dad; color: white; border:none; border-radius:15px 0px 0px 15px;'}}) }}
+                    <span class="input-group-text" style="background-color: #6a0dad; color: white; border-radius: 0px 15px 15px 0px; border: none">
+                        <i class="bi bi-caret-down-fill"></i>
+                    </span>
+                </div>
+                {{ form_end(room) }}
+            </div>
+            <div class="row" >
+                {% if rooms is not empty %}
                     {% for room in rooms %}
-                        <div class="col-12 col-md-4 mb-4">
-                            <div class="room-card card shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ room.id }}">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ room.name }}</h5>
-                                    <p class="card-text">
-                                        <strong>Relier à:</strong> {{ room.idAS is not null ? room.idAS.name : 'N/A' }}<br>
-                                        <strong>Étage:</strong> {{ room.floor.numberFloor }}<br>
-                                        <strong>Bâtiment:</strong> {{ room.building.NameBuilding }} ({{ room.building.AdressBuilding }})<br>
-                                    </p>
+                        <div class="col-md-3 align-items-center position-relative">
+                            <!-- Carte de la salle -->
+                            <div class="room-card card shadow-sm" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                                <div class="card-body d-flex justify-content-center align-items-center">
+                                    <h5 class="card-title text-center">{{ room.name }}</h5>
+                                </div>
 
-                                    <div class="mt-3">
+                                <!-- Pop-up info -->
+                                <div class="popup-details card shadow-sm" style="display: none;">
+                                    <div class="card-body">
+
+                                        <p class="card-text">
+                                            <strong>Relier à:</strong> {{ room.idAS is not null ? room.idAS.name : 'N/A' }}<br>
+                                            <strong>Étage:</strong> {{ room.floor.numberFloor }}<br>
+                                            <strong>Bâtiment:</strong> {{ room.building.NameBuilding }} ({{ room.building.AdressBuilding }})<br>
+                                        </p>
                                         <div class="row">
                                             <div class="col">
-                                                <strong>Température:</strong>
-                                                <span>{{ lastCapturetemp.valeur }} °C</span>
+                                                <strong>Température:</strong> {{ lastCapturetemp.valeur }} °C
                                             </div>
                                             <div class="col">
-                                                <strong>Humidité:</strong>
-                                                <span>{{ lastCapturehum.valeur }}%</span>
+                                                <strong>Humidité:</strong> {{ lastCapturehum.valeur }}%
                                             </div>
                                             <div class="col">
-                                                <strong>CO2:</strong><br>
-                                                <span>{{ lastCaptureco2.valeur }} ppm</span>
+                                                <strong>CO2:</strong> {{ lastCaptureco2.valeur }} ppm
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mt-3">
                                         <a href="{{ path('app_welcome_details', {id: room.id}) }}" class="btn btn-dark table-violet">Détails</a>
                                     </div>
-
-
-
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
-                </div>
+                {% else %}
+                    <p class="text-center">Aucune salle est relier à un SA à cette étage</p>
+                {% endif %}
             </div>
         </div>
     </div>

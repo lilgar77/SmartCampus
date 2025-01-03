@@ -113,7 +113,7 @@ body.modal-open .background-container {
 }
 
 .room-card:hover {
-    transform: scale(1.15);
+    transform: scale(1.05);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -376,3 +376,4 @@ body.modal-open .background-container {
 .message-content {
     flex-grow: 1; /* Permet au contenu du message de prendre toute la largeur disponible */
 }
+
