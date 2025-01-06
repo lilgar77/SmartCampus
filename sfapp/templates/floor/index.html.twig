@@ -40,73 +40,61 @@
                 </div>
             {% endfor %}
 
-
-            <div class="table-responsive" style="max-height: 372px; overflow-y: auto;">
-
-                <div class="d-flex justify-content-end mt-3">
-                    <a href="{{ path('app_floor_add') }}">
-                        <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter un Etage</button>
-                    </a>
-                </div>
-
-                <table class="table table-striped table-bordered">
-                    <thead class="table-violet sticky-header">
-                    <tr>
-                        <th scope="col">NUMERO D'ETAGE</th>
-                        <th scope="col">BATIMENT</th>
-                        <th scope="col">ACTIONS</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for floor in floors %}
-                        <tr>
-                            <td>{{ floor.numberFloor }}</td>
-                            <td>{{ floor.IdBuilding }}</td>
-                            <td>
-                                <!-- Bouton pour ouvrir le modal de suppression -->
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ floor.id }}">
-                                    Supprimer
-                                </button>
-
-                                <!-- Lien pour modifier la salle -->
-                                <a href="{{ path('app_floor_edit', {id: floor.id}) }}" class="btn btn-warning">
-                                    Modifier
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+            <div class="d-flex justify-content-end mt-3">
+                <a href="{{ path('app_floor_add') }}">
+                    <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter un Etage</button>
+                </a>
             </div>
+
+            <table class="table table-striped table-bordered">
+                <thead class="table-violet sticky-header">
+                <tr>
+                    <th scope="col">NUMERO D'ETAGE</th>
+                    <th scope="col">BATIMENT</th>
+                    <th scope="col">ACTIONS</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for floor in floors %}
+                    <tr>
+                        <td>{{ floor.numberFloor }}</td>
+                        <td>{{ floor.IdBuilding }}</td>
+                        <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ floor.id }}">
+                                Supprimer
+                            </button>
+                            <!-- Lien pour modifier la salle -->
+                            <a href="{{ path('app_floor_edit', {id: floor.id}) }}" class="btn btn-warning">
+                                Modifier
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-
-
-            </div>
-
-            <!-- Modal de confirmation de suppression -->
-            {% for floor in floors %}
-                <div class="modal fade" id="deleteModal{{ floor.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ floor.id }}" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel{{ floor.id }}">Confirmer la suppression</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Êtes-vous sûr de vouloir supprimer l'étage "{{ floor.numberFloor }}" du bâtiment "{{ floor.IdBuilding}} ?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-
-                                <!-- Formulaire POST pour supprimer la salle -->
-                                <form action="{{ path('app_floor_delete', {id: floor.id}) }}" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                                </form>
-                            </div>
-                        </div>
+</div>
+     <!-- Modal de confirmation de suppression -->
+    {% for floor in floors %}
+        <div class="modal fade" id="deleteModal{{ floor.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ floor.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel{{ floor.id }}">Confirmer la suppression</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Êtes-vous sûr de vouloir supprimer l'étage "{{ floor.numberFloor }}" du bâtiment "{{ floor.IdBuilding}} ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <!-- Formulaire POST pour supprimer la salle -->
+                        <form action="{{ path('app_floor_delete', {id: floor.id}) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
                     </div>
                 </div>
-            {% endfor %}
-
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}

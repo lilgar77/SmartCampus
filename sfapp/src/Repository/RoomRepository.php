@@ -7,7 +7,6 @@ use App\Model\EtatAS;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-
 /**
  * @extends ServiceEntityRepository<Room>
  */
@@ -87,18 +86,23 @@ class RoomRepository extends ServiceEntityRepository
         return $rooms;
     }
 
-
     /**
      * @return Room[] Un tableau contenant des entités Room avec un système d'acquisition "installé".
      */
-    public function findRoomWithAs(): array
+    public function findRoomWithAs(Room $criteria): array
     {
         /** @var Room[] $room */
         $room = $this->createQueryBuilder('r')
             ->leftJoin('r.id_AS', 'acs')
+            ->leftJoin('r.building', 'b')
+            ->leftJoin('r.floor', 'f')
             ->andWhere('acs IS NOT NULL')
             ->andWhere('acs.etat = :etat')
             ->setParameter('etat', EtatAS::Installer)
+            ->andWhere('f.numberFloor LIKE :floor')
+            ->setParameter('floor', $criteria->getFloor() ? '%' . $criteria->getFloor()->getNumberFloor() . '%' : null)
+            ->andWhere('b.NameBuilding LIKE :building')
+            ->setParameter('building', $criteria->getBuilding() ? '%' . $criteria->getBuilding()->getNameBuilding() . '%' : null)
             ->orderBy('r.name', 'ASC')
             ->getQuery()
             ->getResult();
@@ -121,13 +125,13 @@ class RoomRepository extends ServiceEntityRepository
                 ->setParameter('name', '%' . $criteria->getName() . '%');
         }
 
-        if ($criteria->getFloor()) {
+        if ($criteria->getFloor() && $criteria->getFloor()->getNumberFloor()) {
             $queryBuilder
                 ->andWhere('f.numberFloor LIKE :floor')
                 ->setParameter('floor', '%' . $criteria->getFloor()->getNumberFloor() . '%');
         }
 
-        if ($criteria->getBuilding()) {
+        if ($criteria->getBuilding() && $criteria->getBuilding()->getNameBuilding()) {
             $queryBuilder
                 ->andWhere('b.NameBuilding LIKE :building')
                 ->setParameter('building', '%' . $criteria->getBuilding()->getNameBuilding() . '%');
@@ -140,4 +144,27 @@ class RoomRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return Room[] Un tableau contenant des entités Room.
+     */
+    public function findRoomWithAsDefault(): array
+    {
+        /** @var Room[] $room */
+        $room = $this->createQueryBuilder('r')
+            ->leftJoin('r.id_AS', 'acs')
+            ->leftJoin('r.building', 'b')
+            ->leftJoin('r.floor', 'f')
+            ->andWhere('acs IS NOT NULL')
+            ->andWhere('acs.etat = :etat')
+            ->setParameter('etat', EtatAS::Installer)
+            ->andWhere('f.numberFloor LIKE :floor')
+            ->setParameter('floor', 0)
+            ->andWhere('b.NameBuilding LIKE :building')
+            ->setParameter('building', 'informatique')
+            ->orderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $room;
+    }
 }
