@@ -4,7 +4,7 @@ body {
 .text-link{
     text-decoration-color: mediumpurple;
     color : mediumpurple;
-    }
+}
 
 body.modal-open .background-container {
     filter: blur(4px);

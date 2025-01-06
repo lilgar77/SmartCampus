@@ -40,10 +40,20 @@
                 </div>
             {% endfor %}
 
-            <div class="d-flex justify-content-end mt-3">
+            <div class="d-flex justify-content-center mb-4">
+                {{ form_start(building, { 'attr': {'class': 'd-flex w-50 align-items-center gap-3 '} }) }}
+                <div class="input-group" style="border-radius: 25px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);">
+                    <span class="input-group-text" style="border-radius: 25px 0 0 25px; background-color: #6a0dad; color: #fff;">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    {{ form_widget(building.NameBuilding, { 'attr': {'class': 'form-control', 'placeholder': 'Rechercher un batiment...', 'style': 'border: none; border-radius: 0 25px 25px 0;'} }) }}
+                </div>
                 <a href="{{ path('app_building_add') }}">
-                    <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff;">Ajouter un Bâtiment</button>
+                    <button type="button" class="btn" style="background-color: #6a0dad; color: #fff; white-space: nowrap;">
+                        Ajouter un Bâtiment
+                    </button>
                 </a>
+                {{ form_end(building) }}
             </div>
 
 

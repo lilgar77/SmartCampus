@@ -3,21 +3,23 @@
 namespace App\Form;
 
 use App\Entity\Building;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+
 /**
  * @extends AbstractType<array<string, mixed>>
  */
-class BuildingType extends AbstractType
+class SearchBuldingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('NameBuilding')
-            ->add('AdressBuilding')
-        ;
+            ->add('NameBuilding', TextType::class, [
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
