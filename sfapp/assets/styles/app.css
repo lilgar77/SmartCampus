@@ -4,7 +4,7 @@ body {
 .text-link{
     text-decoration-color: mediumpurple;
     color : mediumpurple;
-    }
+}
 
 body.modal-open .background-container {
     filter: blur(4px);
@@ -405,4 +405,27 @@ body.modal-open .background-container {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* Couleur par défaut du header */
+.accordion-button {
+    background-color: white; /* Couleur de fond par défaut */
+    color: black; /* Couleur du texte par défaut */
+    border: 1px solid #ddd; /* Bordure par défaut */
+}
+
+/* Couleur lorsque l'accordion est ouvert */
+.accordion-button:not(.collapsed) {
+    background-color: #6a0dad; /* Violet pour le header actif */
+    color: white; /* Texte en blanc */
+}
+
+/* Couleur du petit triangle (icône) */
+.accordion-button:not(.collapsed)::after{
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 16 16'><path d='M2 5L8 11L14 5'/></svg>");
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='black' viewBox='0 0 16 16'><path d='M2 5L8 11L14 5'/></svg>");
+
 }

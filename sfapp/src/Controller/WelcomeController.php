@@ -31,21 +31,39 @@ class WelcomeController extends AbstractController
             'method' => 'GET',
             'include_name' => false,
         ]);
+
         $form->handleRequest($request);
 
         $rooms = $roomRepository->findRoomWithAsDefault();
         if ($form->isSubmitted() && $form->isValid()) {
             $rooms = $roomRepository->findRoomWithAs($room);
         }
+        $roomsWithLastCaptures = array_map(function ($room) use ($apiService, $roomRepository) {
+            $roomDbInfo = $roomRepository->getRoomDb($room->getName());
+            $dbname = $roomDbInfo['dbname'] ?? null;
 
-        $getLastCapture = function(string $type) {
-            return $this->apiService->getLastCapture($type)[0] ?? null;
-        };
+            if (!$dbname) {
+                return [
+                    'room' => $room,
+                    'dbname' => null,
+                    'lastCaptures' => [
+                        'temp' => null,
+                        'hum' => null,
+                        'co2' => null,
+                    ],
+                ];
+            }
 
-        $lastCapturetemp = $getLastCapture('temp');
-        $lastCapturehum = $getLastCapture('hum');
-        $lastCaptureco2 = $getLastCapture('co2');
-
+            return [
+                'room' => $room,
+                'dbname' => $dbname,
+                'lastCaptures' => [
+                    'temp' => $apiService->getLastCapture('temp', $dbname)[0]['valeur'] ?? null,
+                    'hum' => $apiService->getLastCapture('hum', $dbname)[0]['valeur'] ?? null,
+                    'co2' => $apiService->getLastCapture('co2', $dbname)[0]['valeur'] ?? null,
+                ],
+            ];
+        }, $rooms);
 
         return $this->render('welcome/index.html.twig', [
             'controller_name' => 'WelcomeController',
@@ -54,6 +72,7 @@ class WelcomeController extends AbstractController
             'lastCapturetemp' => $lastCapturetemp,
             'lastCapturehum' => $lastCapturehum,
             'lastCaptureco2' => $lastCaptureco2,
+            'roomsWithLastCaptures' => $roomsWithLastCaptures,
         ]);
     }
 
@@ -66,21 +85,24 @@ class WelcomeController extends AbstractController
             throw $this->createNotFoundException('Salle non trouvée');
         }
 
-        $getLastCapture = function(string $type) use ($apiService) {
-            return $apiService->getLastCapture($type)[0] ?? null;
+       //récupération de la base de donnée de la salle
+        $dbname = $roomRepository->getRoomDb($room->getName())['dbname'];
+
+        $getLastCapture = function(string $type) use ($apiService, $dbname) {
+            return $apiService->getLastCapture($type, $dbname)[0] ?? null;
         };
 
         $lastCapturetemp = $getLastCapture('temp');
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
-        $date1 = (new \DateTime())->format('Y-m-d');
-        $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
+        $date1 = (new \DateTime('2024-12-01'))->format('Y-m-d');
+        $date2 = (new \DateTime('2025-01-31'))->format('Y-m-d');
 
         // Fonction pour récupérer les données d'intervalle pour chaque type
-        $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2) {
+        $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {
             try {
-                return $apiService->getCapturesByInterval($date1, $date2, $type, 1);
+                return $apiService->getCapturesByInterval($date1, $date2, $type, 1, $dbname);
             } catch (\Exception $e) {
                 return ['error' => $e->getMessage()];
             }

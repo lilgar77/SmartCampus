@@ -25,7 +25,6 @@
                     <button class="input-group-text" onclick="onHandleChangeFloor('slide_up')" style=" background-color: #6a0dad; color: white; border: none; border-radius:0px 15px 15px 0px;">
                             <i class="bi bi-caret-up-fill"></i>
                     </button>
-
                 </div>
                 <div class="d-flex align-items-center" style="flex: 0.35;">
                     Batiment:
@@ -38,34 +37,40 @@
             </div>
             <div class="row" >
                 {% if rooms is not empty %}
-                    {% for room in rooms %}
-                        <div class="col-md-3 align-items-center position-relative">
+                    {% for roomInfo in roomsWithLastCaptures %}
+                        <div class="col-12 col-md-4 mb-4">
+                            <div class="room-card card shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ roomInfo.room.id }}">
+                                <div class="card-body">
+                                <div class="col-md-3 align-items-center position-relative">
                             <!-- Carte de la salle -->
                             <div class="room-card card shadow-sm" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                                 <div class="card-body first">
-                                    <h5 class="card-title text-center">{{ room.name }}</h5>
-                                </div>
+                                    <h5 class="card-title">{{ roomInfo.room.name }}</h5>
+                                    <p class="card-text">
+                                        <strong>Relier à:</strong> {{ roomInfo.room.idAS is not null ? roomInfo.room.idAS.name : 'N/A' }}<br>
+                                        <strong>Étage:</strong> {{ roomInfo.room.floor.numberFloor }}<br>
+                                        <strong>Bâtiment:</strong> {{ roomInfo.room.building.NameBuilding }} ({{ roomInfo.room.building.AdressBuilding }})<br>
+                                    </p>
+
 
                                 <!-- Pop-up info -->
                                 <div class="popup-details card" style="display: none;" >
-                                    <div class="card-body">
-                                        <p class="card-text">
-                                            <strong>Relier à:</strong> {{ room.idAS is not null ? room.idAS.name : 'N/A' }}<br>
-                                            <strong>Étage:</strong> {{ room.floor.numberFloor }}<br>
-                                            <strong>Bâtiment:</strong> {{ room.building.NameBuilding }} ({{ room.building.AdressBuilding }})<br>
-                                        </p>
-                                        <div class="row">
-                                            <div class="col">
-                                                <strong>Température:</strong> {{ lastCapturetemp.valeur }} °C
+                                                <strong>Température:</strong>
+                                                <span>{{ roomInfo.lastCaptures.temp ?? 'N/A' }} °C</span>
                                             </div>
                                             <div class="col">
-                                                <strong>Humidité:</strong> {{ lastCapturehum.valeur }}%
+                                                <strong>Humidité:</strong>
+                                                <span>{{ roomInfo.lastCaptures.hum ?? 'N/A' }}%</span>
                                             </div>
                                             <div class="col">
-                                                <strong>CO2:</strong> {{ lastCaptureco2.valeur }} ppm
+                                                <strong>CO2:</strong>
+                                                <span>{{ roomInfo.lastCaptures.co2 ?? 'N/A' }} ppm</span>
                                             </div>
                                         </div>
-                                        <a href="{{ path('app_welcome_details', {id: room.id}) }}" class="btn btn-dark table-violet">Détails</a>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <a href="{{ path('app_welcome_details', {id: roomInfo.room.id}) }}" class="btn btn-dark table-violet">Détails</a>
                                     </div>
                                 </div>
                             </div>
