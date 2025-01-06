@@ -46,7 +46,7 @@ class AcquisitionSytemeController extends AbstractController
         $ASSearch=$acquisitionSystemRepository->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $data = $form->getData() ?? [];
             $ASSearch = $acquisitionSystemRepository->findByFilters($data);
         }
 
@@ -85,6 +85,12 @@ class AcquisitionSytemeController extends AbstractController
                 $entityManager->persist($installation);
                 $entityManager->flush();
             }
+
+            // Set default values for temp and humidity
+            $acquisitionSystem->setTemperature(0);
+            $acquisitionSystem->setHumidity(0);
+            $acquisitionSystem->setCO2(0);
+
             $entityManager->persist($acquisitionSystem);
             $entityManager->flush();
 

@@ -113,32 +113,13 @@
         </div>
     </div>
 
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const progressBar = document.getElementById('progress-bar');
-            const carousel = document.getElementById('stepsCarousel');
-            const prevButton = document.getElementById('prev-button');
-            const nextButton = document.getElementById('next-button');
-            const stepsCount = 4;
 
-            carousel.addEventListener('slide.bs.carousel', function (event) {
-                const currentIndex = event.to;
-                const progress = ((currentIndex + 1) / stepsCount) * 100;
+        window.progressbar = document.getElementById('progress-bar');
+        window.carousel = document.getElementById('stepsCarousel');
+        window.prevButton = document.getElementById('prev-button');
+        window.nextButton = document.getElementById('next-button');
 
-                progressBar.style.width = progress + '%';
-                progressBar.textContent = `Étape ${currentIndex + 1} sur ${stepsCount}`;
-
-                prevButton.disabled = currentIndex === 0;
-                if (currentIndex === stepsCount - 1) {
-                    nextButton.textContent = 'Valider l\'installation';
-                    nextButton.type = 'submit';
-                    nextButton.removeAttribute('data-bs-slide');
-                } else {
-                    nextButton.textContent = 'Suivant';
-                    nextButton.type = 'button';
-                    nextButton.setAttribute('data-bs-slide', 'next'); 
-                }
-            });
-        });
     </script>
 {% endblock %}

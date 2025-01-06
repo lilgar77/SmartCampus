@@ -144,32 +144,25 @@
         window.roomHumidity = {{ lastCapturehum.valeur }};
 
         // Données pour les graphiques
-        const chartLabels = [];
+        window.chartLabels = [];
         {% for item in dataTemp %}
         chartLabels.push('{{ item.dateCapture }}');
         {% endfor %}
 
-        const tempData = [];
+        window.tempData = [];
         {% for item in dataTemp %}
         tempData.push({{ item.valeur }});
         {% endfor %}
 
-        const humData = [];
+        window.humData = [];
         {% for item in dataHum %}
         humData.push({{ item.valeur }});
         {% endfor %}
 
-        const co2Data = [];
+        window.co2Data = [];
         {% for item in dataCo2 %}
         co2Data.push({{ item.valeur }});
         {% endfor %}
-    </script>
-
-
-
-
-    <script>
-
     </script>
 
 {% endblock %}
