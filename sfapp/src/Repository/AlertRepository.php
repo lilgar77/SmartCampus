@@ -24,17 +24,23 @@ class AlertRepository extends ServiceEntityRepository
 //    /**
 //     * @return Alert[] Returns an array of Alert objects
 //     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findWithoutDateEnd(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.DateEnd IS NULL')
+            ->orderBy('a.DateBegin', 'ASC') // Vous pouvez modifier l'ordre si besoin
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findWithDateEnd(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.DateEnd IS NOT NULL')
+            ->orderBy('a.DateBegin', 'ASC') // Vous pouvez modifier l'ordre si besoin
+            ->getQuery()
+            ->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Alert
 //    {

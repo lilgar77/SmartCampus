@@ -14,7 +14,8 @@ class AlertController extends AbstractController
     public function index(AlertRepository $alertRepository): Response
     {
         return $this->render('alert/index.html.twig', [
-            'alerts' => $alertRepository->findAll(),
+            'alertsBegin' => $alertRepository->findWithoutDateEnd(),
+            'alertsEnd' => $alertRepository->findWithDateEnd(),
         ]);
     }
 }

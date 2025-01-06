@@ -126,6 +126,23 @@ class AppFixtures extends Fixture
         $alert2->setDescription("Il fait très humide dans la salle");
         $manager->persist($alert2);
 
+        $alert3 = new Alert();
+        $alert3->setIdSA($acquisitionSystem);
+        $alert3->setIdRoom($room2);
+        $alert3->setType(AlertType::hum);
+        $alert3->setDateBegin(new \DateTime('now'));
+        $alert3->setDateEnd(new \DateTime('now'));
+        $alert3->setDescription("Il fait absolument humide dans la salle");
+        $manager->persist($alert3);
+
+        $alert4 = new Alert();
+        $alert4->setIdSA($acquisitionSystem);
+        $alert4->setIdRoom($room2);
+        $alert4->setType(AlertType::hum);
+        $alert4->setDateBegin(new \DateTime('now'));
+        $alert4->setDateEnd(new \DateTime('now'));
+        $alert4->setDescription("Il fait pas du tout humide dans la salle");
+        $manager->persist($alert4);
 
         $manager->flush();
     }

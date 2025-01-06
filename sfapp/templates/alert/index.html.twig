@@ -4,33 +4,80 @@
 
 {% block body %}
 
-    <div class="container mt-4">
+    <div class="container mt-2">
         <div class="card shadow-sm p-4">
-            <h1 class="h3 mb-4 text-center">ALERTES EN COURS</h1>
 
-            <!-- Tableau des salles -->
-            <table class="table table-striped table-bordered">
-                <thead class="table-violet sticky-header">
-                <tr>
-                    <th scope="col">DATE DEBUT</th>
-                    <th scope="col">NOM DU SA</th>
-                    <th scope="col">NOM DE LA SALLE</th>
-                    <th scope="col">TYPE D'ALERTE</th>
-                    <th scope="col">PROBLEME</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for alert in alerts %}
-                    <tr>
-                        <td>{{ alert.DateBegin|date("m/d/Y h:m") }}</td>
-                        <td>{{ alert.IdSA.name }}</td>
-                        <td>{{ alert.IdRoom.name }}</td>
-                        <td>{{ alert.type.value }}</td>
-                        <td>{{ alert.description }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            <div id="carouselExample" class="carousel slide">
+
+                <div class="carousel-buttons text-center mb-3">
+                    <button class="btn btn-violet me-2" type="button" data-bs-target="#carouselExample" data-bs-slide-to="0">
+                        EN COURS
+                    </button>
+                    <button class="btn btn-violet" type="button" data-bs-target="#carouselExample" data-bs-slide-to="1">
+                        TERMINÉES
+                    </button>
+                </div>
+                <div class="carousel-inner">
+                    <!-- Fond noir -->
+                    <div class="carousel-item active">
+                        <h1 class="h3 mb-4 text-center">ALERTES EN COURS</h1>
+
+                        <!-- Tableau des salles -->
+                        <table class="table table-striped table-bordered">
+                            <thead class="table-violet sticky-header">
+                            <tr>
+                                <th scope="col">DATE DEBUT</th>
+                                <th scope="col">NOM DU SA</th>
+                                <th scope="col">NOM DE LA SALLE</th>
+                                <th scope="col">TYPE D'ALERTE</th>
+                                <th scope="col">PROBLEME</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for alert in alertsBegin %}
+                                <tr>
+                                    <td>{{ alert.DateBegin|date("m/d/Y h:m") }}</td>
+                                    <td>{{ alert.IdSA.name }}</td>
+                                    <td>{{ alert.IdRoom.name }}</td>
+                                    <td>{{ alert.type.value }}</td>
+                                    <td>{{ alert.description }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Fond gris -->
+                    <div class="carousel-item">
+                        <h1 class="h3 mb-4 text-center">ALERTES TERMINÉES</h1>
+
+                        <!-- Tableau des salles -->
+                        <table class="table table-striped table-bordered">
+                            <thead class="table-violet sticky-header">
+                            <tr>
+                                <th scope="col">DATE DEBUT</th>
+                                <th scope="col">DATE FIN</th>
+                                <th scope="col">NOM DU SA</th>
+                                <th scope="col">NOM DE LA SALLE</th>
+                                <th scope="col">TYPE D'ALERTE</th>
+                                <th scope="col">PROBLEME</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for alert in alertsEnd %}
+                                <tr>
+                                    <td>{{ alert.DateBegin|date("m/d/Y h:m") }}</td>
+                                    <td>{{ alert.DateEnd|date("m/d/Y h:m") }}</td>
+                                    <td>{{ alert.IdSA.name }}</td>
+                                    <td>{{ alert.IdRoom.name }}</td>
+                                    <td>{{ alert.type.value }}</td>
+                                    <td>{{ alert.description }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
 {% endblock %}
