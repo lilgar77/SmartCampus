@@ -110,6 +110,22 @@ class RoomRepository extends ServiceEntityRepository
         return $room;
     }
 
+
+    public function findRoomWithAsInstalled(): array
+    {
+        /** @var Room[] $room */
+        $room = $this->createQueryBuilder('r')
+            ->leftJoin('r.id_AS', 'acs')
+            ->andWhere('acs IS NOT NULL')
+            ->andWhere('acs.etat = :etat')
+            ->setParameter('etat', EtatAS::Installer)
+            ->orderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $room;
+    }
+
     /**
      * @param Room $criteria
      * @return Room[]

@@ -34,7 +34,7 @@ class AlertManager
         $this->logger->info('Vérification des alertes lancée.');
 
         // Récupère toutes les salles
-        $rooms = $this->roomRepository->findRoomWithAs();
+        $rooms = $this->roomRepository->findRoomWithAsInstalled();
 
         foreach ($rooms as $room) {
             $this->checkThresholds($room, $room->getIdAS()->getTemperature(), $room->getIdAS()->getHumidity(), $room->getIdAS()->getCO2());
@@ -69,7 +69,7 @@ class AlertManager
                 $alert->setType(AlertType::temp);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
-                $alert->setDescription("Alerte" . $typeName);
+                $alert->setDescription("Alerte " . $typeName);
                 $this->entityManager->persist($alert);
             }
         } elseif ($activeAlert) {
@@ -91,7 +91,7 @@ class AlertManager
                 $alert->setType(AlertType::hum);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
-                $alert->setDescription("Alerte" . $typeName);
+                $alert->setDescription("Alerte " . $typeName);
                 $this->entityManager->persist($alert);
             }
         } elseif ($activeAlert) {
@@ -113,7 +113,7 @@ class AlertManager
                 $alert->setType(AlertType::co2);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
-                $alert->setDescription("Alerte" . $typeName);
+                $alert->setDescription("Alerte " . $typeName);
                 $this->entityManager->persist($alert);
             }
         } elseif ($activeAlert) {
