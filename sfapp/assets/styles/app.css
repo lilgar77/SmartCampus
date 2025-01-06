@@ -104,15 +104,8 @@ body.modal-open .background-container {
     border-color: #590b92;
 }
 
-/* for the dashboard */
-
-.room-card {
-    position: relative; /* Position relative pour que les pop-ups enfants puissent être positionnées par rapport à elle */
-    overflow: visible; /* S'assure que la pop-up n'est pas coupée */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
 .room-card:hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     transform: scale(1.05);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
@@ -132,8 +125,38 @@ body.modal-open .background-container {
     color: #333;
 }
 
-.card-body a, .card-body button {
+.card-body a{
     margin-top: 10px;
+}
+
+.slide_up{
+    animation: slideUp 1s ease-in-out;
+}
+
+.slide_down {
+    animation: slideDown 1s ease-in-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .progress-circle-container {
@@ -375,36 +398,6 @@ body.modal-open .background-container {
 
 .message-content {
     flex-grow: 1; /* Permet au contenu du message de prendre toute la largeur disponible */
-}
-
-.slide_up{
-    animation: slideUp 1s ease-in-out;
-}
-
-.slide_down {
-    animation: slideDown 1s ease-in-out;
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 /* Couleur par défaut du header */

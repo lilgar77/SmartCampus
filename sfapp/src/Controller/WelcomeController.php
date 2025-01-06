@@ -23,7 +23,7 @@ class WelcomeController extends AbstractController
     }
 
     #[Route('/', name: 'app_welcome')]
-    public function index(Request $request, RoomRepository $roomRepository): Response
+    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService): Response
     {
         // Récupération de toutes les salles
         $room = new Room();
@@ -69,9 +69,6 @@ class WelcomeController extends AbstractController
             'controller_name' => 'WelcomeController',
             'room'  => $form->createView(),
             'rooms' => $rooms,
-            'lastCapturetemp' => $lastCapturetemp,
-            'lastCapturehum' => $lastCapturehum,
-            'lastCaptureco2' => $lastCaptureco2,
             'roomsWithLastCaptures' => $roomsWithLastCaptures,
         ]);
     }

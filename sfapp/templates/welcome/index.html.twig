@@ -38,38 +38,29 @@
             <div class="row" >
                 {% if rooms is not empty %}
                     {% for roomInfo in roomsWithLastCaptures %}
-                        <div class="col-12 col-md-4 mb-4">
-                            <div class="room-card card shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ roomInfo.room.id }}">
-                                <div class="card-body">
-                                <div class="col-md-3 align-items-center position-relative">
+                        <div class="col-md-3 align-items-center position-relative">
                             <!-- Carte de la salle -->
                             <div class="room-card card shadow-sm" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
-                                <div class="card-body first">
-                                    <h5 class="card-title">{{ roomInfo.room.name }}</h5>
-                                    <p class="card-text">
-                                        <strong>Relier à:</strong> {{ roomInfo.room.idAS is not null ? roomInfo.room.idAS.name : 'N/A' }}<br>
-                                        <strong>Étage:</strong> {{ roomInfo.room.floor.numberFloor }}<br>
-                                        <strong>Bâtiment:</strong> {{ roomInfo.room.building.NameBuilding }} ({{ roomInfo.room.building.AdressBuilding }})<br>
-                                    </p>
-
-
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">{{ roomInfo.room.name }}</h5>
+                                </div>
                                 <!-- Pop-up info -->
                                 <div class="popup-details card" style="display: none;" >
-                                                <strong>Température:</strong>
-                                                <span>{{ roomInfo.lastCaptures.temp ?? 'N/A' }} °C</span>
+                                    <div class="card-body">
+                                        <div class="card-text">
+                                            <strong>Relier à:</strong> {{ roomInfo.room.idAS is not null ? roomInfo.room.idAS.name : 'N/A' }}<br>
+                                            <strong>Étage:</strong> {{ roomInfo.room.floor.numberFloor }}<br>
+                                            <strong>Bâtiment:</strong> {{ roomInfo.room.building.NameBuilding }} ({{ roomInfo.room.building.AdressBuilding }})<br>
+                                            <div class="col">
+                                                <strong>Température:</strong> {{ roomInfo.lastCaptures.temp ?? 'N/A' }} °C
                                             </div>
                                             <div class="col">
-                                                <strong>Humidité:</strong>
-                                                <span>{{ roomInfo.lastCaptures.hum ?? 'N/A' }}%</span>
+                                                <strong>Humidité:</strong>{{ roomInfo.lastCaptures.hum ?? 'N/A' }}%
                                             </div>
                                             <div class="col">
-                                                <strong>CO2:</strong>
-                                                <span>{{ roomInfo.lastCaptures.co2 ?? 'N/A' }} ppm</span>
+                                                <strong>CO2:</strong> {{ roomInfo.lastCaptures.co2 ?? 'N/A' }} ppm
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mt-3">
                                         <a href="{{ path('app_welcome_details', {id: roomInfo.room.id}) }}" class="btn btn-dark table-violet">Détails</a>
                                     </div>
                                 </div>
