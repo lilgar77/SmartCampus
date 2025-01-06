@@ -30,6 +30,9 @@ class Alert
     #[ORM\Column(enumType: AlertType::class)] // Utilisation de l'enum
     private ?AlertType $type = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +94,18 @@ class Alert
     public function setIdRoom(?Room $IdRoom): static
     {
         $this->IdRoom = $IdRoom;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
