@@ -22,6 +22,11 @@ return [
     'room' => [
         'path' => 'js/room.js',
         'entrypoint' => true,
-    ]
+    ],
+
+    'plan' => [
+    'path' => 'js/plan.js',
+    'entrypoint' => true,
+]
 
 ];
