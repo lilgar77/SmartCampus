@@ -4,15 +4,15 @@
 
 {% block body %}
 
-    <div class="container mt-5">
-        <div class="card shadow-sm p-4">
+    <div class="container d-flex justify-content-center align-items-center mt-5" style="min-height: 70vh;">
+        <div class="card shadow-sm p-4" style="width: 100%; max-width: 600px;">
             <h2 class="text-center mb-3" style="font-size: 1.3rem;">Ajouter un Système d'Acquisition</h2>
             <p class="text-muted text-center" style="font-size: 0.9rem;">Remplissez ce formulaire pour ajouter un nouveau SA.</p>
 
             {{ form_start(ASForm, { 'attr': {'class': 'row g-4'} }) }}
 
-            <!-- Colonne gauche -->
-            <div class="col-md-6">
+            <!-- Form Fields -->
+            <div class="col-12">
                 <div class="mb-3">
                     {{ form_label(ASForm.macAdress, 'Adresse MAC', {'label_attr': {'class': 'form-label'}}) }}
                     {{ form_widget(ASForm.macAdress, {'attr': {'class': 'form-control'}}) }}
@@ -28,25 +28,6 @@
                     {{ form_widget(ASForm.etat, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
                     {{ form_errors(ASForm.etat, {'attr': {'class': 'text-danger'}}) }}
                 </div>
-            </div>
-
-            <!-- Colonne droite -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form_label(ASForm.temperature, 'Température (°C)', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(ASForm.temperature, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(ASForm.temperature, {'attr': {'class': 'text-danger'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(ASForm.humidity, 'Humidité (%)', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(ASForm.humidity, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(ASForm.humidity, {'attr': {'class': 'text-danger'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(ASForm.CO2, 'CO2 (ppm)', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(ASForm.CO2, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(ASForm.CO2, {'attr': {'class': 'text-danger'}}) }}
-                </div>
                 <div class="mb-3">
                     {{ form_label(ASForm.wording, 'Libellé', {'label_attr': {'class': 'form-label'}}) }}
                     {{ form_widget(ASForm.wording, {'attr': {'class': 'form-control'}}) }}
@@ -54,7 +35,7 @@
                 </div>
             </div>
 
-            <!-- Boutons -->
+            <!-- Bouton -->
             <div class="col-12 text-center">
                 <button type="submit" class="btn" style="background-color: #6a0dad; color: #fff; font-size: 1rem; padding: 0.75rem 2rem;">Ajouter un Système d'Acquisition</button>
             </div>
