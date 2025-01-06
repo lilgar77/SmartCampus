@@ -26,6 +26,10 @@ return [
     'graphdetail' => [
         'path' => 'js/graphdetail.js',
         'entrypoint' => true,
+    ],
+    'carouseltechnician' => [
+    'path' => 'js/carouseltechnician.js',
+    'entrypoint' => true,
     ]
 
 ];
