@@ -109,4 +109,12 @@ class Alert
 
         return $this;
     }
+
+    public function closeAlert(): static
+    {
+        if ($this->DateEnd === null) {
+            $this->DateEnd = new \DateTime(); // Définit la date de fin comme la date actuelle
+        }
+        return $this;
+    }
 }
