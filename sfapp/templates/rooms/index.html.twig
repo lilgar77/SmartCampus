@@ -40,39 +40,53 @@
             {% endfor %}
             <!-- Fin Flash Messages -->
 
-            <!-- Barre de recherche -->
-            <div class="d-flex justify-content-center mb-4">
-                {{ form_start(room, { 'attr': {'class': 'd-flex w-50 align-items-center'} }) }}
-                <div class="input-group" style="border-radius: 25px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);">
-                    <span class="input-group-text" style="border-radius: 25px 0 0 25px; background-color: #6a0dad; color: #fff;">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    {{ form_widget(room.name, { 'attr': {'class': 'form-control', 'placeholder': 'Rechercher une salle...', 'style': 'border: none; border-radius: 0 25px 25px 0;'} }) }}
-                </div>
-                <button type="submit" class="btn ms-2"
-                        style="background-color: #6a0dad; color: #fff; border-radius: 25px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);">
-                    Rechercher
-                </button>
-                {{ form_end(room) }}
+            <div class="d-flex justify-content-end mb-4">
 
-                    <a href="{{ path('app_room_add') }}" class="ms-4">
-                        <button type="button" class="btn btn-violet text-white">Ajouter une Salle</button>
-                    </a>
+                <a href="{{ path('app_room_add') }}" class="ms-4">
+                    <button type="button" class="btn btn-violet text-white">Ajouter une Salle</button>
+                </a>
             </div>
-            <!-- Fin Barre de recherche -->
 
             <!-- Tableau des salles -->
-                <table class="table table-striped table-bordered">
-                    <thead class="table-violet sticky-header">
-                    <tr>
-                        <th scope="col">NOM</th>
-                        <th scope="col">NOM DU SA RELIÉ</th>
-                        <th scope="col">ETAGE</th>
-                        <th scope="col">BATIMENT</th>
-                        <th scope="col">ACTIONS</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+            <table class="table table-striped table-bordered">
+                <thead class="table-violet sticky-header">
+                {{ form_start(room, { 'attr': {'class': 'd-flex align-items-center'} }) }}
+                <tr>
+                    <th scope="col">
+                        <div class="d-flex align-items-center">
+                            NOM:
+                            {{ form_widget(room.name, { 'attr': {'class': 'form-control', 'placeholder': 'Rechercher une salle...', 'style':' margin-left: 5px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);'} }) }}
+                        </div>
+                    </th>
+                    <th scope="col" class="text-center">
+                        <span style="line-height: 2.25;">NOM DU SA RELIÉ</span>
+                    </th>
+                    <th scope="col">
+                        <div class="d-flex align-items-center" style="border:10px">
+                            Étage:
+                            {{ form_widget(room.floor, { 'attr': {'class': 'form-control', 'onchange': 'this.form.submit()', 'style': 'border-radius:15px 0px 0px 15px; border-right:none; background-color: #6a0dad; color: white; margin-left:5px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);'}}) }}
+                            <span class="input-group-text" style="background-color: #6a0dad; color: white;border-left: none; border-radius: 0px 15px 15px 0px">
+                                <i class="bi bi-caret-down-fill"></i>
+                            </span>
+                        </div>
+
+                    </th>
+                    <th scope="col" >
+                        <div class="d-flex align-items-center">
+                            Bâtiment:
+                            {{ form_widget(room.building, { 'attr': {'class': 'form-control', 'onchange': 'this.form.submit()', 'style': 'border-radius:15px 0px 0px 15px; border-right:none; background-color: #6a0dad; color: white; margin-left:5px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);'} }) }}
+                            <span class="input-group-text" style="background-color: #6a0dad; color: white; border-left: none; border-radius: 0px 15px 15px 0px">
+                                <i class="bi bi-caret-down-fill"></i>
+                            </span>
+                        </div>
+                    </th>
+                    <th scope="col" class="text-center">
+                        <span style="line-height: 2.25;">ACTIONS</span>
+                    </th>
+                </tr>
+                {{ form_end(room) }}
+                </thead>
+                <tbody>
                     {% for room in rooms %}
                         <tr>
                             <td>{{ room.name }}</td>

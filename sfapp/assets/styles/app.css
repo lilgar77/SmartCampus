@@ -4,7 +4,7 @@ body {
 .text-link{
     text-decoration-color: mediumpurple;
     color : mediumpurple;
-    }
+}
 
 body.modal-open .background-container {
     filter: blur(4px);
@@ -74,7 +74,6 @@ body.modal-open .background-container {
 
 .icon {
     position: relative;
-    /*argin-top: 5px;*/
     margin-right: 30px;
     top: 0px;
     right: 0px;
@@ -105,15 +104,9 @@ body.modal-open .background-container {
     border-color: #590b92;
 }
 
-/* for the dashboard */
-
-.room-card {
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
 .room-card:hover {
-    transform: scale(1.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(1.05);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -132,8 +125,38 @@ body.modal-open .background-container {
     color: #333;
 }
 
-.card-body a, .card-body button {
+.card-body a{
     margin-top: 10px;
+}
+
+.slide_up{
+    animation: slideUp 1s ease-in-out;
+}
+
+.slide_down {
+    animation: slideDown 1s ease-in-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .progress-circle-container {

@@ -115,7 +115,7 @@
     {% else %}
         <h1 class="text-center mb-4">Résultats de la journée:</h1>
 
-    </div>
+
         <div class="d-flex justify-content-center mb-4">
             <div style="width: 30%; text-align: center; margin-right: 5%;">
                 <h5>Température (°C)</h5>
@@ -143,18 +143,10 @@
         window.roomTemp = {{ lastCapturetemp.valeur }};
         window.roomHumidity = {{ lastCapturehum.valeur }};
 
-    </script>
-
-
-
-
-
-
-    <script>
         // Données pour les graphiques
-        const labels = [];
+        const chartLabels = [];
         {% for item in dataTemp %}
-        labels.push('{{ item.dateCapture }}');
+        chartLabels.push('{{ item.dateCapture }}');
         {% endfor %}
 
         const tempData = [];
@@ -171,68 +163,13 @@
         {% for item in dataCo2 %}
         co2Data.push({{ item.valeur }});
         {% endfor %}
+    </script>
 
-        // Créer les graphiques
-        const tempChartCtx = document.getElementById('tempChart').getContext('2d');
-        const humChartCtx = document.getElementById('humChart').getContext('2d');
-        const co2ChartCtx = document.getElementById('co2Chart').getContext('2d');
 
-        const tempChart = new Chart(tempChartCtx, {
-            type: 'line',  // ou 'bar'
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Température (°C)',
-                    data: tempData,
-                    borderColor: 'rgb(255, 99, 132)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
 
-        const humChart = new Chart(humChartCtx, {
-            type: 'line',  // ou 'bar'
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Humidité (%)',
-                    data: humData,
-                    borderColor: 'rgb(54, 162, 235)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
 
-        const co2Chart = new Chart(co2ChartCtx, {
-            type: 'line',  // ou 'bar'
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'CO2 (ppm)',
-                    data: co2Data,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
+    <script>
+
     </script>
 
 {% endblock %}

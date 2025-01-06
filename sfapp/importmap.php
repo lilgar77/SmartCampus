@@ -20,8 +20,18 @@ return [
     ],
     'room' => [
         'path' => 'js/room.js',
+        'entrypoint' => true,
     ],
-    'chart.js' => [
-        'url' => 'https://cdn.jsdelivr.net/npm/chart.js@4.4.7/+esm',
+
+    'plan' => [
+
+        'path' => 'js/plan.js',
+        'entrypoint' => true,
     ],
+    
+    'graphdetail' => [
+        'path' => 'js/graphdetail.js',
+        'entrypoint' => true,
+    ]
+
 ];
