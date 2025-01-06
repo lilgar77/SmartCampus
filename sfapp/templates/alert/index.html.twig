@@ -3,10 +3,6 @@
 {% block title %}Hello AlertController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
     <div class="container mt-4">
         <div class="card shadow-sm p-4">
@@ -24,6 +20,15 @@
                 </tr>
                 </thead>
                 <tbody>
+                {% for alert in alerts %}
+                    <tr>
+                        <td>{{ alert.DateBegin|date("m/d/Y h:m") }}</td>
+                        <td>{{ alert.IdSA.name }}</td>
+                        <td>{{ alert.IdRoom.name }}</td>
+                        <td>{{ alert.type.value }}</td>
+                        <td>{{ alert.description }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>

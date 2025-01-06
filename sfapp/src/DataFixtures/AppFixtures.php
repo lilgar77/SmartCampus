@@ -10,6 +10,8 @@ use App\Model\EtatAS;
 use App\Entity\Building;
 use App\Entity\Floor;
 use App\Entity\User;
+use App\Entity\Alert;
+use App\Model\AlertType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -28,7 +30,7 @@ class AppFixtures extends Fixture
         $acquisitionSystem->setTemperature(20);
         $acquisitionSystem->setCo2(400);
         $acquisitionSystem->setHumidity(50);
-        $acquisitionSystem->setName('C3-PO');
+        $acquisitionSystem->setName('ESP-11');
         $acquisitionSystem->setWording('Salle de réunion');
         $acquisitionSystem->setMacAdress('00:00:00:00:00:00');
         $acquisitionSystem->setEtat(EtatAS::Disponible);
@@ -79,12 +81,13 @@ class AppFixtures extends Fixture
         $room->setName('D302');
         $room->setFloor($floor4);
         $room->setBuilding($building);
-        $room->setIdAS($acquisitionSystem);
+        $room->setIdAS($acquisitionSystem2);
 
         $room2 = new Room();
-        $room2->setName('D101');
+        $room2->setName('D304');
         $room2->setFloor($floor4);
         $room2->setBuilding($building);
+        $room2->setIdAS($acquisitionSystem);
 
         $manager->persist($room);
         $manager->persist($room2);
@@ -106,6 +109,22 @@ class AppFixtures extends Fixture
         $user->setPassword($hashedPassword);
         $user->setRoles(['ROLE_TECHNICIEN']);
         $manager->persist($user);
+
+        $alert1 = new Alert();
+        $alert1->setIdSA($acquisitionSystem);
+        $alert1->setIdRoom($room2);
+        $alert1->setType(AlertType::temp);
+        $alert1->setDateBegin(new \DateTime('now'));
+        $alert1->setDescription("Il fait beaucoup trop chaud");
+        $manager->persist($alert1);
+
+        $alert2 = new Alert();
+        $alert2->setIdSA($acquisitionSystem);
+        $alert2->setIdRoom($room2);
+        $alert2->setType(AlertType::hum);
+        $alert2->setDateBegin(new \DateTime('now'));
+        $alert2->setDescription("Il fait très humide dans la salle");
+        $manager->persist($alert2);
 
 
         $manager->flush();
