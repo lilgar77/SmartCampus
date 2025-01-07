@@ -69,7 +69,7 @@ class AlertManager
             }
         } elseif ($activeAlert) {
             // Si les seuils sont respectés et qu'une alerte est active, on la clôture
-            $activeAlert->closeAlert();
+            $activeAlert->setDateEnd(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
         }
     }
 
@@ -91,7 +91,7 @@ class AlertManager
             }
         } elseif ($activeAlert) {
             // Si les seuils sont respectés et qu'une alerte est active, on la clôture
-            $activeAlert->closeAlert();
+            $activeAlert->setDateEnd(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
         }
     }
 
