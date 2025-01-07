@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\AlertManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,15 +14,21 @@ use App\Service\ApiService;
 class DiagnosticController extends AbstractController
 {
     private ApiService $apiService;
+    private AlertManager $alertManager;
 
-    public function __construct(ApiService $apiService)
+
+    public function __construct(ApiService $apiService,AlertManager $alertManager)
     {
         $this->apiService = $apiService;
+        $this->alertManager = $alertManager;
+
     }
 
     #[Route('/diagnostic', name: 'app_diagnostic')]
     public function index(AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
+        $this->alertManager->checkAndCreateAlerts();
+
         $AcquisitionSystems = $acquisitionSystemRepository->findInstalledSystems();
 
         return $this->render('diagnostic/index.html.twig', [
@@ -32,6 +39,8 @@ class DiagnosticController extends AbstractController
     #[Route('/diagnostic/{id}', name: 'app_diagnostic_details')]
     public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, ApiService $apiService, RoomRepository $roomRepository): Response
     {
+        $this->alertManager->checkAndCreateAlerts();
+
         $AS = $acquisitionSystemRepository->find($id);
         $room = $roomRepository->find($AS->getRoom());
         $dbname = $roomRepository->getRoomDb($room->getName())['dbname'];
