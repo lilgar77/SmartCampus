@@ -84,7 +84,7 @@ class AppFixtures extends Fixture
         $floor4 = new Floor();
         $floor4->setIdBuilding($building);
         $floor4->setNumberFloor(3);
-        $manager->persist($floor4   );
+        $manager->persist($floor4);
 
 // Création des étages et des salles
         /*for ($floorNumber = 0; $floorNumber <= 3; $floorNumber++) {

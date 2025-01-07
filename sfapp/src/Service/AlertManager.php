@@ -65,8 +65,7 @@ class AlertManager
             // Si les seuils sont dépassés et qu'il n'y a pas d'alerte active, on en crée une
             if (!$activeAlert) {
                 $alert = new Alert();
-                $alert->setDateBegin(new \DateTime());
-                $alert->setType(AlertType::temp);
+                $alert->setDateBegin(new \DateTime('now', new \DateTimeZone('Europe/Paris')));                $alert->setType(AlertType::temp);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
                 $alert->setDescription("Alerte " . $typeName);
@@ -87,7 +86,7 @@ class AlertManager
             // Si les seuils sont dépassés et qu'il n'y a pas d'alerte active, on en crée une
             if (!$activeAlert) {
                 $alert = new Alert();
-                $alert->setDateBegin(new \DateTime());
+                $alert->setDateBegin(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
                 $alert->setType(AlertType::hum);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
@@ -105,12 +104,11 @@ class AlertManager
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::co2);
 
-        if ($value < 400 || $value > 1000) {
+        if ($value > 200) {
             // Si les seuils sont dépassés et qu'il n'y a pas d'alerte active, on en crée une
             if (!$activeAlert) {
                 $alert = new Alert();
-                $alert->setDateBegin(new \DateTime());
-                $alert->setType(AlertType::co2);
+                $alert->setDateBegin(new \DateTime('now', new \DateTimeZone('Europe/Paris')));                $alert->setType(AlertType::co2);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
                 $alert->setDescription("Alerte " . $typeName);
