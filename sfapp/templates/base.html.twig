@@ -22,7 +22,7 @@
         <script async src="https://app3.weatherwidget.org/js/?id=ww_2d75bd80bd96c"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <!-- Import custom JS -->
-
+        {{ importmap("carouseltechnician") }}
         {{ importmap("room") }}
         {{ importmap("plan") }}
         {{ importmap("graphdetail") }}
@@ -73,6 +73,9 @@
 
         <a href="{{ path('app_diagnostic') }}" class="mx-3 text-link
          {% if app.request.attributes.get('_route') starts with 'app_diagnostic'%}text-dark text-decoration-underline active{% endif %}">Diagnostic</a>
+
+        <a href="{{ path('app_alert') }}" class="mx-3 text-link
+         {% if app.request.attributes.get('_route') starts with 'app_alert'%}text-dark text-decoration-underline active{% endif %}">Journal des alertes</a>
     {% endif %}
 
     {% if is_granted('ROLE_TECHNICIEN') %}

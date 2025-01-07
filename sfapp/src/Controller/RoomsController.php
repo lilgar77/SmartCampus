@@ -13,6 +13,7 @@
 namespace App\Controller;
 
 use App\Repository\RoomRepository;
+use App\Service\AlertManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,12 +25,22 @@ use App\Form\RoomFormType;
 
 class RoomsController extends AbstractController
 {
+    private AlertManager $alertManager;
+
+
+
+    public function __construct(AlertManager $alertManager)
+    {
+        $this->alertManager = $alertManager;
+    }
     #[Route('/rooms', name: 'app_rooms')]
     public function index(Request $request, RoomRepository $roomRepository): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
 
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
@@ -52,11 +63,15 @@ class RoomsController extends AbstractController
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $room = new Room();
-        $form = $this->createForm(RoomFormType::class, $room);
+
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
+        $this->alertManager->checkAndCreateAlerts();
+        $room = new Room();
+        $form = $this->createForm(RoomFormType::class, $room);
+
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -81,6 +96,7 @@ class RoomsController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
         $entityManager->remove($room);
         $entityManager->flush();
 
@@ -97,6 +113,7 @@ class RoomsController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
         $form = $this->createForm(RoomFormType::class, $room);
 
         $form->handleRequest($request);

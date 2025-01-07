@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Room;
 use App\Form\SearchRoomFormType;
+use App\Service\AlertManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,15 +17,20 @@ use App\Service\ApiService;
 class WelcomeController extends AbstractController
 {
     private ApiService $apiService;
+    private AlertManager $alertManager;
 
-    public function __construct(ApiService $apiService)
+
+    public function __construct(ApiService $apiService, AlertManager $alertManager)
     {
         $this->apiService = $apiService;
+        $this->alertManager = $alertManager;
+
     }
 
     #[Route('/', name: 'app_welcome')]
     public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService): Response
     {
+        $this->alertManager->checkAndCreateAlerts();
         // Récupération de toutes les salles
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
@@ -77,6 +83,7 @@ class WelcomeController extends AbstractController
     #[Route('/{id}', name: 'app_welcome_details')]
     public function details(RoomRepository $roomRepository, int $id, ApiService $apiService): Response
     {
+        $this->alertManager->checkAndCreateAlerts();
         $room = $roomRepository->find($id);
         if (!$room) {
             throw $this->createNotFoundException('Salle non trouvée');
@@ -93,8 +100,9 @@ class WelcomeController extends AbstractController
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
-        $date1 = (new \DateTime('2024-12-01'))->format('Y-m-d');
-        $date2 = (new \DateTime('2025-01-31'))->format('Y-m-d');
+        $date1 = (new \DateTime())->format('Y-m-d');
+        $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
+
 
         // Fonction pour récupérer les données d'intervalle pour chaque type
         $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {

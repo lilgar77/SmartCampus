@@ -40,12 +40,34 @@
                     {% for roomInfo in roomsWithLastCaptures %}
                         <div class="col-md-3 align-items-center position-relative">
                             <!-- Carte de la salle -->
-                            <div class="room-card card shadow-sm" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                            <div class="room-card card shadow-sm position-relative" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                                <!-- Indicateur de l'état -->
+                                <span
+                                        class="position-absolute top-1 end-1 translate-middle p-2 rounded-circle
+            {% if roomInfo.lastCaptures.temp is not null and roomInfo.lastCaptures.hum is not null and roomInfo.lastCaptures.co2 is not null %}
+                {% if roomInfo.lastCaptures.co2 > 1000 %}
+                    bg-danger
+                {% elseif roomInfo.lastCaptures.temp < 17 and roomInfo.lastCaptures.hum > 70 %}
+                    bg-warning
+                {% elseif roomInfo.lastCaptures.temp < 17 and roomInfo.lastCaptures.hum < 40 %}
+                    bg-info
+                {% elseif roomInfo.lastCaptures.temp > 25 and roomInfo.lastCaptures.hum > 70 %}
+                    bg-warning
+                {% elseif roomInfo.lastCaptures.temp > 25 and roomInfo.lastCaptures.hum < 40 %}
+                    bg-info
+                {% else %}
+                    bg-success
+                {% endif %}
+            {% else %}
+                bg-secondary
+            {% endif %}">
+        </span>
+
                                 <div class="card-body">
                                     <h5 class="card-title text-center">{{ roomInfo.room.name }}</h5>
                                 </div>
                                 <!-- Pop-up info -->
-                                <div class="popup-details card" style="display: none;" >
+                                <div class="popup-details card" style="display: none;">
                                     <div class="card-body">
                                         <div class="card-text">
                                             <strong>Relier à:</strong> {{ roomInfo.room.idAS is not null ? roomInfo.room.idAS.name : 'N/A' }}<br>
@@ -55,7 +77,7 @@
                                                 <strong>Température:</strong> {{ roomInfo.lastCaptures.temp ?? 'N/A' }} °C
                                             </div>
                                             <div class="col">
-                                                <strong>Humidité:</strong>{{ roomInfo.lastCaptures.hum ?? 'N/A' }}%
+                                                <strong>Humidité:</strong> {{ roomInfo.lastCaptures.hum ?? 'N/A' }}%
                                             </div>
                                             <div class="col">
                                                 <strong>CO2:</strong> {{ roomInfo.lastCaptures.co2 ?? 'N/A' }} ppm

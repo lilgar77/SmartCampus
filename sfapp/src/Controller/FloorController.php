@@ -11,7 +11,7 @@
 ###############################################################
 namespace App\Controller;
 
-
+use App\Service\AlertManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +25,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class FloorController extends AbstractController
 {
+    private AlertManager $alertManager;
+
+
+
+    public function __construct(AlertManager $alertManager)
+    {
+        $this->alertManager = $alertManager;
+    }
 
     #[Route('/floor', name: 'app_floor')]
     public function index(Request $request, FloorRepository $floorRepository): Response
@@ -32,6 +40,7 @@ class FloorController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
         $floor = new Floor();
         $form = $this->createForm(SearchFloorType::class, $floor, [
             'method' => 'GET',
@@ -44,6 +53,8 @@ class FloorController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $floorSearch = $floorRepository->findFloorByBuilding($floor);
         }
+        
+        $this->alertManager->checkAndCreateAlerts();
 
         return $this->render('floor/index.html.twig', [
             'floor' => $form->createView(),
@@ -57,6 +68,8 @@ class FloorController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
         $floor = new Floor();
         $form = $this->createForm(FloorType::class, $floor);
 
@@ -85,6 +98,8 @@ class FloorController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
         $entityManager->remove($floor);
         $entityManager->flush();
 
@@ -100,6 +115,8 @@ class FloorController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
         $form = $this->createForm(FloorType::class, $floor);
 
         $form->handleRequest($request);

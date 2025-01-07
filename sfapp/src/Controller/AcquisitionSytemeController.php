@@ -20,6 +20,7 @@ use App\Form\SearchAquisitionSystemeType;
 use App\Form\SearchRoomFormType;
 use App\Model\EtatAS;
 use App\Repository\AcquisitionSystemRepository;
+use App\Service\AlertManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,8 +28,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
 class AcquisitionSytemeController extends AbstractController
 {
+    private AlertManager $alertManager;
+
+    public function __construct(AlertManager $alertManager)
+    {
+        $this->alertManager = $alertManager;
+    }
 
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository): Response
@@ -36,6 +44,8 @@ class AcquisitionSytemeController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
+        $this->alertManager->checkAndCreateAlerts();
 
         // Créer le formulaire
         $form = $this->createForm(SearchAquisitionSystemeType::class, null, [
@@ -65,6 +75,9 @@ class AcquisitionSytemeController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
+        $this->alertManager->checkAndCreateAlerts();
+
         $acquisitionSystem = new AcquisitionSystem();
 
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
@@ -86,6 +99,12 @@ class AcquisitionSytemeController extends AbstractController
                 $entityManager->persist($installation);
                 $entityManager->flush();
             }
+
+            // Set default values for temp and humidity
+            $acquisitionSystem->setTemperature(0);
+            $acquisitionSystem->setHumidity(0);
+            $acquisitionSystem->setCO2(0);
+
             $entityManager->persist($acquisitionSystem);
             $entityManager->flush();
 
@@ -108,6 +127,8 @@ class AcquisitionSytemeController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
         $entityManager->remove($acquisitionSystem);
         $entityManager->flush();
 
@@ -123,6 +144,8 @@ class AcquisitionSytemeController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
 
         $form->handleRequest($request);
