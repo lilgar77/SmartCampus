@@ -139,7 +139,7 @@ class AcquisitionSytemeController extends AbstractController
             return $this->redirectToRoute('app_error_403');
         }
         $this->alertManager->checkAndCreateAlerts();
-        
+
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
 
         $form->handleRequest($request);

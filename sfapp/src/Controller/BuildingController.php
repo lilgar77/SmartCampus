@@ -12,6 +12,7 @@
 namespace App\Controller;
 
 use App\Form\SearchBuldingType;
+use App\Service\AlertManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class BuildingController extends AbstractController
 {
+    private AlertManager $alertManager;
+
+    public function __construct(AlertManager $alertManager)
+    {
+        $this->alertManager = $alertManager;
+    }
    
     #[Route('/building', name: 'app_building')]
     public function index(Request $request, BuildingRepository $buildingRepository): Response
@@ -31,6 +38,8 @@ class BuildingController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
+        $this->alertManager->checkAndCreateAlerts();
 
         $building = new Building();
         $form = $this->createForm(SearchBuldingType::class, $building, [
@@ -60,6 +69,8 @@ class BuildingController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
         $building = new Building();
         $form = $this->createForm(BuildingType::class, $building);
 
@@ -87,6 +98,8 @@ class BuildingController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
         $entityManager->remove($building);
         $entityManager->flush();
 
@@ -102,6 +115,8 @@ class BuildingController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+
         $form = $this->createForm(BuildingType::class, $building);
 
         $form->handleRequest($request);
