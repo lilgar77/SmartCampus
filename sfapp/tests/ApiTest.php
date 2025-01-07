@@ -11,14 +11,14 @@ class ApiTest extends TestCase
 {
     public function testGetCapturesByIntervalSuccess(): void
     {
-        $mockHttpClient = $this->createMock(HttpClientInterface::class);
-        $mockResponse = $this->createMock(ResponseInterface::class);
+        $HttpClient = $this->createMock(HttpClientInterface::class);
+        $Response = $this->createMock(ResponseInterface::class);
 
-        $mockResponse->method('getStatusCode')->willReturn(200);
+        $Response->method('getStatusCode')->willReturn(200);
 
-        $mockHttpClient->method('request')->willReturn($mockResponse);
+        $HttpClient->method('request')->willReturn($Response);
 
-        $apiService = new ApiService($mockHttpClient);
+        $apiService = new ApiService($HttpClient);
         $result = $apiService->getCapturesByInterval('2025-01-01', '2025-01-06', 'temp', 1, 'sae34bdk1eq2');
 
         $this->assertIsArray($result);
@@ -27,14 +27,14 @@ class ApiTest extends TestCase
 
     public function testGetCapturesByIntervalFailure(): void
     {
-        $mockHttpClient = $this->createMock(HttpClientInterface::class);
-        $mockResponse = $this->createMock(ResponseInterface::class);
+        $HttpClient = $this->createMock(HttpClientInterface::class);
+        $Response = $this->createMock(ResponseInterface::class);
 
-        $mockResponse->method('getStatusCode')->willReturn(500);
+        $Response->method('getStatusCode')->willReturn(500);
 
-        $mockHttpClient->method('request')->willReturn($mockResponse);
+        $HttpClient->method('request')->willReturn($Response);
 
-        $apiService = new ApiService($mockHttpClient);
+        $apiService = new ApiService($HttpClient);
 
         $this->expectException(\Exception::class);
         $apiService->getCapturesByInterval('2025-01-01', '2025-01-06', 'temp', 1, 'sae34bdk1eq2');
@@ -42,14 +42,14 @@ class ApiTest extends TestCase
 
     public function testGetLastCaptureSuccess(): void
     {
-        $mockHttpClient = $this->createMock(HttpClientInterface::class);
-        $mockResponse = $this->createMock(ResponseInterface::class);
+        $HttpClient = $this->createMock(HttpClientInterface::class);
+        $Response = $this->createMock(ResponseInterface::class);
 
-        $mockResponse->method('getStatusCode')->willReturn(200);
+        $Response->method('getStatusCode')->willReturn(200);
 
-        $mockHttpClient->method('request')->willReturn($mockResponse);
+        $HttpClient->method('request')->willReturn($Response);
 
-        $apiService = new ApiService($mockHttpClient);
+        $apiService = new ApiService($HttpClient);
         $result = $apiService->getLastCapture('temp', 'sae34bdk1eq2');
 
         $this->assertIsArray($result);
@@ -58,14 +58,14 @@ class ApiTest extends TestCase
 
     public function testGetLastCaptureFailure(): void
     {
-        $mockHttpClient = $this->createMock(HttpClientInterface::class);
-        $mockResponse = $this->createMock(ResponseInterface::class);
+        $HttpClient = $this->createMock(HttpClientInterface::class);
+        $Response = $this->createMock(ResponseInterface::class);
 
-        $mockResponse->method('getStatusCode')->willReturn(500);
+        $Response->method('getStatusCode')->willReturn(500);
 
-        $mockHttpClient->method('request')->willReturn($mockResponse);
+        $HttpClient->method('request')->willReturn($Response);
 
-        $apiService = new ApiService($mockHttpClient);
+        $apiService = new ApiService($HttpClient);
 
         $this->expectException(\Exception::class);
         $apiService->getLastCapture('temp', 'sae34bdk1eq2');
