@@ -1,9 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Initializing charts...');
-    console.log('Labels:', window.chartLabels);
-    console.log('Temperature:', window.tempData);
-    console.log('Humidity:', window.humData);
-    console.log('CO2:', window.co2Data);
 
     /**
      * Creates a chart using Chart.js
@@ -19,9 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
             new Chart(context, {
                 type: 'line',
                 data: {
-                    labels: window.chartLabels, 
+                    labels: window.chartLabels,
                     datasets: [{
-                        label, // Chart title (e.g., "Temperature")
+                        label, // Chart title ("Temperature")
                         data, // Data points for the line chart
                         borderColor: color,
                         tension: 0.1,

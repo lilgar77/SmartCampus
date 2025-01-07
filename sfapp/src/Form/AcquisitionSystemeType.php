@@ -20,15 +20,12 @@ class AcquisitionSystemeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('temperature')
-            ->add('CO2')
             ->add('name', null, [
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Le nom est obligatoire.',
                     ],) ],
                 ])
-            ->add('humidity')
             ->add('wording')
             ->add('macAdress', null, [
                 'constraints' => [

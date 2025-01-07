@@ -7,17 +7,17 @@ class ApiService
 {
     private HttpClientInterface $client;
 
-    // Default name for the database name in the API (D304)
-    private $dbname = 'sae34bdl1eq1';
+
 
     // Default username and password for the API
-    private $username = 'l1eq1';
-    private $userpass = 'dicvex-Zofsip-4juqru';
+    private string $username = 'l1eq1';
+    private string $userpass = 'dicvex-Zofsip-4juqru';
 
     public function __construct(HttpClientInterface $client)
     {
         $this->client = $client;
     }
+
 
     public function getCapturesByInterval(string $date1, string $date2, string $name, int $page, string $dbname): array
     {

@@ -99,6 +99,12 @@ class AcquisitionSytemeController extends AbstractController
                 $entityManager->persist($installation);
                 $entityManager->flush();
             }
+
+            // Set default values for temp and humidity
+            $acquisitionSystem->setTemperature(0);
+            $acquisitionSystem->setHumidity(0);
+            $acquisitionSystem->setCO2(0);
+
             $entityManager->persist($acquisitionSystem);
             $entityManager->flush();
 

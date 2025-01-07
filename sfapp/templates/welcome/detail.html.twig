@@ -110,6 +110,28 @@
         </div>
 
     </div>
+
+    <div class="alert-container mt-4 text-center w-50 mx-auto">
+        {% if lastCapturetemp.valeur is not null and lastCapturehum.valeur is not null and lastCaptureco2.valeur is not null %}
+            {% if lastCaptureco2.valeur > 1000 %}
+                <p class="alert alert-danger fs-4">Ouvrir les fenêtres - L'air est de mauvaise qualité (CO2 élevé)</p>
+            {% elseif lastCapturetemp.valeur < 17 and lastCapturehum.valeur > 70 %}
+                <p class="alert alert-warning fs-4">Fermer les fenêtres - Il fait trop froid et l'humidité est élevée</p>
+            {% elseif lastCapturetemp.valeur < 17 and lastCapturehum.valeur < 40 %}
+                <p class="alert alert-info fs-4">Augmenter le chauffage - La température est basse et l'air est sec</p>
+            {% elseif lastCapturetemp.valeur > 25 and lastCapturehum.valeur > 70 %}
+                <p class="alert alert-warning fs-4">Baisser le chauffage - La température est élevée et l'humidité est élevée</p>
+            {% elseif lastCapturetemp.valeur > 25 and lastCapturehum.valeur < 40 %}
+                <p class="alert alert-info fs-4">Baisser le chauffage - La température est élevée mais l'air est sec</p>
+            {% else %}
+                <p class="alert alert-success fs-4">Les conditions de la salle sont confortables.</p>
+            {% endif %}
+        {% else %}
+            <p class="alert alert-secondary fs-3">Aucune donnée disponible pour évaluer les conditions de la salle.</p>
+        {% endif %}
+    </div>
+
+
     {% if dataTemp.error is defined or dataHum.error is defined or dataCo2.error is defined %}
         <p>Erreur : {{ dataTemp.error ?? dataHum.error ?? dataCo2.error }}</p>
     {% else %}
@@ -144,32 +166,25 @@
         window.roomHumidity = {{ lastCapturehum.valeur }};
 
         // Données pour les graphiques
-        const chartLabels = [];
+        window.chartLabels = [];
         {% for item in dataTemp %}
         chartLabels.push('{{ item.dateCapture }}');
         {% endfor %}
 
-        const tempData = [];
+        window.tempData = [];
         {% for item in dataTemp %}
         tempData.push({{ item.valeur }});
         {% endfor %}
 
-        const humData = [];
+        window.humData = [];
         {% for item in dataHum %}
         humData.push({{ item.valeur }});
         {% endfor %}
 
-        const co2Data = [];
+        window.co2Data = [];
         {% for item in dataCo2 %}
         co2Data.push({{ item.valeur }});
         {% endfor %}
-    </script>
-
-
-
-
-    <script>
-
     </script>
 
 {% endblock %}
