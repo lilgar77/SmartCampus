@@ -2,25 +2,33 @@
 
 namespace App\Controller;
 
+use App\Service\AlertManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\AcquisitionSystemRepository;
+use App\Repository\RoomRepository;
 
 use App\Service\ApiService;
 
 class DiagnosticController extends AbstractController
 {
     private ApiService $apiService;
+    private AlertManager $alertManager;
 
-    public function __construct(ApiService $apiService)
+
+    public function __construct(ApiService $apiService,AlertManager $alertManager)
     {
         $this->apiService = $apiService;
+        $this->alertManager = $alertManager;
+
     }
 
     #[Route('/diagnostic', name: 'app_diagnostic')]
     public function index(AcquisitionSystemRepository $acquisitionSystemRepository): Response
     {
+        $this->alertManager->checkAndCreateAlerts();
+
         $AcquisitionSystems = $acquisitionSystemRepository->findInstalledSystems();
 
         return $this->render('diagnostic/index.html.twig', [
@@ -29,15 +37,19 @@ class DiagnosticController extends AbstractController
     }
 
     #[Route('/diagnostic/{id}', name: 'app_diagnostic_details')]
-    public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, ApiService $apiService): Response
+    public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, ApiService $apiService, RoomRepository $roomRepository): Response
     {
+        $this->alertManager->checkAndCreateAlerts();
+
         $AS = $acquisitionSystemRepository->find($id);
+        $room = $roomRepository->find($AS->getRoom());
+        $dbname = $roomRepository->getRoomDb($room->getName())['dbname'];
         if (!$AS) {
             throw $this->createNotFoundException('SA non trouvée');
         }
 
-        $getLastCapture = function(string $type) use ($apiService) {
-            return $apiService->getLastCapture($type)[0] ?? null;
+        $getLastCapture = function(string $type) use ($apiService, $dbname) {
+            return $apiService->getLastCapture($type, $dbname)[0] ?? null;
         };
 
         $lastCapturetemp = $getLastCapture('temp');
@@ -48,9 +60,9 @@ class DiagnosticController extends AbstractController
         $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
 
         // Fonction pour récupérer les données d'intervalle pour chaque type
-        $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2) {
+        $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {
             try {
-                return $apiService->getCapturesByInterval($date1, $date2, $type, 1);
+                return $apiService->getCapturesByInterval($date1, $date2, $type, 1, $dbname);
             } catch (\Exception $e) {
                 return ['error' => $e->getMessage()];
             }
