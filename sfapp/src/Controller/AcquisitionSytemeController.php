@@ -43,11 +43,15 @@ class AcquisitionSytemeController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        $ASSearch=$acquisitionSystemRepository->findAll();
+        $ASSearch = $acquisitionSystemRepository->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData() ?? [];
-            $ASSearch = $acquisitionSystemRepository->findByFilters($data);
+            $data = $form->getData();
+
+            // Vérifier que les données ne sont pas nulles avant d'appeler la méthode
+            if ($data !== null && is_array($data)) {
+                $ASSearch = $acquisitionSystemRepository->findByFilters($data);
+            }
         }
 
         return $this->render('acquisition_syteme/index.html.twig', [
@@ -55,9 +59,6 @@ class AcquisitionSytemeController extends AbstractController
             'AS' => $form->createView(),
         ]);
     }
-
-
-
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
     public function addAS(Request $request, EntityManagerInterface $entityManager): Response
     {

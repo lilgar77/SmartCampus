@@ -74,5 +74,17 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function findInstalledSystems(): array
+    {
+        $result = $this->createQueryBuilder('a')
+            ->where('a.etat = :installed')
+            ->setParameter('installed', EtatAS::Installer)
+            ->orderBy('a.Name', 'ASC') // Optionnel, pour trier les résultats
+            ->getQuery()
+            ->getResult();
+        /** @var AcquisitionSystem[] $result */
+        return $result;
+    }
+
 }
 

@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Room;
+use App\Form\SearchRoomFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RoomRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 // use services api
 use App\Service\ApiService;
@@ -20,10 +23,21 @@ class WelcomeController extends AbstractController
     }
 
     #[Route('/', name: 'app_welcome')]
-    public function index(RoomRepository $roomRepository, ApiService $apiService): Response
+    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService): Response
     {
-        $rooms = $roomRepository->findRoomWithAs();
+        // Récupération de toutes les salles
+        $room = new Room();
+        $form = $this->createForm(SearchRoomFormType::class, $room, [
+            'method' => 'GET',
+            'include_name' => false,
+        ]);
 
+        $form->handleRequest($request);
+
+        $rooms = $roomRepository->findRoomWithAsDefault();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $rooms = $roomRepository->findRoomWithAs($room);
+        }
         $roomsWithLastCaptures = array_map(function ($room) use ($apiService, $roomRepository) {
             $roomDbInfo = $roomRepository->getRoomDb($room->getName());
             $dbname = $roomDbInfo['dbname'] ?? null;
@@ -53,6 +67,8 @@ class WelcomeController extends AbstractController
 
         return $this->render('welcome/index.html.twig', [
             'controller_name' => 'WelcomeController',
+            'room'  => $form->createView(),
+            'rooms' => $rooms,
             'roomsWithLastCaptures' => $roomsWithLastCaptures,
         ]);
     }
@@ -77,8 +93,8 @@ class WelcomeController extends AbstractController
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
-        $date1 = (new \DateTime())->format('Y-m-d');
-        $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
+        $date1 = (new \DateTime('2024-12-01'))->format('Y-m-d');
+        $date2 = (new \DateTime('2025-01-31'))->format('Y-m-d');
 
         // Fonction pour récupérer les données d'intervalle pour chaque type
         $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {

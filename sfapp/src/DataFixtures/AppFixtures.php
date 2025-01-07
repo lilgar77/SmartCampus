@@ -24,26 +24,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
 
-        $acquisitionSystem = new AcquisitionSystem();
-        $acquisitionSystem->setTemperature(20);
-        $acquisitionSystem->setCo2(400);
-        $acquisitionSystem->setHumidity(50);
-        $acquisitionSystem->setName('C3-PO');
-        $acquisitionSystem->setWording('Salle de réunion');
-        $acquisitionSystem->setMacAdress('00:00:00:00:00:00');
-        $acquisitionSystem->setEtat(EtatAS::Disponible);
-        $manager->persist($acquisitionSystem);
-
-        $acquisitionSystem2 = new AcquisitionSystem();
-        $acquisitionSystem2->setTemperature(25);
-        $acquisitionSystem2->setCo2(500);
-        $acquisitionSystem2->setHumidity(60);
-        $acquisitionSystem2->setName('R2-D2');
-        $acquisitionSystem2->setWording('Salle de réunion 2');
-        $acquisitionSystem2->setMacAdress('00:00:00:00:00:01');
-        $acquisitionSystem2->setEtat(EtatAS::Disponible);
-        $manager->persist($acquisitionSystem2);
-
+        // Création des bâtiments
         $building = new Building();
         $building->setNameBuilding('Informatique');
         $building->setAdressBuilding('LaRochelle');
@@ -54,40 +35,65 @@ class AppFixtures extends Fixture
         $building2->setAdressBuilding('LaRochelle');
         $manager->persist($building2);
 
+// Création des étages et des salles
+        for ($floorNumber = 0; $floorNumber <= 3; $floorNumber++) {
+            $floor = new Floor();
+            $floor->setNumberFloor($floorNumber);
+            $floor->setIdBuilding($building);
+            $manager->persist($floor);
 
-        $floor1 = new Floor();
-        $floor1->setNumberFloor(0);
-        $floor1->setIdBuilding($building);
-        $manager->persist($floor1);
+            // Création des salles pour chaque étage
+            for ($roomNumber = 1; $roomNumber <= 8; $roomNumber++) {
+                $room = new Room();
+                $room->setName('D' . $floorNumber . '0' . $roomNumber); // Exemple : D101, D102, etc.
+                $room->setFloor($floor);
+                $room->setBuilding($building);
 
-        $floor2 = new Floor();
-        $floor2->setNumberFloor(1);
-        $floor2->setIdBuilding($building);
-        $manager->persist($floor2);
+                // Association avec un système d'acquisition si nécessaire
+                    $acquisitionSystem = new AcquisitionSystem();
+                    $acquisitionSystem->setTemperature(20 + $floorNumber);
+                    $acquisitionSystem->setCo2(400 + $roomNumber * 10);
+                    $acquisitionSystem->setHumidity(50 + $roomNumber);
+                    $acquisitionSystem->setName('AS-' . $floorNumber . '-' . $roomNumber);
+                    $acquisitionSystem->setWording('Salle ' . $room->getName());
+                    $acquisitionSystem->setMacAdress('00:00:00:00:0' . $floorNumber . ':' . $roomNumber);
+                    $acquisitionSystem->setEtat(EtatAS::Installer);
+                    $manager->persist($acquisitionSystem);
 
-        $floor3 = new Floor();
-        $floor3->setNumberFloor(2);
-        $floor3->setIdBuilding($building);
-        $manager->persist($floor3);
+                    $room->setIdAS($acquisitionSystem);
 
-        $floor4 = new Floor();
-        $floor4->setNumberFloor(3);
-        $floor4->setIdBuilding($building);
-        $manager->persist($floor4);
+                $manager->persist($room);
+            }
+        }
+        for ($floorNumber = 0; $floorNumber <= 3; $floorNumber++) {
+            $floor = new Floor();
+            $floor->setNumberFloor($floorNumber);
+            $floor->setIdBuilding($building2);
+            $manager->persist($floor);
 
-        $room = new Room();
-        $room->setName('D302');
-        $room->setFloor($floor4);
-        $room->setBuilding($building);
-        $room->setIdAS($acquisitionSystem);
+            // Création des salles pour chaque étage
+            for ($roomNumber = 1; $roomNumber <= 8; $roomNumber++) {
+                $room = new Room();
+                $room->setName('C' . $floorNumber . '0' . $roomNumber); // Exemple : D101, D102, etc.
+                $room->setFloor($floor);
+                $room->setBuilding($building2);
 
-        $room2 = new Room();
-        $room2->setName('D101');
-        $room2->setFloor($floor4);
-        $room2->setBuilding($building);
+                // Association avec un système d'acquisition si nécessaire
+                $acquisitionSystem = new AcquisitionSystem();
+                $acquisitionSystem->setTemperature(20 + $floorNumber);
+                $acquisitionSystem->setCo2(400 + $roomNumber * 10);
+                $acquisitionSystem->setHumidity(50 + $roomNumber);
+                $acquisitionSystem->setName('ASC-' . $floorNumber . '-' . $roomNumber);
+                $acquisitionSystem->setWording('Salle ' . $room->getName());
+                $acquisitionSystem->setMacAdress('00:00:00:00:1' . $floorNumber . ':' . $roomNumber);
+                $acquisitionSystem->setEtat(EtatAS::Disponible);
+                $manager->persist($acquisitionSystem);
 
-        $manager->persist($room);
-        $manager->persist($room2);
+                $room->setIdAS($acquisitionSystem);
+
+                $manager->persist($room);
+            }
+        }
 
         $user = new User();
         $user->setEmail('admin@admin.com');

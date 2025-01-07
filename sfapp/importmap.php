@@ -18,11 +18,17 @@ return [
         'path' => 'app.js',
         'preload' => true,
     ],
-
     'room' => [
         'path' => 'js/room.js',
         'entrypoint' => true,
     ],
+
+    'plan' => [
+
+        'path' => 'js/plan.js',
+        'entrypoint' => true,
+    ],
+    
     'graphdetail' => [
         'path' => 'js/graphdetail.js',
         'entrypoint' => true,

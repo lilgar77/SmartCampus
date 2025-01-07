@@ -74,7 +74,6 @@ body.modal-open .background-container {
 
 .icon {
     position: relative;
-    /*argin-top: 5px;*/
     margin-right: 30px;
     top: 0px;
     right: 0px;
@@ -105,15 +104,9 @@ body.modal-open .background-container {
     border-color: #590b92;
 }
 
-/* for the dashboard */
-
-.room-card {
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
 .room-card:hover {
-    transform: scale(1.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(1.05);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -132,8 +125,38 @@ body.modal-open .background-container {
     color: #333;
 }
 
-.card-body a, .card-body button {
+.card-body a{
     margin-top: 10px;
+}
+
+.slide_up{
+    animation: slideUp 1s ease-in-out;
+}
+
+.slide_down {
+    animation: slideDown 1s ease-in-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .progress-circle-container {
@@ -375,4 +398,27 @@ body.modal-open .background-container {
 
 .message-content {
     flex-grow: 1; /* Permet au contenu du message de prendre toute la largeur disponible */
+}
+
+/* Couleur par défaut du header */
+.accordion-button {
+    background-color: white; /* Couleur de fond par défaut */
+    color: black; /* Couleur du texte par défaut */
+    border: 1px solid #ddd; /* Bordure par défaut */
+}
+
+/* Couleur lorsque l'accordion est ouvert */
+.accordion-button:not(.collapsed) {
+    background-color: #6a0dad; /* Violet pour le header actif */
+    color: white; /* Texte en blanc */
+}
+
+/* Couleur du petit triangle (icône) */
+.accordion-button:not(.collapsed)::after{
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 16 16'><path d='M2 5L8 11L14 5'/></svg>");
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='black' viewBox='0 0 16 16'><path d='M2 5L8 11L14 5'/></svg>");
+
 }
