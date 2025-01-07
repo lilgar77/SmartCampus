@@ -93,8 +93,9 @@ class WelcomeController extends AbstractController
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
-        $date1 = (new \DateTime('2024-12-01'))->format('Y-m-d');
-        $date2 = (new \DateTime('2025-01-31'))->format('Y-m-d');
+        $date1 = (new \DateTime())->format('Y-m-d');
+        $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
+
 
         // Fonction pour récupérer les données d'intervalle pour chaque type
         $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {

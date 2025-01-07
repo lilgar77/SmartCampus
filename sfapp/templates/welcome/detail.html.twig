@@ -113,7 +113,7 @@
 
     <div class="alert-container mt-4 text-center w-50 mx-auto">
         {% if lastCapturetemp.valeur is not null and lastCapturehum.valeur is not null and lastCaptureco2.valeur is not null %}
-            {% if lastCaptureco2.valeur > 1400 %}
+            {% if lastCaptureco2.valeur > 1000 %}
                 <p class="alert alert-danger fs-4">Ouvrir les fenêtres - L'air est de mauvaise qualité (CO2 élevé)</p>
             {% elseif lastCapturetemp.valeur < 17 and lastCapturehum.valeur > 70 %}
                 <p class="alert alert-warning fs-4">Fermer les fenêtres - Il fait trop froid et l'humidité est élevée</p>
