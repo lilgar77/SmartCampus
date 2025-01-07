@@ -15,7 +15,7 @@
         <div class="card shadow-sm p-4">
             <h1 class="h3 mb-4 text-center background-container">Liste des Salles</h1>
             <div class="d-flex justify-content-center mb-4">
-                {{ form_start(room, { 'attr': {'class': 'd-flex w-75 align-items-center gap-5 '} }) }}
+                {{ form_start(room, { 'attr': {'class': 'd-flex gap-5 '} }) }}
                 <div class="d-flex align-items-center form">
                     Etage:
                     {{ form_widget(room.floor, { 'attr': {'class': 'form-control', 'onchange':'this.form.submit()', 'style': 'background-color: #6a0dad; color: white; border:none; border-radius:15px 0px 0px 15px;'}}) }}
@@ -26,7 +26,7 @@
                             <i class="bi bi-caret-up-fill"></i>
                     </button>
                 </div>
-                <div class="d-flex align-items-center" style="flex: 0.35;">
+                <div class="d-flex align-items-center">
                     Batiment:
                     {{ form_widget(room.building, { 'attr': {'class': 'form-control', 'onchange': 'this.form.submit()', 'style': 'background-color: #6a0dad; color: white; border:none; border-radius:15px 0px 0px 15px;'}}) }}
                     <span class="input-group-text" style="background-color: #6a0dad; color: white; border-radius: 0px 15px 15px 0px; border: none">
