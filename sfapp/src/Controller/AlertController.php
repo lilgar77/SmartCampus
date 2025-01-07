@@ -13,13 +13,11 @@ class AlertController extends AbstractController
 {
     private AlertManager $alertManager;
 
-    private LoggerInterface $logger; // Déclaration du logger
 
 
-    public function __construct(AlertManager $alertManager, LoggerInterface $logger)
+    public function __construct(AlertManager $alertManager)
     {
         $this->alertManager = $alertManager;
-        $this->logger = $logger;
     }
     #[Route('/alert', name: 'app_alert')]
     public function index(AlertRepository $alertRepository): Response
