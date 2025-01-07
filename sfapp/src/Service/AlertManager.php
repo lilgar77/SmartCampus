@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AlertRepository;
 use App\Model\AlertType;
 use App\Repository\RoomRepository;
-use Psr\Log\LoggerInterface; // Interface standard pour le logger
 
 
 class AlertManager
@@ -16,22 +15,19 @@ class AlertManager
     private EntityManagerInterface $entityManager;
     private AlertRepository $alertRepository;
     private RoomRepository $roomRepository;
-    private LoggerInterface $logger;
 
 
 
-    public function __construct(EntityManagerInterface $entityManager, AlertRepository $alertRepository, RoomRepository $roomRepository,LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $entityManager, AlertRepository $alertRepository, RoomRepository $roomRepository)
     {
         $this->entityManager = $entityManager;
         $this->alertRepository = $alertRepository;
         $this->roomRepository = $roomRepository;
-        $this->logger = $logger; // Stockage du logger
 
     }
 
     public function checkAndCreateAlerts(): void
     {
-        $this->logger->info('Vérification des alertes lancée.');
 
         // Récupère toutes les salles
         $rooms = $this->roomRepository->findRoomWithAsInstalled();
@@ -40,7 +36,6 @@ class AlertManager
             $this->checkThresholds($room, $room->getIdAS()->getTemperature(), $room->getIdAS()->getHumidity(), $room->getIdAS()->getCO2());
         }
 
-        $this->logger->info('Vérification des alertes terminée.');
     }
 
     public function checkThresholds(Room $room, float $temperature, float $humidity, int $co2): void
@@ -61,7 +56,8 @@ class AlertManager
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::temp);
 
-        if ($value < 17 || $value > 21) {
+
+        if ($value <17 || $value>21) {
             // Si les seuils sont dépassés et qu'il n'y a pas d'alerte active, on en crée une
             if (!$activeAlert) {
                 $alert = new Alert();
@@ -104,11 +100,13 @@ class AlertManager
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::co2);
 
-        if ($value > 200) {
+        if ( $value < 400 || $value > 1000 ) {
             // Si les seuils sont dépassés et qu'il n'y a pas d'alerte active, on en crée une
             if (!$activeAlert) {
                 $alert = new Alert();
-                $alert->setDateBegin(new \DateTime('now', new \DateTimeZone('Europe/Paris')));                $alert->setType(AlertType::co2);
+                $date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+                $alert->setDateBegin($date);
+                $alert->setType(AlertType::co2);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
                 $alert->setDescription("Alerte " . $typeName);
@@ -116,7 +114,7 @@ class AlertManager
             }
         } elseif ($activeAlert) {
             // Si les seuils sont respectés et qu'une alerte est active, on la clôture
-            $activeAlert->closeAlert();
+            $activeAlert->setDateEnd(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
         }
     }
 

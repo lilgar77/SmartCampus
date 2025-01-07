@@ -113,7 +113,8 @@ class Alert
     public function closeAlert(): static
     {
         if ($this->DateEnd === null) {
-            $this->DateEnd = new \DateTime(); // Définit la date de fin comme la date actuelle
+            $date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+            $this->DateEnd = $date; // Définit la date de fin comme la date actuelle
         }
         return $this;
     }

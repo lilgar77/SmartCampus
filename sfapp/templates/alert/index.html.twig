@@ -36,7 +36,7 @@
                             <tbody>
                             {% for alert in alertsBegin %}
                                 <tr>
-                                    <td>{{ alert.DateBegin|date("m/d/Y h:m") }}</td>
+                                    <td>{{ alert.DateBegin|date("m/d/Y H:i") }}</td>
                                     <td>{{ alert.IdSA.name }}</td>
                                     <td>{{ alert.IdRoom.name }}</td>
                                     <td>{{ alert.type.value }}</td>
@@ -65,8 +65,8 @@
                             <tbody>
                             {% for alert in alertsEnd %}
                                 <tr>
-                                    <td>{{ alert.DateBegin|date("m/d/Y h:m") }}</td>
-                                    <td>{{ alert.DateEnd|date("m/d/Y h:m") }}</td>
+                                    <td>{{ alert.DateBegin|date("m/d/Y H:i") }}</td>
+                                    <td>{{ alert.DateEnd|date("m/d/Y H:i") }}</td>
                                     <td>{{ alert.IdSA.name }}</td>
                                     <td>{{ alert.IdRoom.name }}</td>
                                     <td>{{ alert.type.value }}</td>

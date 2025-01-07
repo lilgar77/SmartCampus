@@ -26,7 +26,7 @@ class AlertController extends AbstractController
     {
         $this->alertManager->checkAndCreateAlerts();
 
-        $this->logger->info("Alerts created");
+
 
         return $this->render('alert/index.html.twig', [
             'alertsBegin' => $alertRepository->findWithoutDateEnd(),
