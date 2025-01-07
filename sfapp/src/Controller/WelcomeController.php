@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RoomRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 // use services api
 use App\Service\ApiService;
@@ -19,11 +20,14 @@ class WelcomeController extends AbstractController
     private ApiService $apiService;
     private AlertManager $alertManager;
 
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(ApiService $apiService, AlertManager $alertManager)
+
+    public function __construct(ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager)
     {
         $this->apiService = $apiService;
         $this->alertManager = $alertManager;
+        $this->entityManager = $entityManager;
 
     }
 
@@ -43,6 +47,8 @@ class WelcomeController extends AbstractController
         $rooms = $roomRepository->findRoomWithAsDefault();
         if ($form->isSubmitted() && $form->isValid()) {
             $rooms = $roomRepository->findRoomWithAs($room);
+        }else{
+            $apiService->updateLastCapturesForRooms($roomRepository, $this->entityManager);
         }
         $roomsWithLastCaptures = array_map(function ($room) use ($apiService, $roomRepository) {
             $roomDbInfo = $roomRepository->getRoomDb($room->getName());
