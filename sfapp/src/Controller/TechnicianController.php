@@ -6,6 +6,7 @@ use App\Entity\Installation;
 use App\Form\TechnicianType;
 use App\Model\EtatAS;
 use App\Repository\InstallationRepository;
+use App\Service\AlertManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,14 +16,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TechnicianController extends AbstractController
 {
+    private AlertManager $alertManager;
+
+
+
+    public function __construct(AlertManager $alertManager)
+    {
+        $this->alertManager = $alertManager;
+    }
     #[Route('/technician', name: 'app_technician')]
     public function index(EntityManagerInterface $entityManager, InstallationRepository $installationRepository): Response
     {
-        $installations = $entityManager->getRepository(Installation::class)->findAll();
- 
+
          if (!$this->isGranted('ROLE_TECHNICIEN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
+        $installations = $entityManager->getRepository(Installation::class)->findAll();
         foreach ($installations as $installation) {
 
             $acquisitionSystem = $installation->getAS();
@@ -48,6 +58,7 @@ class TechnicianController extends AbstractController
         if (!$this->isGranted('ROLE_TECHNICIEN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->alertManager->checkAndCreateAlerts();
         $form = $this->createForm(TechnicianType::class);
         $form->handleRequest($request);
 
