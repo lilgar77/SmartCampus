@@ -97,7 +97,7 @@ class WelcomeController extends AbstractController
         ]);
     }
 
-
+    #[Route('/{id}', name: 'app_welcome_details')]
     public function details(RoomRepository $roomRepository, int $id, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
