@@ -33,29 +33,17 @@ use App\Repository\RoomRepository;
 
 class AcquisitionSytemeController extends AbstractController
 {
-    private AlertManager $alertManager;
-    private ApiService $apiService;
-
-    private EntityManagerInterface $entityManager;
-
-
-    public function __construct(AlertManager $alertManager, ApiService $apiService, EntityManagerInterface $entityManager)
-    {
-        $this->alertManager = $alertManager;
-        $this->apiService = $apiService;
-        $this->entityManager = $entityManager;
-    }
 
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
-    public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository, RoomRepository $roomRepository): Response
+    public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->apiService->updateLastCapturesForRooms($roomRepository, $this->entityManager);
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
 
 
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         // Créer le formulaire
         $form = $this->createForm(SearchAquisitionSystemeType::class, null, [
@@ -80,13 +68,13 @@ class AcquisitionSytemeController extends AbstractController
         ]);
     }
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
-    public function addAS(Request $request, EntityManagerInterface $entityManager): Response
+    public function addAS(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
 
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $acquisitionSystem = new AcquisitionSystem();
 
@@ -132,12 +120,12 @@ class AcquisitionSytemeController extends AbstractController
 
     
     #[Route('/acquisitionsyteme/{id}', name: 'app_acquisition_syteme_delete', methods: ['POST'])]
-    public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager): Response
+    public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $entityManager->remove($acquisitionSystem);
         $entityManager->flush();
@@ -149,12 +137,12 @@ class AcquisitionSytemeController extends AbstractController
 
     
     #[Route('/acquisitionsyteme/{id}/edit', name: 'app_acquisition_syteme_edit')]
-    public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
 

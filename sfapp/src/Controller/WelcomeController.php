@@ -17,24 +17,10 @@ use App\Service\ApiService;
 
 class WelcomeController extends AbstractController
 {
-    private ApiService $apiService;
-    private AlertManager $alertManager;
-
-    private EntityManagerInterface $entityManager;
-
-
-    public function __construct(ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager)
-    {
-        $this->apiService = $apiService;
-        $this->alertManager = $alertManager;
-        $this->entityManager = $entityManager;
-
-    }
-
     #[Route('/', name: 'app_welcome')]
-    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService): Response
+    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
         // Récupération de toutes les salles
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
@@ -48,7 +34,7 @@ class WelcomeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $rooms = $roomRepository->findRoomWithAs($room);
         }else{
-            $apiService->updateLastCapturesForRooms($roomRepository, $this->entityManager);
+            $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         }
         $roomsWithLastCaptures = array_map(function ($room) use ($apiService, $roomRepository) {
             $roomDbInfo = $roomRepository->getRoomDb($room->getName());
@@ -87,10 +73,10 @@ class WelcomeController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_welcome_details')]
-    public function details(RoomRepository $roomRepository, int $id, ApiService $apiService): Response
+    public function details(RoomRepository $roomRepository, int $id, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        $apiService->updateLastCapturesForRooms($roomRepository, $this->entityManager);
-        $this->alertManager->checkAndCreateAlerts();
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+        $alertManager->checkAndCreateAlerts();
         $room = $roomRepository->find($id);
         if (!$room) {
             throw $this->createNotFoundException('Salle non trouvée');
