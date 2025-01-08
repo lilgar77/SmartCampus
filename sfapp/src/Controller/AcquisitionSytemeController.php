@@ -21,29 +21,39 @@ use App\Form\SearchRoomFormType;
 use App\Model\EtatAS;
 use App\Repository\AcquisitionSystemRepository;
 use App\Service\AlertManager;
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Repository\RoomRepository;
 
 
 class AcquisitionSytemeController extends AbstractController
 {
     private AlertManager $alertManager;
+    private ApiService $apiService;
 
-    public function __construct(AlertManager $alertManager)
+    private EntityManagerInterface $entityManager;
+
+
+    public function __construct(AlertManager $alertManager, ApiService $apiService, EntityManagerInterface $entityManager)
     {
         $this->alertManager = $alertManager;
+        $this->apiService = $apiService;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
-    public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository): Response
+    public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository, RoomRepository $roomRepository): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $this->apiService->updateLastCapturesForRooms($roomRepository, $this->entityManager);
+
 
         $this->alertManager->checkAndCreateAlerts();
 
