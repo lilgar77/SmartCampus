@@ -28,30 +28,41 @@ class AlertManager
 
     public function checkAndCreateAlerts(): void
     {
-
         // Récupère toutes les salles
         $rooms = $this->roomRepository->findRoomWithAsInstalled();
 
         foreach ($rooms as $room) {
-            $this->checkThresholds($room, $room->getIdAS()->getTemperature(), $room->getIdAS()->getHumidity(), $room->getIdAS()->getCO2());
-        }
+            $acquisitionSystem = $room->getIdAS();
 
+            // Vérifie si le système d'acquisition existe
+            if ($acquisitionSystem !== null) {
+                $this->checkThresholds(
+                    $room,
+                    $acquisitionSystem->getTemperature(),
+                    $acquisitionSystem->getHumidity(),
+                    $acquisitionSystem->getCO2()
+                );
+            }
+        }
     }
 
-    public function checkThresholds(Room $room, float $temperature, float $humidity, int $co2): void
+    public function checkThresholds(Room $room, ?float $temperature, ?float $humidity, ?int $co2): void
     {
         // Récupérer les alertes actives
         $activeAlerts = $this->alertRepository->findActiveAlertsByRoom($room);
 
         // Vérifications
         $this->processAlertTemp($room, 'temp', $temperature, $activeAlerts);
-        $this->processAlertHum($room, 'hum', $humidity,$temperature, $activeAlerts);
+        $this->processAlertHum($room, 'hum', $humidity, $temperature, $activeAlerts);
         $this->processAlertCo2($room, 'co2', $co2, $activeAlerts);
 
         $this->entityManager->flush();
     }
 
-    private function processAlertTemp(Room $room, string $typeName, float|int $value, array $activeAlerts): void
+    /**
+     * @param Alert[] $activeAlerts Un tableau d'objets Alert.
+     */
+    private function processAlertTemp(Room $room, string $typeName, ?float $value, array $activeAlerts): void
     {
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::temp);
@@ -73,12 +84,15 @@ class AlertManager
         }
     }
 
-    private function processAlertHum(Room $room, string $typeName, float|int $valueHum, float|int $valueTemp, array $activeAlerts): void
+    /**
+     * @param Alert[] $activeAlerts Un tableau d'objets Alert.
+     */
+    private function processAlertHum(Room $room, string $typeName, ?float $valueHum, ?float $valueTemp, array $activeAlerts): void
     {
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::hum);
 
-        if ($valueHum > 70  && $valueTemp > 20) {
+        if ($valueHum > 70 and $valueTemp >= 20.0) {
             // Si les seuils sont dépassés et qu'il n'y a pas d'alerte active, on en crée une
             if (!$activeAlert) {
                 $alert = new Alert();
@@ -95,7 +109,10 @@ class AlertManager
         }
     }
 
-    private function processAlertCo2(Room $room, string $typeName, float|int $value, array $activeAlerts): void
+    /**
+     * @param Alert[] $activeAlerts Un tableau d'objets Alert.
+     */
+    private function processAlertCo2(Room $room, string $typeName, ?int $value, array $activeAlerts): void
     {
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::co2);
@@ -118,10 +135,14 @@ class AlertManager
         }
     }
 
+    /**
+     * @param Alert[] $activeAlerts
+     * @return Alert|null
+     */
     private function findActiveAlert(array $activeAlerts, AlertType $type): ?Alert
     {
         foreach ($activeAlerts as $alert) {
-            if ($alert->getType() === $type) {
+            if ($alert instanceof Alert && $alert->getType() === $type) {
                 return $alert;
             }
         }
