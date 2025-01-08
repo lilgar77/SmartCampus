@@ -50,7 +50,7 @@ class AlertRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->andWhere('a.IdRoom = :room') // Filtrer les alertes par salle
             ->setParameter('room', $room)
-            ->orderBy('a.DateStart', 'DESC') // Trier par date de début décroissante (les plus récentes d'abord)
+            ->orderBy('a.DateBegin', 'DESC') // Trier par date de début décroissante (les plus récentes d'abord)
             ->setMaxResults(5) // Limiter à 5 résultats
             ->getQuery()
             ->getResult();
