@@ -23,16 +23,42 @@
 
     <div class="container mt-4">
         <div class="card shadow-sm p-4">
-            <h1 class="h3 mb-4 text-center background-container"> {{ as.Name }}</h1>
+            <h1 class="h3 mb-3 text-center background-container"> {{ as.Name }}</h1>
 
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    {{ form_start(form) }}
-                    {{ form_widget(form) }}
-                    {{ form_end(form) }}
+            <form method="GET" action="{{ path('app_diagnostic_details', {id: as.id}) }}" class="text-center mb-4">
+                <label for="interval" class="d-block mb-3">Choisir un intervalle :</label>
+                <div class="btn-group" role="group" aria-label="Interval Buttons">
+                    <button
+                            type="submit"
+                            class="btn btn-violet {{ app.request.query.get('interval') == '1d' ? 'active' : '' }}"
+                            name="interval"
+                            value="1d">
+                        1 Jour
+                    </button>
+                    <button
+                            type="submit"
+                            class="btn btn-violet {{ app.request.query.get('interval') == '1w' ? 'active' : '' }}"
+                            name="interval"
+                            value="1w">
+                        1 Semaine
+                    </button>
+                    <button
+                            type="submit"
+                            class="btn btn-violet {{ app.request.query.get('interval') == '1m' ? 'active' : '' }}"
+                            name="interval"
+                            value="1m">
+                        1 Mois
+                    </button>
+                    <button
+                            type="submit"
+                            class="btn btn-violet {{ app.request.query.get('interval') == '1y' ? 'active' : '' }}"
+                            name="interval"
+                            value="1y">
+                        1 An
+                    </button>
                 </div>
-            </div>
-
+            </form>
+            </form>
             <div class="row">
                 <!-- Première ligne : 2 premiers graphiques -->
                 <div class="col-md-6 mb-3">

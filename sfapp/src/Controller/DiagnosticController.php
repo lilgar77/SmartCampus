@@ -12,7 +12,6 @@ use App\Repository\RoomRepository;
 use App\Repository\AlertRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\ApiService;
-use App\Form\DiagnosticFilterFormType;
 
 class DiagnosticController extends AbstractController
 {
@@ -49,33 +48,25 @@ class DiagnosticController extends AbstractController
         $lastCapturetemp = $getLastCapture('temp');
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
-
-        $form = $this->createForm(DiagnosticFilterFormType::class);
-        $form->handleRequest($request);
-
+        
         // Définition de l'intervalle par défaut
-        $interval = '1d'; // Valeur par défaut
-        if ($form->isSubmitted() && $form->isValid()) {
-            $interval = $form->get('interval')->getData();
-        }
-
-        // Calcul des dates en fonction de l'intervalle
-        $date2 = (new \DateTime('now'))->format('Y-m-d');
+        $interval = $request->query->get('interval', '1d'); // Par défaut : 1 jour
+        $date2 = (new \DateTime('now'))->format("Y-m-d"); // Date actuelle
         switch ($interval) {
             case '1d':
-                $date1 = (new \DateTime('yesterday'))->format('Y-m-d');
+                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1D'))->format("Y-m-d");
                 break;
             case '1w':
-                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1W'))->format('Y-m-d');
+                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1W'))->format("Y-m-d");
                 break;
             case '1m':
-                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1M'))->format('Y-m-d');
+                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1M'))->format("Y-m-d");
                 break;
             case '1y':
-                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1Y'))->format('Y-m-d');
+                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1Y'))->format("Y-m-d");
                 break;
             default:
-                $date1 = (new \DateTime('2024-12-01'))->format('Y-m-d');
+                $date1 = (new \DateTime('2024-12-01'))->format("Y-m-d"); // Valeur par défaut si intervalle invalide
                 break;
         }
 
@@ -99,7 +90,6 @@ class DiagnosticController extends AbstractController
 
         return $this->render('diagnostic/diagnostic.html.twig', [
             'as' => $AS,
-            'form' => $form->createView(),
             'dataTemp' => $dataTemp,
             'dataHum' => $dataHum,
             'dataCo2' => $dataCo2,
