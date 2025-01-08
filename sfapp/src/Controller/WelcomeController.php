@@ -20,7 +20,6 @@ class WelcomeController extends AbstractController
     #[Route('/', name: 'app_welcome')]
     public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        $alertManager->checkAndCreateAlerts();
         // Récupération de toutes les salles
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
@@ -35,6 +34,7 @@ class WelcomeController extends AbstractController
             $rooms = $roomRepository->findRoomWithAs($room);
         }else{
             $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+            $alertManager->checkAndCreateAlerts();
         }
         $roomsWithLastCaptures = array_map(function ($room) use ($apiService, $roomRepository) {
             $roomDbInfo = $roomRepository->getRoomDb($room->getName());
