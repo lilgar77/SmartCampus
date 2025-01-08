@@ -10,8 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\AcquisitionSystemRepository;
 use App\Repository\RoomRepository;
 use App\Repository\AlertRepository;
-
+use Symfony\Component\HttpFoundation\Request;
 use App\Service\ApiService;
+use App\Form\DiagnosticFilterFormType;
 
 class DiagnosticController extends AbstractController
 {
@@ -29,7 +30,7 @@ class DiagnosticController extends AbstractController
     }
 
     #[Route('/diagnostic/{id}', name: 'app_diagnostic_details')]
-    public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, RoomRepository $roomRepository,ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, AlertRepository $alertRepository): Response
+    public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, RoomRepository $roomRepository,ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, AlertRepository $alertRepository, Request $request): Response
     {
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $alertManager->checkAndCreateAlerts();
@@ -49,14 +50,45 @@ class DiagnosticController extends AbstractController
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
-        $date1 = (new \DateTime('2024-12-01'))->format('Y-m-d');
-        $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
+        $form = $this->createForm(DiagnosticFilterFormType::class);
+        $form->handleRequest($request);
+
+        // Définition de l'intervalle par défaut
+        $interval = '1d'; // Valeur par défaut
+        if ($form->isSubmitted() && $form->isValid()) {
+            $interval = $form->get('interval')->getData();
+        }
+
+        // Calcul des dates en fonction de l'intervalle
+        $date2 = (new \DateTime('now'))->format('Y-m-d');
+        switch ($interval) {
+            case '1d':
+                $date1 = (new \DateTime('yesterday'))->format('Y-m-d');
+                break;
+            case '1w':
+                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1W'))->format('Y-m-d');
+                break;
+            case '1m':
+                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1M'))->format('Y-m-d');
+                break;
+            case '1y':
+                $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1Y'))->format('Y-m-d');
+                break;
+            default:
+                $date1 = (new \DateTime('2024-12-01'))->format('Y-m-d');
+                break;
+        }
 
         // Fonction pour récupérer les données d'intervalle pour chaque type
         $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {
             try {
-                return $apiService->getCapturesByInterval($date1, $date2, $type, 1, $dbname);
-            } catch (\Exception $e) {
+                return $apiService->getCapturesByInterval(
+                    $date1,
+                    $date2,
+                    $type,
+                    1,
+                    $dbname
+                );            } catch (\Exception $e) {
                 return ['error' => $e->getMessage()];
             }
         };
@@ -67,6 +99,7 @@ class DiagnosticController extends AbstractController
 
         return $this->render('diagnostic/diagnostic.html.twig', [
             'as' => $AS,
+            'form' => $form->createView(),
             'dataTemp' => $dataTemp,
             'dataHum' => $dataHum,
             'dataCo2' => $dataCo2,

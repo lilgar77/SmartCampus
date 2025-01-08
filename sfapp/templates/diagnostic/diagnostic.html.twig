@@ -25,6 +25,14 @@
         <div class="card shadow-sm p-4">
             <h1 class="h3 mb-4 text-center background-container"> {{ as.Name }}</h1>
 
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
             <div class="row">
                 <!-- Première ligne : 2 premiers graphiques -->
                 <div class="col-md-6 mb-3">
