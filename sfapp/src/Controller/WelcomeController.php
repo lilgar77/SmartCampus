@@ -90,6 +90,7 @@ class WelcomeController extends AbstractController
     public function details(RoomRepository $roomRepository, int $id, ApiService $apiService): Response
     {
         $this->alertManager->checkAndCreateAlerts();
+        $apiService->updateLastCapturesForRooms($roomRepository, $this->entityManager);
         $room = $roomRepository->find($id);
         if (!$room) {
             throw $this->createNotFoundException('Salle non trouvée');
