@@ -13,24 +13,12 @@ use App\Repository\RoomRepository;
 
 class AlertController extends AbstractController
 {
-    private AlertManager $alertManager;
-    private ApiService $apiService;
 
-    private EntityManagerInterface $entityManager;
-
-
-
-    public function __construct(AlertManager $alertManager, ApiService $apiService, EntityManagerInterface $entityManager)
-    {
-        $this->alertManager = $alertManager;
-        $this->apiService = $apiService;
-        $this->entityManager = $entityManager;
-    }
     #[Route('/alert', name: 'app_alert')]
-    public function index(AlertRepository $alertRepository, RoomRepository $roomRepository): Response
+    public function index(AlertRepository $alertRepository, RoomRepository $roomRepository, ApiService $apiService, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        $this->apiService->updateLastCapturesForRooms($roomRepository, $this->entityManager);
-        $this->alertManager->checkAndCreateAlerts();
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+        $alertManager->checkAndCreateAlerts();
 
 
 
