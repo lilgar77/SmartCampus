@@ -56,8 +56,8 @@ body.modal-open .background-container {
 
 .progress-circle-container {
     margin-top: 70px;
-    width: 250px;
-    height: 250px;
+    width: 65%;
+    height: 50%;
     border-radius: 200px 0 200px 200px;
     border: 10px solid #000000;
     transform: rotate(-45deg);
