@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\AcquisitionSystemRepository;
 use App\Repository\RoomRepository;
+use App\Repository\AlertRepository;
 
 use App\Service\ApiService;
 
@@ -28,7 +29,7 @@ class DiagnosticController extends AbstractController
     }
 
     #[Route('/diagnostic/{id}', name: 'app_diagnostic_details')]
-    public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, RoomRepository $roomRepository,ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
+    public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, RoomRepository $roomRepository,ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, AlertRepository $alertRepository): Response
     {
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $alertManager->checkAndCreateAlerts();
@@ -72,6 +73,7 @@ class DiagnosticController extends AbstractController
             'lastCapturetemp' => $lastCapturetemp,
             'lastCapturehum' => $lastCapturehum,
             'lastCaptureco2' => $lastCaptureco2,
+            'Alerts' => $alertRepository->findLastFiveAlertsByRoom($room),
         ]);
     }
 }
