@@ -11,7 +11,9 @@
 ###############################################################
 namespace App\Controller;
 
+use App\Repository\RoomRepository;
 use App\Service\AlertManager;
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,21 +26,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class FloorController extends AbstractController
 {
-    private AlertManager $alertManager;
 
-
-
-    public function __construct(AlertManager $alertManager)
-    {
-        $this->alertManager = $alertManager;
-    }
     #[Route('/floor', name: 'app_floor')]
-    public function index(FloorRepository $floorRepository): Response
+    public function index(FloorRepository $floorRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+        $alertManager->checkAndCreateAlerts();
 
         return $this->render('floor/index.html.twig', [
             'floors' => $floorRepository->sortFloors(),
@@ -47,12 +43,12 @@ class FloorController extends AbstractController
 
 
     #[Route('/floor/add', name: 'app_floor_add')]
-    public function add(Request $request, EntityManagerInterface $entityManager): Response
+    public function add(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $floor = new Floor();
         $form = $this->createForm(FloorType::class, $floor);
@@ -77,12 +73,12 @@ class FloorController extends AbstractController
 
     
     #[Route('/floor/{id}', name: 'app_floor_delete', methods: ['POST'])]
-    public function delete(Floor $floor, EntityManagerInterface $entityManager): Response
+    public function delete(Floor $floor, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $entityManager->remove($floor);
         $entityManager->flush();
@@ -94,12 +90,12 @@ class FloorController extends AbstractController
 
     
     #[Route('/floor/{id}/edit', name: 'app_floor_edit')]
-    public function edit(Floor $floor, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(Floor $floor, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $form = $this->createForm(FloorType::class, $floor);
 
