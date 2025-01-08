@@ -35,23 +35,38 @@ class DiagnosticController extends AbstractController
         $alertManager->checkAndCreateAlerts();
 
         $AS = $acquisitionSystemRepository->find($id);
-        $room = $roomRepository->find($AS->getRoom());
-        $dbname = $roomRepository->getRoomDb($room->getName())['dbname'];
         if (!$AS) {
             throw $this->createNotFoundException('SA non trouvée');
         }
 
-        $getLastCapture = function(string $type) use ($apiService, $dbname) {
+        $room = $AS->getRoom();
+        if (!$room) {
+            throw $this->createNotFoundException('La salle n’a pas été trouvée.');
+        }
+
+        $name = $room->getName();
+        if (!$name) {
+            throw $this->createNotFoundException('Le nom de la salle est introuvable.');
+        }
+
+        $roomDb = $roomRepository->getRoomDb($name);
+        if (!isset($roomDb['dbname']) || !is_string($roomDb['dbname'])) {
+            throw $this->createNotFoundException('La base de données de la salle est introuvable ou invalide.');
+        }
+
+        $dbname = $roomDb['dbname'];
+
+        $getLastCapture = function (string $type) use ($apiService, $dbname) {
             return $apiService->getLastCapture($type, $dbname)[0] ?? null;
         };
 
         $lastCapturetemp = $getLastCapture('temp');
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
-        
-        // Définition de l'intervalle par défaut
-        $interval = $request->query->get('interval', '1d'); // Par défaut : 1 jour
-        $date2 = (new \DateTime('now'))->format("Y-m-d"); // Date actuelle
+
+        // Gestion de l'intervalle
+        $interval = $request->query->get('interval', '1d');
+        $date2 = (new \DateTime('now'))->format("Y-m-d");
         switch ($interval) {
             case '1d':
                 $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1D'))->format("Y-m-d");
@@ -66,20 +81,14 @@ class DiagnosticController extends AbstractController
                 $date1 = (new \DateTime('now'))->sub(new \DateInterval('P1Y'))->format("Y-m-d");
                 break;
             default:
-                $date1 = (new \DateTime('2024-12-01'))->format("Y-m-d"); // Valeur par défaut si intervalle invalide
+                $date1 = (new \DateTime('2024-12-01'))->format("Y-m-d");
                 break;
         }
 
-        // Fonction pour récupérer les données d'intervalle pour chaque type
-        $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {
+        $getCapturesByInterval = function (string $type) use ($apiService, $date1, $date2, $dbname) {
             try {
-                return $apiService->getCapturesByInterval(
-                    $date1,
-                    $date2,
-                    $type,
-                    1,
-                    $dbname
-                );            } catch (\Exception $e) {
+                return $apiService->getCapturesByInterval($date1, $date2, $type, 1, $dbname);
+            } catch (\Exception $e) {
                 return ['error' => $e->getMessage()];
             }
         };
@@ -87,6 +96,8 @@ class DiagnosticController extends AbstractController
         $dataTemp = $getCapturesByInterval('temp');
         $dataHum = $getCapturesByInterval('hum');
         $dataCo2 = $getCapturesByInterval('co2');
+
+        $alerts = $alertRepository->findLastFiveAlertsByRoom($room);
 
         return $this->render('diagnostic/diagnostic.html.twig', [
             'as' => $AS,
@@ -96,7 +107,7 @@ class DiagnosticController extends AbstractController
             'lastCapturetemp' => $lastCapturetemp,
             'lastCapturehum' => $lastCapturehum,
             'lastCaptureco2' => $lastCaptureco2,
-            'Alerts' => $alertRepository->findLastFiveAlertsByRoom($room),
+            'Alerts' => $alerts,
         ]);
     }
 }
