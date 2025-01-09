@@ -52,9 +52,9 @@ class AlertManager
         $activeAlerts = $this->alertRepository->findActiveAlertsByRoom($room);
 
         // Vérifications
-        $this->processAlertTemp($room, 'temp', $temperature, $activeAlerts);
-        $this->processAlertHum($room, 'hum', $humidity, $temperature, $activeAlerts);
-        $this->processAlertCo2($room, 'co2', $co2, $activeAlerts);
+        $this->processAlertTemp($room, $temperature, $activeAlerts);
+        $this->processAlertHum($room, $humidity, $temperature, $activeAlerts);
+        $this->processAlertCo2($room, $co2, $activeAlerts);
 
         $this->entityManager->flush();
     }
@@ -62,7 +62,7 @@ class AlertManager
     /**
      * @param Alert[] $activeAlerts Un tableau d'objets Alert.
      */
-    private function processAlertTemp(Room $room, string $typeName, ?float $value, array $activeAlerts): void
+    private function processAlertTemp(Room $room, ?float $value, array $activeAlerts): void
     {
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::temp);
@@ -75,7 +75,7 @@ class AlertManager
                 $alert->setDateBegin(new \DateTime('now', new \DateTimeZone('Europe/Paris')));                $alert->setType(AlertType::temp);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
-                $alert->setDescription("Alerte " . $typeName);
+                $alert->setDescription("Alerte: La température n'est plus dans les seuils. Les fenêtres doivent être ouvertes. " );
                 $this->entityManager->persist($alert);
             }
         } elseif ($activeAlert) {
@@ -87,7 +87,7 @@ class AlertManager
     /**
      * @param Alert[] $activeAlerts Un tableau d'objets Alert.
      */
-    private function processAlertHum(Room $room, string $typeName, ?float $valueHum, ?float $valueTemp, array $activeAlerts): void
+    private function processAlertHum(Room $room, ?float $valueHum, ?float $valueTemp, array $activeAlerts): void
     {
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::hum);
@@ -100,7 +100,7 @@ class AlertManager
                 $alert->setType(AlertType::hum);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
-                $alert->setDescription("Alerte " . $typeName);
+                $alert->setDescription("Alerte: L'humidité est trop élévée et les risques de moisissures sont là. Les fenêtres doivent être ouverts. " );
                 $this->entityManager->persist($alert);
             }
         } elseif ($activeAlert) {
@@ -112,7 +112,7 @@ class AlertManager
     /**
      * @param Alert[] $activeAlerts Un tableau d'objets Alert.
      */
-    private function processAlertCo2(Room $room, string $typeName, ?int $value, array $activeAlerts): void
+    private function processAlertCo2(Room $room, ?int $value, array $activeAlerts): void
     {
         // Vérifie si une alerte est déjà active pour ce type
         $activeAlert = $this->findActiveAlert($activeAlerts, AlertType::co2);
@@ -126,7 +126,7 @@ class AlertManager
                 $alert->setType(AlertType::co2);
                 $alert->setIdRoom($room);
                 $alert->setIdSA($room->getIdAS());
-                $alert->setDescription("Alerte " . $typeName);
+                $alert->setDescription("Alerte: Le CO2 n'est plus dans les seuils prévus. Les fenêtres doivent être ouvertes" );
                 $this->entityManager->persist($alert);
             }
         } elseif ($activeAlert) {

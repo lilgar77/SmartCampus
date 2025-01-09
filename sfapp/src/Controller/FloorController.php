@@ -30,7 +30,7 @@ class FloorController extends AbstractController
 
 
     #[Route('/floor', name: 'app_floor')]
-    public function index(FloorRepository $floorRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
+    public function index(FloorRepository $floorRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
