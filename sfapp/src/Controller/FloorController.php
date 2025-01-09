@@ -22,10 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Floor;
 use App\Repository\FloorRepository;
 use App\Form\FloorType;
+use App\Form\SearchFloorType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class FloorController extends AbstractController
 {
+
 
     #[Route('/floor', name: 'app_floor')]
     public function index(FloorRepository $floorRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
@@ -36,11 +38,25 @@ class FloorController extends AbstractController
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $alertManager->checkAndCreateAlerts();
 
+
+        $floor = new Floor();
+        $form = $this->createForm(SearchFloorType::class, $floor, [
+            'method' => 'GET',
+        ]);
+
+        $form->handleRequest($request);
+
+        $floorSearch=$floorRepository->findFloorByBuilding($floor);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $floorSearch = $floorRepository->findFloorByBuilding($floor);
+        }
+        
         return $this->render('floor/index.html.twig', [
-            'floors' => $floorRepository->sortFloors(),
+            'floor' => $form->createView(),
+            'floors' => $floorSearch,
         ]);
     }
-
 
     #[Route('/floor/add', name: 'app_floor_add')]
     public function add(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
