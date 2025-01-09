@@ -22,8 +22,8 @@
                         <div class="col-12 col-md-4 mb-4">
                             <a href="{{ path('app_diagnostic_details', {id: as.id}) }}" class="text-decoration-none text-dark">
                                 <div class="room-card card shadow-sm">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ as.Name }}</h5>
+                                    <div class="card-body bg-secondary-subtle">
+                                        <h5 class="card-title text-violet">{{ as.Name }}</h5>
                                         <p class="card-text">
                                             <strong>Relier à:</strong> {{ as.room.name }}<br>
                                             <strong>Étage:</strong> {{ as.room.floor.numberFloor }}<br>
