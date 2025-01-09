@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Floor;
 use App\Repository\FloorRepository;
 use App\Form\FloorType;
+use App\Form\SearchFloorType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class FloorController extends AbstractController
@@ -32,19 +33,34 @@ class FloorController extends AbstractController
     {
         $this->alertManager = $alertManager;
     }
+
     #[Route('/floor', name: 'app_floor')]
-    public function index(FloorRepository $floorRepository): Response
+    public function index(Request $request, FloorRepository $floorRepository): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
+        $floor = new Floor();
+        $form = $this->createForm(SearchFloorType::class, $floor, [
+            'method' => 'GET',
+        ]);
+
+        $form->handleRequest($request);
+
+        $floorSearch=$floorRepository->findFloorByBuilding($floor);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $floorSearch = $floorRepository->findFloorByBuilding($floor);
+        }
+        
         $this->alertManager->checkAndCreateAlerts();
 
         return $this->render('floor/index.html.twig', [
-            'floors' => $floorRepository->sortFloors(),
+            'floor' => $form->createView(),
+            'floors' => $floorSearch,
         ]);
     }
-
 
     #[Route('/floor/add', name: 'app_floor_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
