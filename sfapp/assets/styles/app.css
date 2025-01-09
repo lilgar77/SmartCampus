@@ -241,9 +241,9 @@ body.modal-open .background-container {
     top: 50%; /* Positionner verticalement au centre */
     left: 50%; /* Positionner horizontalement au centre */
     transform: translate(-50%, -50%); /* Recentrer et annuler la rotation */
-    font-size: 20px;
+    font-size: 15px;
     z-index: 10;
-    color: #CC5658; /* Couleur du texte */
+    color: #000000; /* Couleur du texte */
     text-align: center; /* Centrer le texte */
 }
 
