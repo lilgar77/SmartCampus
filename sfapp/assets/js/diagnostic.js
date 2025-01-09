@@ -63,12 +63,60 @@ const co2Descriptions = {
 };
 
 const tempDescriptions = {
-    darkBlue: "La température est très basse (seuil bleu foncé). ❄️ Il fait anormalement froid.",
-    lightBlue: "La température est basse (seuil bleu clair). 🌬️ La pièce est fraîche.",
-    green: "La température est dans un seuil idéal (seuil vert). 🌡️ Les conditions sont optimales.",
-    yellow: "La température est modérée (seuil jaune). ⚠️ Elle commence à être légèrement élevée.",
-    orange: "La température est élevée (seuil orange). 🟠 La pièce est chaude.",
-    red: "La température est critique (seuil rouge). 🚨 Il fait trop chaud."
+    darkBlue: `La température est très basse (seuil bleu foncé). ❄️ Il fait anormalement froid dans la pièce, ce qui peut causer de l'inconfort ou une baisse de concentration.
+
+RAISONS POTENTIELLES :
+- Chauffage défectueux ou inexistant.
+- Mauvaise isolation thermique.
+
+SOLUTIONS :
+- Vérifiez si le chauffage fonctionne correctement.
+- Utilisez des solutions temporaires comme des radiateurs d'appoint.
+- Améliorez l'isolation si nécessaire.`,
+
+    lightBlue: `La température est basse (seuil bleu clair). 🌬️ La pièce est fraîche, mais pas critique. Cela pourrait devenir inconfortable sur le long terme.
+
+RAISONS POTENTIELLES :
+- Chauffage insuffisant.
+- Courants d'air ou ventilation excessive.
+
+SOLUTIONS :
+- Augmentez légèrement la température du chauffage.
+- Vérifiez l'étanchéité des fenêtres et des portes.`,
+
+    green: `La température est dans un seuil idéal (seuil vert). 🌡️ Les conditions thermiques sont optimales pour le confort et la concentration. Aucune action n'est nécessaire.`,
+
+    yellow: `La température est modérée (seuil jaune). ⚠️ Elle commence à être légèrement élevée, ce qui pourrait causer un certain inconfort, surtout sur le long terme.
+
+RAISONS POTENTIELLES :
+- Chauffage trop élevé.
+- Aération insuffisante.
+
+SOLUTIONS :
+- Baissez légèrement la température du chauffage.
+- Aérez la pièce pour équilibrer la température.`,
+
+    orange: `La température est élevée (seuil orange). 🟠 La pièce est chaude, ce qui peut provoquer de l'inconfort et une baisse de productivité.
+
+RAISONS POTENTIELLES :
+- Surchauffage dû à un radiateur mal réglé.
+- Manque de ventilation ou pièce exposée directement au soleil.
+
+SOLUTIONS :
+- Réduisez le chauffage ou éteignez-le temporairement.
+- Aérez pour faire circuler l'air plus frais.
+- Utilisez des rideaux ou stores pour limiter l'exposition au soleil.`,
+
+    red: `La température est critique (seuil rouge). 🚨 Il fait trop chaud dans la pièce, ce qui peut entraîner des risques pour la santé (comme des malaises).
+
+RAISONS POTENTIELLES :
+- Absence de ventilation.
+- Canicule ou chauffage excessif non contrôlé.
+
+SOLUTIONS :
+- Aérez immédiatement pour faire entrer de l'air frais.
+- Réduisez ou éteignez les sources de chaleur.
+- Si possible, utilisez un ventilateur ou une climatisation.`
 };
 
 const humDescriptions = {
@@ -90,14 +138,14 @@ const createChart = (ctx, labels, data, colors) => {
             datasets: [{
                 data,
                 backgroundColor: colors,
-                hoverOffset: 1
+                hoverOffset: 0
             }]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: { position: 'top' },
-                tooltip: { enabled: true }
+                tooltip: { enabled: false }
             }
         }
     });
