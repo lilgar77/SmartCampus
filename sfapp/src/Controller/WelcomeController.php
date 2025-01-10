@@ -15,9 +15,20 @@ use App\Service\ApiService;
 
 class WelcomeController extends AbstractController
 {
-    #[Route('/', name: 'app_welcome')]
-    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService): Response
+    private ApiService $apiService;
+    private AlertManager $alertManager;
+
+    public function __construct(ApiService $apiService, AlertManager $alertManager)
     {
+        $this->apiService = $apiService;
+        $this->alertManager = $alertManager;
+    }
+
+    #[Route('/', name: 'app_welcome')]
+    public function index(Request $request, RoomRepository $roomRepository): Response
+    {
+        $this->alertManager->checkAndCreateAlerts();
+
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
             'method' => 'GET',
@@ -31,12 +42,8 @@ class WelcomeController extends AbstractController
             $rooms = $roomRepository->findRoomWithAs($room);
         }
 
-        $roomsWithLastCaptures = array_map(function ($room) use ($apiService, $roomRepository) {
-            $roomName = $room->getName();
-            if (!is_string($roomName)) {
-                throw new \InvalidArgumentException('Invalid room name.');
-            }
-
+        $roomsWithLastCaptures = array_map(function ($room) use ($roomRepository) {
+            $roomName = $room->getName() ?? '';
             $roomDbInfo = $roomRepository->getRoomDb($roomName);
             $dbname = $roomDbInfo['dbname'] ?? null;
 
@@ -52,35 +59,45 @@ class WelcomeController extends AbstractController
                 ];
             }
 
+            // Get last captures
+            $lastCaptureTemp = $this->apiService->getLastCapture('temp', $dbname);
+            $lastCaptureHum = $this->apiService->getLastCapture('hum', $dbname);
+            $lastCaptureCo2 = $this->apiService->getLastCapture('co2', $dbname);
+
+            // Validate and extract values (assuming getLastCapture() always returns an array)
+            $tempValue = isset($lastCaptureTemp[0]['valeur']) && is_numeric($lastCaptureTemp[0]['valeur'])
+                ? round((float) $lastCaptureTemp[0]['valeur'], 1)
+                : null;
+
+            $humValue = isset($lastCaptureHum[0]['valeur']) && is_numeric($lastCaptureHum[0]['valeur'])
+                ? round((float) $lastCaptureHum[0]['valeur'], 1)
+                : null;
+
+            $co2Value = isset($lastCaptureCo2[0]['valeur'])
+                ? $lastCaptureCo2[0]['valeur']
+                : null;
+
             return [
                 'room' => $room,
                 'dbname' => $dbname,
                 'lastCaptures' => [
-                    'temp' => is_numeric($apiService->getLastCapture('temp', $dbname)[0]['valeur'] ?? null)
-                        ? round((float)$apiService->getLastCapture('temp', $dbname)[0]['valeur'], 1)
-                        : null,
-                    'hum' => is_numeric($apiService->getLastCapture('hum', $dbname)[0]['valeur'] ?? null)
-                        ? round((float)$apiService->getLastCapture('hum', $dbname)[0]['valeur'], 1)
-                        : null,
-                    'co2' => $apiService->getLastCapture('co2', $dbname)[0]['valeur'] ?? null,
+                    'temp' => $tempValue,
+                    'hum' => $humValue,
+                    'co2' => $co2Value,
                 ],
             ];
         }, $rooms);
 
         return $this->render('welcome/index.html.twig', [
-            'room' => $form->createView(),
+            'controller_name' => 'WelcomeController',
+            'room'  => $form->createView(),
+            'rooms' => $rooms,
             'roomsWithLastCaptures' => $roomsWithLastCaptures,
         ]);
     }
 
     #[Route('/{id}', name: 'app_welcome_details')]
-    public function details(
-        RoomRepository $roomRepository,
-        int $id,
-        ApiService $apiService,
-        AlertManager $alertManager,
-        EntityManagerInterface $entityManager
-    ): Response {
+    public function details(RoomRepository $roomRepository, int $id, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response {
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $alertManager->checkAndCreateAlerts();
 
