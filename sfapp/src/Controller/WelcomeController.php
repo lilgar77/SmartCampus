@@ -170,8 +170,8 @@ class WelcomeController extends AbstractController
     /**
      * Groups data by hour and calculates rounded averages.
      *
-     * @param array $data Array of data points with 'dateCapture' and 'valeur' keys.
-     * @return array Array of hourly averaged data with rounded values.
+     * @param array<int, array{dateCapture: string, valeur: float}> $data
+     * @return array<int, array{dateCapture: string, valeur: float}>
      */
     private function calculateHourlyAverage(array $data): array
     {
@@ -187,11 +187,11 @@ class WelcomeController extends AbstractController
 
             // Initialize the group if it doesn't exist
             if (!isset($groupedData[$hour])) {
-                $groupedData[$hour] = ['sum' => 0, 'count' => 0];
+                $groupedData[$hour] = ['sum' => 0.0, 'count' => 0];
             }
 
             // Sum up the values and count the occurrences
-            $groupedData[$hour]['sum'] += $item['valeur'];
+            $groupedData[$hour]['sum'] += (float) $item['valeur'];
             $groupedData[$hour]['count']++;
         }
 
@@ -206,4 +206,5 @@ class WelcomeController extends AbstractController
 
         return $averagedData;
     }
+
 }
