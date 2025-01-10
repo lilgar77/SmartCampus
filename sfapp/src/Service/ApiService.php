@@ -20,8 +20,27 @@ class ApiService
         $this->client = $client;
 
         // Set the username and password for the API
-        $this->username = $parameterBag->get('API_USERNAME');
-        $this->userpass = $parameterBag->get('API_USERPASS');
+        $this->username = $this->getStringParam($parameterBag, 'API_USERNAME');
+        $this->userpass = $this->getStringParam($parameterBag, 'API_USERPASS');
+    }
+
+    /**
+     * Cette fonction garantit que le paramètre est une chaîne de caractères.
+     *
+     * @param ParameterBagInterface $parameterBag
+     * @param string $paramName
+     * @return string
+     */
+    private function getStringParam(ParameterBagInterface $parameterBag, string $paramName): string
+    {
+        $value = $parameterBag->get($paramName);
+
+        // Si la valeur n'est pas une chaîne, retourne une chaîne vide ou une valeur par défaut
+        if (!is_string($value)) {
+            return '';
+        }
+
+        return $value;
     }
 
     /**

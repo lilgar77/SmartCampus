@@ -97,15 +97,21 @@ class WelcomeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_welcome_details')]
-    public function details(RoomRepository $roomRepository, int $id, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response {
+    public function details(RoomRepository $roomRepository, int $id, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
+    {
+        // Update the last captures for all rooms
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+
+        // Check and create alerts if necessary
         $alertManager->checkAndCreateAlerts();
 
+        // Fetch the room by its ID
         $room = $roomRepository->find($id);
         if (!$room) {
             throw $this->createNotFoundException('Room not found');
         }
 
+        // Retrieve the room's database information
         $roomName = $room->getName();
         if (!is_string($roomName)) {
             throw new \InvalidArgumentException('Invalid room name.');
@@ -130,6 +136,7 @@ class WelcomeController extends AbstractController
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
+        // Define the date range for the data retrieval
         $date1 = (new \DateTime())->format('Y-m-d');
         $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
 
@@ -141,10 +148,12 @@ class WelcomeController extends AbstractController
             }
         };
 
+        // Calculate hourly averages and round them
         $dataTemp = $this->calculateHourlyAverage($getCapturesByInterval('temp'));
         $dataHum = $this->calculateHourlyAverage($getCapturesByInterval('hum'));
         $dataCo2 = $this->calculateHourlyAverage($getCapturesByInterval('co2'));
 
+        // Render the details template with the data
         return $this->render('welcome/detail.html.twig', [
             'room' => $room,
             'dataTemp' => $dataTemp,
