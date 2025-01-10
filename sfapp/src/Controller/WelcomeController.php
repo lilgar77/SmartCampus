@@ -10,28 +10,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RoomRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 // use services api
 use App\Service\ApiService;
 
 class WelcomeController extends AbstractController
 {
-    private ApiService $apiService;
-    private AlertManager $alertManager;
-
-
-    public function __construct(ApiService $apiService, AlertManager $alertManager)
-    {
-        $this->apiService = $apiService;
-        $this->alertManager = $alertManager;
-
-    }
-
     #[Route('/', name: 'app_welcome')]
-    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService): Response
+    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        $this->alertManager->checkAndCreateAlerts();
-        // Récupération de toutes les salles
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
             'method' => 'GET',
@@ -43,12 +31,25 @@ class WelcomeController extends AbstractController
         $rooms = $roomRepository->findRoomWithAsDefault();
         if ($form->isSubmitted() && $form->isValid()) {
             $rooms = $roomRepository->findRoomWithAs($room);
+        } else {
+            $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+            $alertManager->checkAndCreateAlerts();
         }
+
         $roomsWithLastCaptures = array_map(function ($room) use ($apiService, $roomRepository) {
-            $roomDbInfo = $roomRepository->getRoomDb($room->getName());
+            $roomName = $room->getName();
+
+            // Vérifier que le nom de la salle est une chaîne de caractères
+            if (!is_string($roomName)) {
+                throw $this->createNotFoundException('Le nom de la salle est introuvable ou invalide.');
+            }
+
+            // Récupérer les informations de la salle dans la base de données
+            $roomDbInfo = $roomRepository->getRoomDb($roomName);
             $dbname = $roomDbInfo['dbname'] ?? null;
 
-            if (!$dbname) {
+            // Si le nom de la base de données n'est pas valide, retourner les valeurs par défaut
+            if (!is_string($dbname)) {
                 return [
                     'room' => $room,
                     'dbname' => null,
@@ -60,13 +61,30 @@ class WelcomeController extends AbstractController
                 ];
             }
 
+            // Récupérer les dernières captures de température, humidité et CO2
+            $lastCaptureTemp = $apiService->getLastCapture('temp', $dbname);
+            $tempValue = (isset($lastCaptureTemp[0]['valeur']) && is_numeric($lastCaptureTemp[0]['valeur']))
+                ? (float) $lastCaptureTemp[0]['valeur']
+                : null;
+
+            $lastCaptureHum = $apiService->getLastCapture('hum', $dbname);
+            $humValue = (isset($lastCaptureHum[0]['valeur']) && is_numeric($lastCaptureHum[0]['valeur']))
+                ? (float) $lastCaptureHum[0]['valeur']
+                : null;
+
+            $lastCaptureCo2 = $apiService->getLastCapture('co2', $dbname);
+            $co2Value = (isset($lastCaptureCo2[0]['valeur']) && is_numeric($lastCaptureCo2[0]['valeur']))
+                ? (float) $lastCaptureCo2[0]['valeur']
+                : null;
+
+            // Retourner les informations de la salle avec les dernières captures
             return [
                 'room' => $room,
                 'dbname' => $dbname,
                 'lastCaptures' => [
-                    'temp' => $apiService->getLastCapture('temp', $dbname)[0]['valeur'] ?? null,
-                    'hum' => $apiService->getLastCapture('hum', $dbname)[0]['valeur'] ?? null,
-                    'co2' => $apiService->getLastCapture('co2', $dbname)[0]['valeur'] ?? null,
+                    'temp' => $tempValue,
+                    'hum' => $humValue,
+                    'co2' => $co2Value,
                 ],
             ];
         }, $rooms);
@@ -79,20 +97,32 @@ class WelcomeController extends AbstractController
         ]);
     }
 
-
     #[Route('/{id}', name: 'app_welcome_details')]
-    public function details(RoomRepository $roomRepository, int $id, ApiService $apiService): Response
+    public function details(RoomRepository $roomRepository, int $id, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        $this->alertManager->checkAndCreateAlerts();
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+        $alertManager->checkAndCreateAlerts();
+
         $room = $roomRepository->find($id);
         if (!$room) {
             throw $this->createNotFoundException('Salle non trouvée');
         }
 
-       //récupération de la base de donnée de la salle
-        $dbname = $roomRepository->getRoomDb($room->getName())['dbname'];
+        // Récupération de la base de données de la salle
+        $roomName = $room->getName();
 
+        if (!is_string($roomName)) {
+            throw $this->createNotFoundException('Le nom de la salle est introuvable ou invalide.');
+        }
+
+        $roomDbInfo = $roomRepository->getRoomDb($roomName);
+        $dbname = $roomDbInfo['dbname'] ?? null;
+
+        // Récupérer la dernière capture pour chaque type
         $getLastCapture = function(string $type) use ($apiService, $dbname) {
+            if (!is_string($dbname)) {
+                return null;
+            }
             return $apiService->getLastCapture($type, $dbname)[0] ?? null;
         };
 
@@ -103,9 +133,11 @@ class WelcomeController extends AbstractController
         $date1 = (new \DateTime())->format('Y-m-d');
         $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
 
-
-        // Fonction pour récupérer les données d'intervalle pour chaque type
+        // Fonction pour récupérer les captures par intervalle
         $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {
+            if (!is_string($dbname)) {
+                return ['error' => 'Database name is invalid'];
+            }
             try {
                 return $apiService->getCapturesByInterval($date1, $date2, $type, 1, $dbname);
             } catch (\Exception $e) {

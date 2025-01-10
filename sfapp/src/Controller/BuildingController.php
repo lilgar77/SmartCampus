@@ -13,6 +13,7 @@ namespace App\Controller;
 
 use App\Form\SearchBuldingType;
 use App\Service\AlertManager;
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,25 +22,21 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Building;
 use App\Form\BuildingType;
 use App\Repository\BuildingRepository;
+use App\Repository\RoomRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class BuildingController extends AbstractController
 {
-    private AlertManager $alertManager;
-
-    public function __construct(AlertManager $alertManager)
-    {
-        $this->alertManager = $alertManager;
-    }
-   
     #[Route('/building', name: 'app_building')]
-    public function index(Request $request, BuildingRepository $buildingRepository): Response
+    public function index(Request $request, BuildingRepository $buildingRepository, EntityManagerInterface $entityManager, ApiService $apiService, RoomRepository $roomRepository, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
 
-        $this->alertManager->checkAndCreateAlerts();
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+
+        $alertManager->checkAndCreateAlerts();
 
         $building = new Building();
         $form = $this->createForm(SearchBuldingType::class, $building, [
@@ -64,12 +61,12 @@ class BuildingController extends AbstractController
 
    
     #[Route('/building/add', name: 'app_building_add')]
-    public function add(Request $request, EntityManagerInterface $entityManager): Response
+    public function add(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $building = new Building();
         $form = $this->createForm(BuildingType::class, $building);
@@ -93,12 +90,12 @@ class BuildingController extends AbstractController
 
     
     #[Route('/building/{id}', name: 'app_building_delete', methods: ['POST'])]
-    public function delete(Building $building, EntityManagerInterface $entityManager): Response
+    public function delete(Building $building, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $entityManager->remove($building);
         $entityManager->flush();
@@ -110,12 +107,12 @@ class BuildingController extends AbstractController
 
    
     #[Route('/building/{id}/edit', name: 'app_building_edit')]
-    public function edit(Building $building, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(Building $building, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $form = $this->createForm(BuildingType::class, $building);
 

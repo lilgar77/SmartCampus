@@ -36,6 +36,9 @@ class Room
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Building $building = null;
 
+    /**
+     * @var Collection<int, Alert>
+     */
     #[ORM\OneToMany(targetEntity: Alert::class, mappedBy: 'IdRoom')]
     private Collection $alerts;
 
