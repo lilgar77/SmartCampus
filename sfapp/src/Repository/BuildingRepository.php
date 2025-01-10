@@ -47,15 +47,4 @@ class BuildingRepository extends ServiceEntityRepository
             ->getResult();
         return $building;
     }
-public function findBuildingByNameAndPlace(string $name, string $adresse): ?Building
-{
-    return $this->createQueryBuilder('b')
-        ->where('b.NameBuilding = :name')
-        ->andWhere('b.AdressBuilding = :adresse') // Assurez-vous que `place` est le bon nom de champ
-        ->setParameter('name', $name)
-        ->setParameter('adresse', $adresse)
-        ->getQuery()
-        ->getOneOrNullResult();
-}
-
 }

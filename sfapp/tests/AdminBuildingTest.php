@@ -43,7 +43,7 @@ class AdminBuildingTest extends WebTestCase
         $client->request('GET', '/building');
         $this->assertResponseIsSuccessful();
     }
-    public function testModifDeSalleAccessibleAuxAdmins(): void
+    public function testModifDeBatimentAccessibleAuxAdmins(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
 
@@ -54,7 +54,7 @@ class AdminBuildingTest extends WebTestCase
         $admin = $userRepository->findOneByEmail('admin@admin.com');
 
         $client->loginUser($admin);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByNameAndPlace('Informatique', 'La Rochelle')->getId();
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Informatique'])->getId();
         $client->request('GET', '/building/'.$identifier.'/edit');
         $this->assertResponseIsSuccessful();
     }
@@ -97,7 +97,7 @@ class AdminBuildingTest extends WebTestCase
         $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
 
         $client->loginUser($technicien);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Informatique'])->getId();
         $client->request('GET', '/building/'.$identifier.'/edit');
         $this->assertResponseRedirects('/403');
     }
