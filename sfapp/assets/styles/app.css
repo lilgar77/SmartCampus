@@ -89,6 +89,7 @@ body.modal-open .background-container {
 
 .circle-info-temp {
     top:30%;
+    left: 10%;
     font-size: 20px;
 }
 
@@ -133,6 +134,18 @@ body.modal-open .background-container {
     width: 20px;
     height: 20px;
     border: 2px solid black;
+}
+
+.red{
+    background-color: #b22222;
+}
+
+.green {
+    background-color: #93CC56;
+}
+
+.yellow {
+    background-color: #edc11d;
 }
 
 .list-mail:hover {
