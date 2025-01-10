@@ -1,21 +1,27 @@
 <?php
 namespace App\Service;
 
+use http\Params;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Repository\RoomRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ApiService
 {
     private HttpClientInterface $client;
 
     // Default username and password for the API
-    private string $username = 'l1eq1';
-    private string $userpass = 'dicvex-Zofsip-4juqru';
+    private string $username;
+    private string $userpass;
 
-    public function __construct(HttpClientInterface $client)
+    public function __construct(HttpClientInterface $client, ParameterBagInterface $parameterBag)
     {
         $this->client = $client;
+
+        // Set the username and password for the API
+        $this->username = $parameterBag->get('API_USERNAME');
+        $this->userpass = $parameterBag->get('API_USERPASS');
     }
 
     /**
