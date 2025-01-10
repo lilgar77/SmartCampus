@@ -63,6 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.co2Data,
         'rgb(75, 192, 192)',
         300,
-        1000
+        1500
     );
 });
