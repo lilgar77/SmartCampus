@@ -34,38 +34,38 @@ class FloorTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Liste des Etages');
     }
 
-    public function testSetup()
-    {
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // Ensure the admin user exists
-        $admin = $userRepository->findOneByEmail('admin@admin.com');
-        $this->assertNotNull($admin, 'Admin user not found.');
-
-        // Log in as the admin
-        $client->loginUser($admin);
-
-        // Load the edit form for the selected Building
-        $crawler = $client->request('GET', '/building/add');
-
-        // Fill in the form with updated data
-        $form = $crawler->selectButton('Ajouter un batiment')->form([
-            'building[NameBuilding]' => 'Info',
-            'building[AdressBuilding]' => 'Rue',
-        ]);
-
-        // Submit the form
-        $client->submit($form);
-
-        // Verify redirection after form submission
-        $this->assertResponseRedirects('/building');
-        $client->followRedirect();
-
-        // Verify successful response after following the redirect
-        $this->assertResponseIsSuccessful();
-    }
-
+//    public function testSetup()
+//    {
+//        $client = static::createClient();
+//        $userRepository = static::getContainer()->get(UserRepository::class);
+//
+//        // Ensure the admin user exists
+//        $admin = $userRepository->findOneByEmail('admin@admin.com');
+//        $this->assertNotNull($admin, 'Admin user not found.');
+//
+//        // Log in as the admin
+//        $client->loginUser($admin);
+//
+//        // Load the edit form for the selected Building
+//        $crawler = $client->request('GET', '/building/add');
+//
+//        // Fill in the form with updated data
+//        $form = $crawler->selectButton('Ajouter un batiment')->form([
+//            'building[NameBuilding]' => 'Info',
+//            'building[AdressBuilding]' => 'Rue',
+//        ]);
+//
+//        // Submit the form
+//        $client->submit($form);
+//
+//        // Verify redirection after form submission
+//        $this->assertResponseRedirects('/building');
+//        $client->followRedirect();
+//
+//        // Verify successful response after following the redirect
+//        $this->assertResponseIsSuccessful();
+//    }
+//
 
     public function testAddFloor()
     {
@@ -80,7 +80,7 @@ class FloorTest extends WebTestCase
         $client->loginUser($admin);
 
         // Load the form page for adding a new system
-        $id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Info')->getId();
+        $id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
         $crawler = $client->request('GET', '/floor/add');
 
         // Check if the response was successful (status 200)

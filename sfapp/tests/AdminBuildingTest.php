@@ -54,7 +54,7 @@ class AdminBuildingTest extends WebTestCase
         $admin = $userRepository->findOneByEmail('admin@admin.com');
 
         $client->loginUser($admin);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Informatique')->getId();
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByNameAndPlace('Informatique', 'La Rochelle')->getId();
         $client->request('GET', '/building/'.$identifier.'/edit');
         $this->assertResponseIsSuccessful();
     }
