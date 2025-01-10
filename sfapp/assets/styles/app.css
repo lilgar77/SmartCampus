@@ -56,28 +56,19 @@ body.modal-open .background-container {
 
 .progress-circle-container {
     margin-top: 70px;
-    width: 250px;
-    height: 250px;
+    width: 65%;
+    height: 50%;
     border-radius: 200px 0 200px 200px;
     border: 10px solid #000000;
     transform: rotate(-45deg);
 }
 
 .progress-circle svg {
-    position: absolute;
-    top:0;
-    left:0;
     transform: scale(1.2) rotate(45deg);
 }
 
-.progress-circle {
-    margin-top: 40px;
-    width: 270px;
-    height: 200px;
-}
-
 #wave-path {
-    transition: d 0.3s ease;
+    transition: d 0.6s ease;
 }
 
 .thermometer {
@@ -98,7 +89,6 @@ body.modal-open .background-container {
 
 .circle-info-temp {
     top:30%;
-    left:10%;
     font-size: 20px;
 }
 
@@ -107,8 +97,8 @@ body.modal-open .background-container {
 }
 
 .circle-info-wave {
-    top: 37%;
-    left: 55%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
     font-size: 50px;
     text-shadow:

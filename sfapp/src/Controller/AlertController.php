@@ -2,27 +2,23 @@
 
 namespace App\Controller;
 
+use App\Service\ApiService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\AlertManager;
 use App\Repository\AlertRepository;
-use Psr\Log\LoggerInterface;
+use App\Repository\RoomRepository;
 
 class AlertController extends AbstractController
 {
-    private AlertManager $alertManager;
 
-
-
-    public function __construct(AlertManager $alertManager)
-    {
-        $this->alertManager = $alertManager;
-    }
     #[Route('/alert', name: 'app_alert')]
-    public function index(AlertRepository $alertRepository): Response
+    public function index(AlertRepository $alertRepository, RoomRepository $roomRepository, ApiService $apiService, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        $this->alertManager->checkAndCreateAlerts();
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+        $alertManager->checkAndCreateAlerts();
 
 
 

@@ -64,8 +64,8 @@ class WelcomeController extends AbstractController
                 'room' => $room,
                 'dbname' => $dbname,
                 'lastCaptures' => [
-                    'temp' => round($apiService->getLastCapture('temp', $dbname)[0]['valeur'],1) ?? null,
-                    'hum' =>  round($apiService->getLastCapture('hum', $dbname)[0]['valeur'],1) ?? null,
+                    'temp' => $apiService->getLastCapture('temp', $dbname)[0]['valeur'] ?? null,
+                    'hum' => $apiService->getLastCapture('hum', $dbname)[0]['valeur'] ?? null,
                     'co2' => $apiService->getLastCapture('co2', $dbname)[0]['valeur'] ?? null,
                 ],
             ];
@@ -89,15 +89,11 @@ class WelcomeController extends AbstractController
             throw $this->createNotFoundException('Salle non trouvée');
         }
 
-        //récupération de la base de donnée de la salle
+       //récupération de la base de donnée de la salle
         $dbname = $roomRepository->getRoomDb($room->getName())['dbname'];
 
         $getLastCapture = function(string $type) use ($apiService, $dbname) {
-            $capture=$apiService->getLastCapture($type, $dbname)[0] ?? null;
-            if ($capture) {
-                $capture['valeur'] = round($capture['valeur'], 1); // Arrondir au dixième près
-            }
-            return $capture;
+            return $apiService->getLastCapture($type, $dbname)[0] ?? null;
         };
 
         $lastCapturetemp = $getLastCapture('temp');

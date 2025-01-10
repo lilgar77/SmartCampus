@@ -1,30 +1,36 @@
 <?php
 namespace App\Service;
 
+use http\Params;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use App\Repository\RoomRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ApiService
 {
     private HttpClientInterface $client;
 
-
-
     // Default username and password for the API
-    private string $username = 'l1eq1';
-    private string $userpass = 'dicvex-Zofsip-4juqru';
+    private string $username;
+    private string $userpass;
 
-    public function __construct(HttpClientInterface $client)
+    public function __construct(HttpClientInterface $client, ParameterBagInterface $parameterBag)
     {
         $this->client = $client;
+
+        // Set the username and password for the API
+        $this->username = $parameterBag->get('API_USERNAME');
+        $this->userpass = $parameterBag->get('API_USERPASS');
     }
 
-
+    /**
+     * @return array<int, array<string, mixed>> Le tableau des captures avec les données sous forme de tableau associatif.
+     */
     public function getCapturesByInterval(string $date1, string $date2, string $name, int $page, string $dbname): array
     {
-        // URL of the API for the captures in interval
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/interval';
 
-        // Headers and query for the API request
         $headers = [
             'accept'   => 'application/ld+json',
             'dbname'   => $dbname,
@@ -39,8 +45,6 @@ class ApiService
             'page'  => $page,
         ];
 
-
-        // Try to make the request to the API
         try {
             $response = $this->client->request('GET', $url, [
                 'headers' => $headers,
@@ -51,19 +55,22 @@ class ApiService
                 throw new \Exception('Erreur HTTP : ' . $response->getStatusCode());
             }
 
-            return $response->toArray();
+            $responseData = $response->toArray();
+
+            // Transform response to ensure it matches array<int, array<string, mixed>>
+            return $this->validateResponse($responseData);
         } catch (\Exception $e) {
             throw new \Exception('Erreur lors de la requête : ' . $e->getMessage());
         }
     }
 
+    /**
+     * @return array<int, array<string, mixed>> Le tableau des captures avec les données sous forme de tableau associatif.
+     */
     public function getLastCapture(string $name, string $dbname): array
     {
-
-        // URL of the API for the last capture
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/last';
 
-         // Headers and query for the API request
         $headers = [
             'accept'   => 'application/ld+json',
             'dbname'   => $dbname,
@@ -77,7 +84,6 @@ class ApiService
             'page'  => 1,
         ];
 
-        // Try to make the request to the API
         try {
             $response = $this->client->request('GET', $url, [
                 'headers' => $headers,
@@ -88,9 +94,87 @@ class ApiService
                 throw new \Exception('Erreur HTTP : ' . $response->getStatusCode());
             }
 
-            return $response->toArray();
+            $responseData = $response->toArray();
+
+            // Transform response to ensure it matches array<int, array<string, mixed>>
+            return $this->validateResponse($responseData);
         } catch (\Exception $e) {
             throw new \Exception('Erreur lors de la requête : ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Validates and transforms the API response to ensure it matches the expected type.
+     *
+     * @param array<mixed> $response
+     * @return array<int, array<string, mixed>>
+     */
+    private function validateResponse(array $response): array
+    {
+        $validated = [];
+        foreach ($response as $item) {
+            if (is_array($item) && $this->isAssociativeArray($item)) {
+                /** @var array<string, mixed> $item */
+                $validated[] = $item;
+            }
+        }
+        return $validated;
+    }
+
+    /**
+     * Helper function to check if an array is associative with string keys.
+     *
+     * @param array<mixed> $array
+     * @return bool
+     */
+    private function isAssociativeArray(array $array): bool
+    {
+        foreach (array_keys($array) as $key) {
+            if (!is_string($key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function updateLastCapturesForRooms(RoomRepository $roomRepository, EntityManagerInterface $entityManager): void
+    {
+        $rooms = $roomRepository->findRoomWithAsInstalled();
+
+        foreach ($rooms as $room) {
+            $name = $room->getName();
+            if ($name === null) {
+                continue;
+            }
+
+            $roomDbInfo = $roomRepository->getRoomDb($name);
+            $dbname = $roomDbInfo['dbname'] ?? null;
+
+            if ($dbname === null) {
+                continue;
+            }
+
+            try {
+                $lastTemperature = $this->getLastCapture('temp', $dbname)[0]['valeur'] ?? null;
+                $lastHumidity = $this->getLastCapture('hum', $dbname)[0]['valeur'] ?? null;
+                $lastCO2 = $this->getLastCapture('co2', $dbname)[0]['valeur'] ?? null;
+
+                $lastTemperature = is_numeric($lastTemperature) ? (int) $lastTemperature : 0;
+                $lastHumidity = is_numeric($lastHumidity) ? (int) $lastHumidity : 0;
+                $lastCO2 = is_numeric($lastCO2) ? (int) $lastCO2 : 0;
+
+                $acquisitionSystem = $room->getIdAS();
+
+                if ($acquisitionSystem !== null) {
+                    $acquisitionSystem->setTemperature($lastTemperature);
+                    $acquisitionSystem->setHumidity($lastHumidity);
+                    $acquisitionSystem->setCO2($lastCO2);
+                }
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
+        $entityManager->flush();
     }
 }
