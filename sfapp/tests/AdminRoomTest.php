@@ -54,7 +54,7 @@ class AdminRoomTest extends WebTestCase
         $admin = $userRepository->findOneByEmail('admin@admin.com');
 
         $client->loginUser($admin);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('D101')->getId();
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('D304')->getId();
         $client->request('GET', '/rooms/'.$identifier.'/edit');
         $this->assertResponseIsSuccessful();
     }
@@ -97,7 +97,7 @@ class AdminRoomTest extends WebTestCase
         $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
 
         $client->loginUser($technicien);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('D101')->getId();
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('D304')->getId();
         $client->request('GET', '/rooms/'.$identifier.'/edit');
         $this->assertResponseRedirects('/403');
     }
