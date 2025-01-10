@@ -11,14 +11,14 @@
             <a href="{{ path('app_welcome') }}" class="btn btn-violet text-white">
                 &#8592; Retour
             </a>
-            <h1>Détails de la salle {{ room.name }} ({{ lastCapturehum.dateCapture }})</h1>
+            <h1>Détails de la salle {{ room.name }} ({{ lastCapturehum.dateCapture|date('H:i d-m-Y') }})</h1>
         </div>
 
         <div class="d-flex justify-content-around circles-wrapper">
             <div class="d-flex justify-content-space-around align-items-center w-100 gap-4">
                 <div class="circle-item w-100 h-100 rounded d-flex flex-column align-items-center text-align-center position-relative">
                     <div class="progress-circle-container position-relative d-flex align-items-center justify-content-center overflow-hidden">
-                        <div class="progress-circle w-100 h-75 position-relative">
+                        <div class="progress-circle position-relative">
                             <div class="circle-info-wave position-absolute text-align-center z-2">
                                 {{ lastCapturehum.valeur}}%
                             </div>
