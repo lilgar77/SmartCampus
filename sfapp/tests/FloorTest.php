@@ -12,7 +12,7 @@ class FloorTest extends WebTestCase
     private ?int $idFloor; // Variable to store the Floor ID for later use
 
     // Test case for accessing the Floor list page
-    public function testSomething(): void
+    public function testFloorPage(): void
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);

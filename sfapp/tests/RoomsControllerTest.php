@@ -85,14 +85,14 @@ class RoomsControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
 
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('info')->getId();
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Informatique'])->getId();
         $identifier2 = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(2)->getId();
-        $identifier3 = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('TestSA-002')->getId();
+        //$identifier3 = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('ESP-11')->getId();
 
 
         $form = $crawler->selectButton('Ajouter une Salle')->form([
             'room_form[name]' => 'Test Room',
-            'room_form[id_AS]' => $identifier3,
+            //'room_form[id_AS]' => $identifier3,
             'room_form[floor]' => $identifier2,
             'room_form[building]' => $identifier,
         ]);
@@ -155,13 +155,13 @@ class RoomsControllerTest extends WebTestCase
         $this->assertSelectorTextContains('div.alert', 'La salle "Test Room Updated" a été supprimée avec succès.');
 
 
-        // delete full data
-
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('info')->getId();
-        $identifier3 = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('TestSA-002')->getId();
-
-        $client->request('POST', '/acquisitionsyteme/'.$identifier3);
-        $client->request('POST', '/building/'.$identifier);
+//        // delete full data
+//
+//        $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Informatique'])->getId();
+//        //$identifier3 = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('TestSA-002')->getId();
+//
+//        //$client->request('POST', '/acquisitionsyteme/'.$identifier3);
+//        $client->request('POST', '/building/'.$identifier);
 
     }
 
