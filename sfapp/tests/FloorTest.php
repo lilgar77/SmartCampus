@@ -9,7 +9,7 @@ use App\Repository\UserRepository;
 
 class FloorTest extends WebTestCase
 {
-    private ?int $idFloor; // Variable to store the Floor ID for later use
+    private ?int $idFloor;
 
     // Test case for accessing the Floor list page
     public function testFloorPage(): void
@@ -82,10 +82,10 @@ class FloorTest extends WebTestCase
         // Log in as the admin
         $client->loginUser($admin);
         // Retrieve the ID of the Floor based on its id for editing
-        $this->id_Floor = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(4)->getId();
+        $this->idFloor = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(4)->getId();
 
         // Load the edit form for the selected Floor
-        $crawler = $client->request('GET', '/floor/'. $this->id_Floor.'/edit');
+        $crawler = $client->request('GET', '/floor/'. $this->idFloor.'/edit');
 
         // Check if the response was successful (status 200)
         $this->assertResponseIsSuccessful();
@@ -123,10 +123,10 @@ class FloorTest extends WebTestCase
         $client->loginUser($admin);
 
         // Retrieve the ID of the Floor based on its id for editing
-        $this->id_Floor = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(8)->getId();
+        $this->idFloor = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(8)->getId();
 
         // Send a POST request to delete the system
-        $crawler = $client->request('POST', '/floor/'. $this->id_Floor);
+        $crawler = $client->request('POST', '/floor/'. $this->idFloor);
 
         // Verify redirection after the deletion
         $this->assertResponseRedirects('/floor');
