@@ -45,7 +45,7 @@ class BuildingTest extends WebTestCase
 
         $formBuilding = $crawler->selectButton('Ajouter un batiment')->form(
             [
-            'building[NameBuilding]' => 'Droit',
+            'building[NameBuilding]' => 'Medecine',
             'building[AdressBuilding]' => 'LaRochelle',
             ]
         );
@@ -54,7 +54,7 @@ class BuildingTest extends WebTestCase
         $this->assertResponseRedirects('/building');
         $client->followRedirect();
 
-        $this->assertSelectorTextContains('div.alert', 'Bâtiment "Droit" ajouté avec succès');
+        $this->assertSelectorTextContains('div.alert', 'Bâtiment "Medecine" ajouté avec succès');
     }
 
     public function testEditBuilding(): void {
@@ -68,13 +68,13 @@ class BuildingTest extends WebTestCase
         // Log in as the admin
         $client->loginUser($admin);
 
-        $this->id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Droit')->getId();
+        $this->id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Medecine'])->getId();
 
         $crawler = $client->request('GET', '/building/'.$this->id_Building.'/edit');
 
         $formBuilding = $crawler->selectButton('Sauvegarder les modifications')->form(
             [
-                'building[NameBuilding]' => 'Droit',
+                'building[NameBuilding]' => 'Medecine',
                 'building[AdressBuilding]' => 'Marseille',
             ]
         );
@@ -83,7 +83,7 @@ class BuildingTest extends WebTestCase
         $this->assertResponseRedirects('/building');
         $client->followRedirect();
 
-        $this->assertSelectorTextContains('div.alert', 'Bâtiment "Droit" modifié avec succès');
+        $this->assertSelectorTextContains('div.alert', 'Bâtiment "Medecine" modifié avec succès');
     }
     public function testDeleteBuilding(): void
     {
@@ -99,18 +99,17 @@ class BuildingTest extends WebTestCase
 
 
         // Retrieve the ID of the AcquisitionSystem that is to be deleted
-        $this->id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findBuildingByName('Droit')->getId();
+        $this->id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Medecine'])->getId();
 
+        $this->assertNotNull($this->id_Building, 'Building ID is null.');
         // Send a POST request to delete the system
-        $crawler = $client->request('POST', '/building/'. $this->id_Building);
-
+        $crawler = $client->request('POST', '/building/' . $this->id_Building);
         // Verify redirection after the deletion
         $this->assertResponseRedirects('/building');
         $client->followRedirect();
 
         // Check for success message after deletion
-        $this->assertSelectorTextContains('div.alert', 'Bâtiment "Droit" supprimé avec succès');
-
+        $this->assertSelectorTextContains('div.alert', 'Bâtiment "Medecine" supprimé avec succès');
 
     }
 }

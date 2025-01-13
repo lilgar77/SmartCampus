@@ -51,11 +51,8 @@ class AcquisitionSystemTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Fill in the form fields with test data
-       $form = $crawler->selectButton('Ajouter un Système d\'Acquisition')->form(
+        $form = $crawler->selectButton('Ajouter un Système d\'Acquisition')->form(
             [
-                'acquisition_systeme[temperature]' => 20,
-                'acquisition_systeme[CO2]' => 400,
-                'acquisition_systeme[humidity]' => 50,
                 'acquisition_systeme[name]' => 'TestSA-001',
                 'acquisition_systeme[wording]' => 'Salle de réunion',
                 'acquisition_systeme[macAdress]' => '00:00:00:00:00:05',
@@ -96,9 +93,6 @@ class AcquisitionSystemTest extends WebTestCase
         // Fill in the form with updated data
         $form = $crawler->selectButton('Sauvegarder les modifications')->form(
             [
-                'acquisition_systeme[temperature]' => 25,
-                'acquisition_systeme[CO2]' => 450,
-                'acquisition_systeme[humidity]' => 55,
                 'acquisition_systeme[name]' => 'TestSA-Updated',
                 'acquisition_systeme[wording]' => 'Salle updated',
                 'acquisition_systeme[macAdress]' => '00:00:00:00:00:08',
@@ -140,6 +134,5 @@ class AcquisitionSystemTest extends WebTestCase
         $this->assertResponseRedirects('/acquisitionsysteme');
 
         // Check for success message after deletion
-        //$this->assertSelectorTextContains('div.alert', 'Système d\'acquisition "TestSA-Updated" supprimé avec succès');*/
     }
 }

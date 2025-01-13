@@ -28,7 +28,7 @@ class BuildingRepository extends ServiceEntityRepository
         $buildings = $this->createQueryBuilder('b')
             ->where('b.NameBuilding LIKE :NameBuilding')
             ->setParameter('NameBuilding', '%' . $name . '%')
-            ->orderBy('b.NameBuilding', 'ASC')
+           ->orderBy('b.NameBuilding', 'ASC')
             ->getQuery()
             ->getResult();
 
@@ -47,5 +47,4 @@ class BuildingRepository extends ServiceEntityRepository
             ->getResult();
         return $building;
     }
-
 }
