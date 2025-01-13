@@ -12,9 +12,11 @@
 
 namespace App\Controller;
 
+use App\Model\EtatAS;
 use App\Repository\RoomRepository;
 use App\Service\AlertManager;
 use App\Service\ApiService;
+use App\Entity\Installation;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -71,6 +73,16 @@ class RoomsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($room);
+            if($room->getIdAS() != null)
+            {
+                $room->getIdAS()->setEtat(EtatAS::En_Installation);
+                $installation = new Installation();
+                $installation->setSA($room->getIdAS());
+                $installation->setRoom($room);
+                $installation->setComment("Requête pour installation");
+                $entityManager->persist($installation);
+            }
+
             $entityManager->flush();
             $this->addFlash('success', 'La salle "' . $room->getName() . '" a été ajoutée avec succès.');
             return $this->redirectToRoute('app_rooms');

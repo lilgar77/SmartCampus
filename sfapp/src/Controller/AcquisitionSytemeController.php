@@ -156,7 +156,7 @@ class AcquisitionSytemeController extends AbstractController
                 $installation = new Installation();
                 $installation->setSA($acquisitionSystem);
                 $installation->setRoom($acquisitionSystem->getRoom());
-                $installation->setComment($acquisitionSystem->getWording());
+                $installation->setComment("Requête pour installation");
                 $entityManager->persist($installation);
             }
             $entityManager->flush();
