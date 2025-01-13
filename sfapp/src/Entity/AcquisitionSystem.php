@@ -7,7 +7,6 @@ use App\Repository\AcquisitionSystemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 //Entity uniqueness
@@ -54,9 +53,11 @@ class AcquisitionSystem
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Name = null;
 
+    /**
+     * @var Collection<int, Alert>
+     */
     #[ORM\OneToMany(targetEntity: Alert::class, mappedBy: 'IdSA')]
     private Collection $alerts;
-
     public function __construct()
     {
         $this->alerts = new ArrayCollection();

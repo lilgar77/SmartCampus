@@ -6,7 +6,10 @@ use App\Entity\Installation;
 use App\Form\TechnicianType;
 use App\Model\EtatAS;
 use App\Repository\InstallationRepository;
+use App\Repository\RoomRepository;
 use App\Service\AlertManager;
+
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,22 +19,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TechnicianController extends AbstractController
 {
-    private AlertManager $alertManager;
-
-
-
-    public function __construct(AlertManager $alertManager)
-    {
-        $this->alertManager = $alertManager;
-    }
     #[Route('/technician', name: 'app_technician')]
-    public function index(EntityManagerInterface $entityManager, InstallationRepository $installationRepository): Response
+    public function index(RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager,EntityManagerInterface $entityManager, InstallationRepository $installationRepository): Response
     {
 
          if (!$this->isGranted('ROLE_TECHNICIEN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $installations = $entityManager->getRepository(Installation::class)->findAll();
         foreach ($installations as $installation) {
 
@@ -53,12 +49,12 @@ class TechnicianController extends AbstractController
         ]);
     }
     #[Route('/technician/{id}/detail', name: 'app_technician_detail')]
-    public function detail(Request $request, EntityManagerInterface $entityManager, InstallationRepository $installationRepository): Response
+    public function detail(Request $request, EntityManagerInterface $entityManager, InstallationRepository $installationRepository, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_TECHNICIEN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
         $form = $this->createForm(TechnicianType::class);
         $form->handleRequest($request);
 

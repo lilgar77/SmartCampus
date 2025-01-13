@@ -1,6 +1,7 @@
 <?php
 namespace App\Service;
 
+use http\Params;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Repository\RoomRepository;
 use Doctrine\ORM\EntityManagerInterface;

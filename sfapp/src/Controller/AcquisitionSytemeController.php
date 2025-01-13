@@ -21,31 +21,29 @@ use App\Form\SearchRoomFormType;
 use App\Model\EtatAS;
 use App\Repository\AcquisitionSystemRepository;
 use App\Service\AlertManager;
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Repository\RoomRepository;
 
 
 class AcquisitionSytemeController extends AbstractController
 {
-    private AlertManager $alertManager;
-
-    public function __construct(AlertManager $alertManager)
-    {
-        $this->alertManager = $alertManager;
-    }
 
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
-    public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository): Response
+    public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
 
-        $this->alertManager->checkAndCreateAlerts();
+
+        $alertManager->checkAndCreateAlerts();
 
         // Créer le formulaire
         $form = $this->createForm(SearchAquisitionSystemeType::class, null, [
@@ -70,13 +68,13 @@ class AcquisitionSytemeController extends AbstractController
         ]);
     }
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
-    public function addAS(Request $request, EntityManagerInterface $entityManager): Response
+    public function addAS(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
 
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $acquisitionSystem = new AcquisitionSystem();
 
@@ -122,12 +120,12 @@ class AcquisitionSytemeController extends AbstractController
 
     
     #[Route('/acquisitionsyteme/{id}', name: 'app_acquisition_syteme_delete', methods: ['POST'])]
-    public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager): Response
+    public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $entityManager->remove($acquisitionSystem);
         $entityManager->flush();
@@ -139,12 +137,12 @@ class AcquisitionSytemeController extends AbstractController
 
     
     #[Route('/acquisitionsyteme/{id}/edit', name: 'app_acquisition_syteme_edit')]
-    public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
-        $this->alertManager->checkAndCreateAlerts();
+        $alertManager->checkAndCreateAlerts();
 
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
 
@@ -158,7 +156,7 @@ class AcquisitionSytemeController extends AbstractController
                 $installation = new Installation();
                 $installation->setSA($acquisitionSystem);
                 $installation->setRoom($acquisitionSystem->getRoom());
-                $installation->setComment($acquisitionSystem->getWording());
+                $installation->setComment("Requête pour installation");
                 $entityManager->persist($installation);
             }
             $entityManager->flush();

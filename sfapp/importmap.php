@@ -36,6 +36,11 @@ return [
     'carouseltechnician' => [
     'path' => 'js/carouseltechnician.js',
     'entrypoint' => true,
-    ]
+    ],
+
+    'diagnostic' => [
+        'path' => 'js/diagnostic.js',
+        'entrypoint' => true,
+    ],
 
 ];

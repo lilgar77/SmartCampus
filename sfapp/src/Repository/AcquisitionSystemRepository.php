@@ -74,6 +74,9 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return AcquisitionSystem[] Returns an array of AcquisitionSystem objects
+     */
     public function findInstalledSystems(): array
     {
         $result = $this->createQueryBuilder('a')
@@ -82,6 +85,7 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
             ->orderBy('a.Name', 'ASC') // Optionnel, pour trier les résultats
             ->getQuery()
             ->getResult();
+
         /** @var AcquisitionSystem[] $result */
         return $result;
     }
