@@ -11,14 +11,14 @@
             <a href="{{ path('app_welcome') }}" class="btn btn-violet text-white">
                 &#8592; Retour
             </a>
-            <h1>Détails de la salle {{ room.name }} ({{ lastCapturehum.dateCapture }})</h1>
+            <h1>Détails de la salle {{ room.name }} ({{ lastCapturehum.dateCapture|date('H:i d-m-Y') }})</h1>
         </div>
 
         <div class="d-flex justify-content-around circles-wrapper">
             <div class="d-flex justify-content-space-around align-items-center w-100 gap-4">
                 <div class="circle-item w-100 h-100 rounded d-flex flex-column align-items-center text-align-center position-relative">
                     <div class="progress-circle-container position-relative d-flex align-items-center justify-content-center overflow-hidden">
-                        <div class="progress-circle w-100 h-75 position-relative">
+                        <div class="progress-circle position-relative">
                             <div class="circle-info-wave position-absolute text-align-center z-2">
                                 {{ lastCapturehum.valeur}}%
                             </div>
@@ -29,15 +29,15 @@
                     </div>
                     <div class="d-flex justify-content-start align-items-start flex-column gap-3 m-2 ms-3 d-flex justify-content-start align-items-start flex-column gap-3 m-2">
                         <div class="d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle bg-success"></span>
+                            <span class="legend-color rounded-circle green"></span>
                             <span> <70% ou sinon la température est inférieur à 20°C</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle bg-warning"></span>
+                            <span class="legend-color rounded-circle yellow"></span>
                             <span> >70% et la température est entre 20 et 25°C</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle bg-danger"></span>
+                            <span class="legend-color rounded-circle red"></span>
                             <span> >70% et la température est supérieur à 25°C</span>
                         </div>
                     </div>
@@ -56,15 +56,15 @@
                     </div>
                     <div class="legend-thermometer d-flex justify-content-start align-items-start flex-column gap-3">
                         <div class="d-flex align-items-center gap-2 text-align-left d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle bg-success"></span>
+                            <span class="legend-color rounded-circle green"></span>
                             <span>Entre 17 et 21°C</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle bg-warning"></span>
+                            <span class="legend-color rounded-circle yellow"></span>
                             <span>Entre 22 et 26°C ou entre 16 et 12°C</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle bg-danger"></span>
+                            <span class="legend-color rounded-circle red"></span>
                             <span>Moins de 12°C ou plus de 26°C</span>
                         </div>
                     </div>
@@ -93,15 +93,15 @@
                     </p>
                     <div class="d-flex justify-content-start align-items-start flex-column gap-3 m-2">
                         <div class="d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle bg-success"></span>
+                            <span class="legend-color rounded-circle green"></span>
                             <span>Entre 400 et 1000 ppm</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle rounded-circle bg-warning"></span>
+                            <span class="legend-color rounded-circle rounded-circle yellow"></span>
                             <span>Entre 1000 et 1400 ppm</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 text-align-left">
-                            <span class="legend-color rounded-circle bg-danger"></span>
+                            <span class="legend-color rounded-circle red"></span>
                             <span>Moins de 400 ppm ou plus de 1400 ppm </span>
                         </div>
                     </div>

@@ -30,28 +30,28 @@
                 <div class="btn-group" role="group" aria-label="Interval Buttons">
                     <button
                             type="submit"
-                            class="btn btn-violet {{ app.request.query.get('interval') == '1d' ? 'active' : '' }}"
+                            class="btn btn-violet text-white{{ app.request.query.get('interval') == '1d' ? 'active' : '' }}"
                             name="interval"
                             value="1d">
                         1 Jour
                     </button>
                     <button
                             type="submit"
-                            class="btn btn-violet {{ app.request.query.get('interval') == '1w' ? 'active' : '' }}"
+                            class="btn btn-violet text-white{{ app.request.query.get('interval') == '1w' ? 'active' : '' }}"
                             name="interval"
                             value="1w">
                         1 Semaine
                     </button>
                     <button
                             type="submit"
-                            class="btn btn-violet {{ app.request.query.get('interval') == '1m' ? 'active' : '' }}"
+                            class="btn btn-violet text-white{{ app.request.query.get('interval') == '1m' ? 'active' : '' }}"
                             name="interval"
                             value="1m">
                         1 Mois
                     </button>
                     <button
                             type="submit"
-                            class="btn btn-violet {{ app.request.query.get('interval') == '1y' ? 'active' : '' }}"
+                            class="btn btn-violet text-white{{ app.request.query.get('interval') == '1y' ? 'active' : '' }}"
                             name="interval"
                             value="1y">
                         1 An

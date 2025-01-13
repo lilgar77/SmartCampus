@@ -26,7 +26,7 @@ function onHandleChangeFloor(slide){
         }
     }
     if (slide === 'slide_up') {
-        if(currentValue<values.at(3)){
+        if(currentValue<Math.max(...values)){
             floor.classList.add('slide_up');
             floor.style.direction='-100';
             currentValue++;

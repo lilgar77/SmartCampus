@@ -11,15 +11,24 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RoomRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-
-// use services api
 use App\Service\ApiService;
 
 class WelcomeController extends AbstractController
 {
-    #[Route('/', name: 'app_welcome')]
-    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
+    private ApiService $apiService;
+    private AlertManager $alertManager;
+
+    public function __construct(ApiService $apiService, AlertManager $alertManager)
     {
+        $this->apiService = $apiService;
+        $this->alertManager = $alertManager;
+    }
+
+    #[Route('/', name: 'app_welcome')]
+    public function index(Request $request, RoomRepository $roomRepository): Response
+    {
+        $this->alertManager->checkAndCreateAlerts();
+
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
             'method' => 'GET',
@@ -31,25 +40,14 @@ class WelcomeController extends AbstractController
         $rooms = $roomRepository->findRoomWithAsDefault();
         if ($form->isSubmitted() && $form->isValid()) {
             $rooms = $roomRepository->findRoomWithAs($room);
-        } else {
-            $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
-            $alertManager->checkAndCreateAlerts();
         }
 
-        $roomsWithLastCaptures = array_map(function ($room) use ($apiService, $roomRepository) {
-            $roomName = $room->getName();
-
-            // Vérifier que le nom de la salle est une chaîne de caractères
-            if (!is_string($roomName)) {
-                throw $this->createNotFoundException('Le nom de la salle est introuvable ou invalide.');
-            }
-
-            // Récupérer les informations de la salle dans la base de données
+        $roomsWithLastCaptures = array_map(function ($room) use ($roomRepository) {
+            $roomName = $room->getName() ?? '';
             $roomDbInfo = $roomRepository->getRoomDb($roomName);
             $dbname = $roomDbInfo['dbname'] ?? null;
 
-            // Si le nom de la base de données n'est pas valide, retourner les valeurs par défaut
-            if (!is_string($dbname)) {
+            if (!$dbname) {
                 return [
                     'room' => $room,
                     'dbname' => null,
@@ -61,23 +59,24 @@ class WelcomeController extends AbstractController
                 ];
             }
 
-            // Récupérer les dernières captures de température, humidité et CO2
-            $lastCaptureTemp = $apiService->getLastCapture('temp', $dbname);
-            $tempValue = (isset($lastCaptureTemp[0]['valeur']) && is_numeric($lastCaptureTemp[0]['valeur']))
-                ? (float) $lastCaptureTemp[0]['valeur']
+            // Get last captures
+            $lastCaptureTemp = $this->apiService->getLastCapture('temp', $dbname);
+            $lastCaptureHum = $this->apiService->getLastCapture('hum', $dbname);
+            $lastCaptureCo2 = $this->apiService->getLastCapture('co2', $dbname);
+
+            // Validate and extract values (assuming getLastCapture() always returns an array)
+            $tempValue = isset($lastCaptureTemp[0]['valeur']) && is_numeric($lastCaptureTemp[0]['valeur'])
+                ? round((float) $lastCaptureTemp[0]['valeur'], 1)
                 : null;
 
-            $lastCaptureHum = $apiService->getLastCapture('hum', $dbname);
-            $humValue = (isset($lastCaptureHum[0]['valeur']) && is_numeric($lastCaptureHum[0]['valeur']))
-                ? (float) $lastCaptureHum[0]['valeur']
+            $humValue = isset($lastCaptureHum[0]['valeur']) && is_numeric($lastCaptureHum[0]['valeur'])
+                ? round((float) $lastCaptureHum[0]['valeur'], 1)
                 : null;
 
-            $lastCaptureCo2 = $apiService->getLastCapture('co2', $dbname);
-            $co2Value = (isset($lastCaptureCo2[0]['valeur']) && is_numeric($lastCaptureCo2[0]['valeur']))
-                ? (float) $lastCaptureCo2[0]['valeur']
+            $co2Value = isset($lastCaptureCo2[0]['valeur'])
+                ? $lastCaptureCo2[0]['valeur']
                 : null;
 
-            // Retourner les informations de la salle avec les dernières captures
             return [
                 'room' => $room,
                 'dbname' => $dbname,
@@ -114,20 +113,23 @@ class WelcomeController extends AbstractController
 
         // Retrieve the room's database information
         $roomName = $room->getName();
-
         if (!is_string($roomName)) {
-            throw $this->createNotFoundException('Room name is invalid or not found.');
+            throw new \InvalidArgumentException('Invalid room name.');
         }
 
         $roomDbInfo = $roomRepository->getRoomDb($roomName);
         $dbname = $roomDbInfo['dbname'] ?? null;
 
-        // Get the last capture for each type of data (temperature, humidity, CO2)
-        $getLastCapture = function(string $type) use ($apiService, $dbname) {
-            if (!is_string($dbname)) {
-                return null;
+        if (!is_string($dbname)) {
+            throw new \InvalidArgumentException('Invalid database name.');
+        }
+
+        $getLastCapture = function (string $type) use ($apiService, $dbname) {
+            $capture = $apiService->getLastCapture($type, $dbname)[0] ?? null;
+            if ($capture && isset($capture['valeur']) && is_numeric($capture['valeur'])) {
+                $capture['valeur'] = round((float)$capture['valeur'], 1);
             }
-            return $apiService->getLastCapture($type, $dbname)[0] ?? null;
+            return $capture;
         };
 
         $lastCapturetemp = $getLastCapture('temp');
@@ -138,11 +140,7 @@ class WelcomeController extends AbstractController
         $date1 = (new \DateTime())->format('Y-m-d');
         $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
 
-        // Function to retrieve captures by interval
-        $getCapturesByInterval = function(string $type) use ($apiService, $date1, $date2, $dbname) {
-            if (!is_string($dbname)) {
-                return ['error' => 'Database name is invalid'];
-            }
+        $getCapturesByInterval = function (string $type) use ($apiService, $date1, $date2, $dbname) {
             try {
                 return $apiService->getCapturesByInterval($date1, $date2, $type, 1, $dbname);
             } catch (\Exception $e) {
@@ -170,37 +168,34 @@ class WelcomeController extends AbstractController
     /**
      * Groups data by hour and calculates rounded averages.
      *
-     * @param array<int, array{dateCapture: string, valeur: float}> $data
-     * @return array<int, array{dateCapture: string, valeur: float}>
+     * @param array<int|string, array<string, Mixed>|string>  $data Array of data points with 'dateCapture' and 'valeur' keys.
+     * @return array<int|string,array<string, Mixed>|string> Array of hourly averaged data with rounded values.
      */
     private function calculateHourlyAverage(array $data): array
     {
         $groupedData = [];
 
         foreach ($data as $item) {
-            if (!isset($item['dateCapture'], $item['valeur'])) {
-                continue; // Ignore invalid data
+            // Validation des clés attendues
+            if (!isset($item['dateCapture'], $item['valeur']) || !is_string($item['dateCapture']) || !is_numeric($item['valeur'])) {
+                continue; // Ignore les données invalides
             }
 
-            // Extract the hour from the capture date
             $hour = (new \DateTime($item['dateCapture']))->format('Y-m-d H:00:00');
 
-            // Initialize the group if it doesn't exist
             if (!isset($groupedData[$hour])) {
-                $groupedData[$hour] = ['sum' => 0.0, 'count' => 0];
+                $groupedData[$hour] = ['sum' => 0, 'count' => 0];
             }
 
-            // Sum up the values and count the occurrences
-            $groupedData[$hour]['sum'] += (float) $item['valeur'];
+            $groupedData[$hour]['sum'] += (float)$item['valeur'];
             $groupedData[$hour]['count']++;
         }
 
         $averagedData = [];
         foreach ($groupedData as $hour => $values) {
-            // Calculate the rounded average for each hour
             $averagedData[] = [
                 'dateCapture' => $hour,
-                'valeur' => round($values['sum'] / $values['count']), // Rounded average
+                'valeur' => round($values['sum'] / $values['count'], 1),
             ];
         }
 
