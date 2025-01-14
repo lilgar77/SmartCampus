@@ -33,7 +33,7 @@ class AcquisitionSystemTest extends WebTestCase
     }
 
     // Test case for adding a new Acquisition System
-    public function testAddAS(): void
+    public function testDAjoutDeSystemeDacquisionS(): void
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -71,7 +71,7 @@ class AcquisitionSystemTest extends WebTestCase
     }
 
     // Test case for editing an existing Acquisition System
-    public function testEditAS(): void
+    public function testDEditionDeSystemeDacquision(): void
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -111,7 +111,7 @@ class AcquisitionSystemTest extends WebTestCase
     }
 
     // Test case for deleting an existing Acquisition System
-    public function testDeleteAS(): void
+    public function testDeSuppressionDeSystemeDacquision(): void
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);

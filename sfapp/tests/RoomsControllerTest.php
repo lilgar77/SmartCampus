@@ -11,7 +11,7 @@ use App\Repository\UserRepository;
 
 class RoomsControllerTest extends WebTestCase
 {
-    public function testIndexPage()
+    public function testAffichageDesSalles()
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -26,7 +26,7 @@ class RoomsControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Liste des Salles');
     }
 
-    public function testAddRoom()
+    public function testAjoutDeSalles()
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -62,7 +62,7 @@ class RoomsControllerTest extends WebTestCase
     }
 
 
-    public function testEditRoom()
+    public function testEditionDeSalles()
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -89,7 +89,7 @@ class RoomsControllerTest extends WebTestCase
     }
 
 
-    public function testDeleteRoom()
+    public function testSuppressionDeSalles()
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
