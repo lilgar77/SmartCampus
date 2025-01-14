@@ -96,11 +96,10 @@ class WelcomeController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'app_welcome_details')]
     public function details(RoomRepository $roomRepository, int $id, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        // Update the last captures for all rooms
-        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
 
         // Check and create alerts if necessary
         $alertManager->checkAndCreateAlerts();
@@ -136,6 +135,11 @@ class WelcomeController extends AbstractController
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
+
+        $room->getIdAS()->setTemperature($lastCapturetemp['valeur']);
+        $room->getIdAS()->setHumidity($lastCapturehum['valeur']);
+        $room->getIdAS()->setCO2($lastCaptureco2['valeur']);
+
         // Define the date range for the data retrieval
         $date1 = (new \DateTime())->format('Y-m-d');
         $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
@@ -164,7 +168,6 @@ class WelcomeController extends AbstractController
             'lastCaptureco2' => $lastCaptureco2,
         ]);
     }
-
     /**
      * Groups data by hour and calculates rounded averages.
      *
