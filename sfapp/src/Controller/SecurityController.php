@@ -32,6 +32,13 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
+//    #[Route(path: '/403', name: 'app_error_403')]
+//    public function error403(): Response
+//    {
+//        return $this->render('security/eror401.html.twig', [
+//            'message' => 'Accès interdit : vous n\'êtes pas autorisé à accéder à cette ressource.',
+//        ]);
+//    }
 
 
 }

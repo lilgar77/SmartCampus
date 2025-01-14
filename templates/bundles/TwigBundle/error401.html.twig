@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accès interdit{% endblock %}
+
+{% block body %}
+    <section class="d-flex justify-content-center align-items-center"
+             style="height: 50vh; margin: 0;">
+        <div class="card shadow p-4" style="width: 400px; border-radius: 15px;">
+            <div class="card-body">
+                <h1 class="h4 text-center mb-4" style="color: #dc3545;">403 - Accès interdit</h1>
+
+                <p class="text-center mb-4">
+                    {{ message | default("Vous n'avez pas les permissions nécessaires pour accéder à cette page.") }}
+                </p>
+
+                <div class="text-center">
+                    <a href="{{ path('app_login') }}" class="btn btn-lg btn-block"
+                       style="background-color: #6a0dad; color: #fff;">
+                        Retour à la page de connexion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
