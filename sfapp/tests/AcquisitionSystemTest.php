@@ -45,7 +45,6 @@ class AcquisitionSystemTest extends WebTestCase
         // Log in as the admin
         $client->loginUser($admin);
 
-
         // Load the form page for adding a new system
         $crawler = $client->request('GET', '/acquisitionsyteme/add');
         $this->assertResponseIsSuccessful();
@@ -65,9 +64,6 @@ class AcquisitionSystemTest extends WebTestCase
 
         // Verify redirection to the list page after submission
         $this->assertResponseRedirects('/acquisitionsysteme');  // Vérifie la redirection vers la page d'acquisition
-
-        // Check if the success message appears
-        //$this->assertSelectorTextContains('div.alert', 'Système d\'acquisition "TestSA-001" ajouté avec succès');
     }
 
     // Test case for editing an existing Acquisition System
@@ -82,7 +78,6 @@ class AcquisitionSystemTest extends WebTestCase
 
         // Log in as the admin
         $client->loginUser($admin);
-
 
         // Retrieve the ID of the AcquisitionSystem based on its name for editing
         $this->id_AS = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('TestSA-001')->getId();
@@ -105,9 +100,6 @@ class AcquisitionSystemTest extends WebTestCase
 
         // Verify redirection after form submission
         $this->assertResponseRedirects('/acquisitionsysteme');
-
-        // Check for success message after modification
-        //$this->assertSelectorTextContains('div.alert', 'Système d\'acquisition "TestSA-Updated" modifié avec succès');
     }
 
     // Test case for deleting an existing Acquisition System
@@ -123,7 +115,6 @@ class AcquisitionSystemTest extends WebTestCase
         // Log in as the admin
         $client->loginUser($admin);
 
-
         // Retrieve the ID of the AcquisitionSystem that is to be deleted
         $this->id_AS = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('TestSA-Updated')->getId();
 
@@ -132,7 +123,5 @@ class AcquisitionSystemTest extends WebTestCase
 
         // Verify redirection after the deletion
         $this->assertResponseRedirects('/acquisitionsysteme');
-
-        // Check for success message after deletion
     }
 }

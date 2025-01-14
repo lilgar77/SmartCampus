@@ -90,7 +90,7 @@ class FloorTest extends WebTestCase
         // Check if the response was successful (status 200)
         $this->assertResponseIsSuccessful();
 
-        $id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Tech de co'])->getId();
+        $id_Building = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Informatique'])->getId();
 
         // Fill in the form with updated data
         $form = $crawler->selectButton('Sauvegarder les modifications')->form([

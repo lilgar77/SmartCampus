@@ -41,12 +41,9 @@ class RoomsControllerTest extends WebTestCase
 
         $identifier = $client->getContainer()->get('doctrine')->getRepository(Building::class)->findOneBy(['NameBuilding' => 'Informatique'])->getId();
         $identifier2 = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(2)->getId();
-        //$identifier3 = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('ESP-11')->getId();
-
 
         $form = $crawler->selectButton('Ajouter une Salle')->form([
             'room_form[name]' => 'Test Room',
-            //'room_form[id_AS]' => $identifier3,
             'room_form[floor]' => $identifier2,
             'room_form[building]' => $identifier,
         ]);

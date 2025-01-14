@@ -56,10 +56,17 @@ class AppFixtures extends Fixture
         $acquisitionSystem3->setEtat(EtatAS::Installer);
         $manager->persist($acquisitionSystem3);
 
+        //need in the test room and floor
         $building = new Building();
         $building->setNameBuilding('Informatique');
         $building->setAdressBuilding('LaRochelle');
         $manager->persist($building);
+
+        //need in the test rooms
+        $floor3 = new Floor();
+        $floor3->setIdBuilding($building);
+        $floor3->setNumberFloor(2);
+        $manager->persist($floor3);
 
         $building2 = new Building();
         $building2->setNameBuilding('Tech de co');
@@ -76,52 +83,12 @@ class AppFixtures extends Fixture
         $floor2->setNumberFloor(1);
         $manager->persist($floor2);
 
-        $floor3 = new Floor();
-        $floor3->setIdBuilding($building);
-        $floor3->setNumberFloor(2);
-        $manager->persist($floor3);
+
 
         $floor4 = new Floor();
         $floor4->setIdBuilding($building);
         $floor4->setNumberFloor(3);
         $manager->persist($floor4);
-
-// Création des étages et des salles
-        /*for ($floorNumber = 0; $floorNumber <= 3; $floorNumber++) {
-            $floor = new Floor();
-            $floor->setNumberFloor($floorNumber);
-            $floor->setIdBuilding($building);
-            $manager->persist($floor);
-
-            // Création des salles pour chaque étage
-            for ($roomNumber = 1; $roomNumber <= 8; $roomNumber++) {
-                $room = new Room();
-                $room->setName('D' . $floorNumber . '0' . $roomNumber); // Exemple : D101, D102, etc.
-                $room->setFloor($floor);
-                $room->setBuilding($building);
-
-                // Association avec un système d'acquisition si nécessaire
-                    $acquisitionSystem = new AcquisitionSystem();
-                    $acquisitionSystem->setTemperature(20 + $floorNumber);
-                    $acquisitionSystem->setCo2(400 + $roomNumber * 10);
-                    $acquisitionSystem->setHumidity(50 + $roomNumber);
-                    $acquisitionSystem->setName('AS-' . $floorNumber . '-' . $roomNumber);
-                    $acquisitionSystem->setWording('Salle ' . $room->getName());
-                    $acquisitionSystem->setMacAdress('00:00:00:00:0' . $floorNumber . ':' . $roomNumber);
-                    $acquisitionSystem->setEtat(EtatAS::Installer);
-                    $manager->persist($acquisitionSystem);
-
-                    $room->setIdAS($acquisitionSystem);
-
-                $manager->persist($room);
-            }
-        }
-        for ($floorNumber = 0; $floorNumber <= 3; $floorNumber++) {
-            $floor = new Floor();
-            $floor->setNumberFloor($floorNumber);
-            $floor->setIdBuilding($building2);
-            $manager->persist($floor);*/
-
 
         $room2 = new Room();
         $room2->setName('D304');
