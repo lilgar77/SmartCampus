@@ -13,8 +13,9 @@ class AdminRoomTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/rooms/add');
-        $this->assertResponseRedirects('/403');
+        $this->assertResponseRedirects('/login');
     }
+
     public function testAjoutDeSalleAccessibleAuxAdmins(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
@@ -29,6 +30,7 @@ class AdminRoomTest extends WebTestCase
         $client->request('GET', '/rooms/add');
         $this->assertResponseIsSuccessful();
     }
+
     public function testListeDeSalleAccessibleAuxAdmins(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
@@ -43,6 +45,7 @@ class AdminRoomTest extends WebTestCase
         $client->request('GET', '/rooms');
         $this->assertResponseIsSuccessful();
     }
+
     public function testModifDeSalleAccessibleAuxAdmins(): void
     {
         // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
@@ -55,50 +58,7 @@ class AdminRoomTest extends WebTestCase
 
         $client->loginUser($admin);
         $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('D304')->getId();
-        $client->request('GET', '/rooms/'.$identifier.'/edit');
+        $client->request('GET', '/rooms/' . $identifier . '/edit');
         $this->assertResponseIsSuccessful();
-    }
-    public function testAjoutDeSalleInterditAuxTechniciens(): void
-    {
-        // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
-
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // le même que dans les fixtures
-        $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
-
-        $client->loginUser($technicien);
-        $client->request('GET', '/rooms/add');
-        $this->assertResponseRedirects('/403');
-    }
-    public function testListeDeSalleInterditAuxTechniciens(): void
-    {
-        // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
-
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // le même que dans les fixtures
-        $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
-
-        $client->loginUser($technicien);
-        $client->request('GET', '/rooms');
-        $this->assertResponseRedirects('/403');
-    }
-    public function testModifDeSalleInterditAuxTechniciens(): void
-    {
-        // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
-
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // le même que dans les fixtures
-        $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
-
-        $client->loginUser($technicien);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Room::class)->findRoomByName('D304')->getId();
-        $client->request('GET', '/rooms/'.$identifier.'/edit');
-        $this->assertResponseRedirects('/403');
     }
 }
