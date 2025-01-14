@@ -13,6 +13,7 @@
         "doctrine/orm": "^3.3",
         "symfony/asset": "6.3.*",
         "symfony/asset-mapper": "6.3.*",
+        "symfony/cache": "6.3.*",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
         "symfony/flex": "^2",
