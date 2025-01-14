@@ -21,19 +21,16 @@ function onHandleChangeFloor(slide){
     if (slide === 'slide_down') {
         if(currentValue>Math.min(...values)){
             floor.classList.add('slide_down');
-            floor.style.direction='100';
             currentValue--;
         }
     }
     if (slide === 'slide_up') {
         if(currentValue<Math.max(...values)){
             floor.classList.add('slide_up');
-            floor.style.direction='-100';
             currentValue++;
         }
     }
-    floorInput.value=currentValue
-    floorInput.closest('form').submit();
+    floorInput.value=currentValue;
 }
 
 window.showPopup = showPopup;
