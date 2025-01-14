@@ -27,12 +27,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class BuildingController extends AbstractController
 {
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building', name: 'app_building')]
     public function index(Request $request, BuildingRepository $buildingRepository, EntityManagerInterface $entityManager, ApiService $apiService, RoomRepository $roomRepository, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
 
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
 
@@ -59,13 +58,10 @@ class BuildingController extends AbstractController
         ]);
     }
 
-   
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/building/add', name: 'app_building_add')]
     public function add(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
         $alertManager->checkAndCreateAlerts();
 
         $building = new Building();
@@ -88,13 +84,11 @@ class BuildingController extends AbstractController
         ]);
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
+
     #[Route('/building/{id}', name: 'app_building_delete', methods: ['POST'])]
     public function delete(Building $building, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
         $alertManager->checkAndCreateAlerts();
 
         $entityManager->remove($building);
@@ -105,13 +99,11 @@ class BuildingController extends AbstractController
         return $this->redirectToRoute('app_building');
     }
 
-   
+    #[IsGranted("ROLE_ADMIN")]
+
     #[Route('/building/{id}/edit', name: 'app_building_edit')]
     public function edit(Building $building, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
         $alertManager->checkAndCreateAlerts();
 
         $form = $this->createForm(BuildingType::class, $building);

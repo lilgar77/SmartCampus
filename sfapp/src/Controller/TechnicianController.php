@@ -19,13 +19,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TechnicianController extends AbstractController
 {
+    #[IsGranted("ROLE_TECHNICIAN")]
     #[Route('/technician', name: 'app_technician')]
     public function index(RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager,EntityManagerInterface $entityManager, InstallationRepository $installationRepository): Response
     {
 
-         if (!$this->isGranted('ROLE_TECHNICIEN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
         $alertManager->checkAndCreateAlerts();
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $installations = $entityManager->getRepository(Installation::class)->findAll();
@@ -48,12 +46,11 @@ class TechnicianController extends AbstractController
             'installations' => $installationRepository->findAll(),
         ]);
     }
+
+    #[IsGranted("ROLE_TECHNICIAN")]
     #[Route('/technician/{id}/detail', name: 'app_technician_detail')]
     public function detail(Request $request, EntityManagerInterface $entityManager, InstallationRepository $installationRepository, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_TECHNICIEN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
         $alertManager->checkAndCreateAlerts();
         $form = $this->createForm(TechnicianType::class);
         $form->handleRequest($request);

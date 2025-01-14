@@ -12,10 +12,13 @@ use App\Repository\RoomRepository;
 use App\Repository\AlertRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\ApiService;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 class DiagnosticController extends AbstractController
 {
 
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/diagnostic', name: 'app_diagnostic')]
     public function index(AcquisitionSystemRepository $acquisitionSystemRepository,ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, RoomRepository $roomRepository): Response
     {
@@ -27,7 +30,7 @@ class DiagnosticController extends AbstractController
             'AS' => $AcquisitionSystems,
         ]);
     }
-
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/diagnostic/{id}', name: 'app_diagnostic_details')]
     public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, RoomRepository $roomRepository,ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, AlertRepository $alertRepository, Request $request): Response
     {

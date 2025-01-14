@@ -28,13 +28,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class FloorController extends AbstractController
 {
 
-
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor', name: 'app_floor')]
     public function index(FloorRepository $floorRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, Request $request): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $alertManager->checkAndCreateAlerts();
 
@@ -57,13 +55,11 @@ class FloorController extends AbstractController
             'floors' => $floorSearch,
         ]);
     }
-
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/add', name: 'app_floor_add')]
     public function add(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
         $alertManager->checkAndCreateAlerts();
 
         $floor = new Floor();
@@ -87,13 +83,11 @@ class FloorController extends AbstractController
         ]);
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/{id}', name: 'app_floor_delete', methods: ['POST'])]
     public function delete(Floor $floor, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
         $alertManager->checkAndCreateAlerts();
 
         $entityManager->remove($floor);
@@ -104,13 +98,11 @@ class FloorController extends AbstractController
         return $this->redirectToRoute('app_floor');
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/{id}/edit', name: 'app_floor_edit')]
     public function edit(Floor $floor, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
         $alertManager->checkAndCreateAlerts();
 
         $form = $this->createForm(FloorType::class, $floor);

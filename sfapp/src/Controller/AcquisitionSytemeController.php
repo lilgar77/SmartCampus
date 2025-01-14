@@ -34,14 +34,11 @@ use App\Repository\RoomRepository;
 class AcquisitionSytemeController extends AbstractController
 {
 
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
-
 
         $alertManager->checkAndCreateAlerts();
 
@@ -67,12 +64,10 @@ class AcquisitionSytemeController extends AbstractController
             'AS' => $form->createView(),
         ]);
     }
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
     public function addAS(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
 
         $alertManager->checkAndCreateAlerts();
 
@@ -118,13 +113,10 @@ class AcquisitionSytemeController extends AbstractController
         ]);
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/{id}', name: 'app_acquisition_syteme_delete', methods: ['POST'])]
     public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
         $alertManager->checkAndCreateAlerts();
 
         $entityManager->remove($acquisitionSystem);
@@ -135,7 +127,7 @@ class AcquisitionSytemeController extends AbstractController
         return $this->redirectToRoute('app_acquisition_syteme_liste');
     }
 
-    
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/{id}/edit', name: 'app_acquisition_syteme_edit')]
     public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {

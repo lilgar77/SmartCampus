@@ -25,16 +25,14 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Room;
 use App\Form\SearchRoomFormType;
 use App\Form\RoomFormType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RoomsController extends AbstractController
 {
-
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms', name: 'app_rooms')]
     public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $alertManager->checkAndCreateAlerts();
 
@@ -56,15 +54,10 @@ class RoomsController extends AbstractController
             'room'  => $form->createView(),
         ]);
     }
-
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/add', name: 'app_room_add')]
     public function add(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
-
         $alertManager->checkAndCreateAlerts();
         $room = new Room();
         $form = $this->createForm(RoomFormType::class, $room);
@@ -96,13 +89,11 @@ class RoomsController extends AbstractController
         ]);
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
     public function delete(Request $request, Room $room, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
         $alertManager->checkAndCreateAlerts();
         $entityManager->remove($room);
         $entityManager->flush();
@@ -113,13 +104,11 @@ class RoomsController extends AbstractController
         return $this->redirectToRoute('app_rooms');
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/{id}/edit', name: 'app_room_edit')]
     public function edit(Room $room, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
         $alertManager->checkAndCreateAlerts();
         $form = $this->createForm(RoomFormType::class, $room);
 
