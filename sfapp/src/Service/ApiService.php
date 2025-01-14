@@ -1,53 +1,54 @@
 <?php
+
 namespace App\Service;
 
-use http\Params;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Repository\RoomRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ApiService
 {
     private HttpClientInterface $client;
-
-    // Default username and password for the API
     private string $username;
     private string $userpass;
+    private FilesystemAdapter $cache;
 
     public function __construct(HttpClientInterface $client, ParameterBagInterface $parameterBag)
     {
         $this->client = $client;
-
-        // Set the username and password for the API
         $this->username = $this->getStringParam($parameterBag, 'API_USERNAME');
         $this->userpass = $this->getStringParam($parameterBag, 'API_USERPASS');
+        $this->cache = new FilesystemAdapter();  // Utilisation du cache sur le système de fichiers
     }
 
-    /**
-     * Cette fonction garantit que le paramètre est une chaîne de caractères.
-     *
-     * @param ParameterBagInterface $parameterBag
-     * @param string $paramName
-     * @return string
-     */
     private function getStringParam(ParameterBagInterface $parameterBag, string $paramName): string
     {
         $value = $parameterBag->get($paramName);
-
-        // Si la valeur n'est pas une chaîne, retourne une chaîne vide ou une valeur par défaut
-        if (!is_string($value)) {
-            return '';
-        }
-
-        return $value;
+        return is_string($value) ? $value : '';
     }
 
     /**
-     * @return array<int, array<string, mixed>> Le tableau des captures avec les données sous forme de tableau associatif.
+     * Récupère les captures par intervalle avec cache.
      */
     public function getCapturesByInterval(string $date1, string $date2, string $name, int $page, string $dbname): array
     {
+        $cacheKey = 'captures_' . md5($date1 . $date2 . $name . $page . $dbname);  // Clé de cache unique
+
+        // Récupérer l'élément de cache
+        $cacheItem = $this->cache->getItem($cacheKey);
+
+        // Vérifier si l'élément est dans le cache et s'il n'est pas expiré
+        if ($cacheItem->isHit()) {
+            $cachedData = $cacheItem->get();
+            // Vérifier l'expiration manuellement (si les données datent de moins de 10 minutes)
+            if (isset($cachedData['timestamp']) && (time() - $cachedData['timestamp']) < 600) {
+                return $cachedData['data']; // Retourne les données en cache si elles ne sont pas expirées
+            }
+        }
+
+        // Si les données sont expirées ou non présentes dans le cache, on refait la requête API
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/interval';
 
         $headers = [
@@ -75,19 +76,43 @@ class ApiService
             }
 
             $responseData = $response->toArray();
+            $validatedResponse = $this->validateResponse($responseData);
 
-            // Transform response to ensure it matches array<int, array<string, mixed>>
-            return $this->validateResponse($responseData);
+            // Enregistrer les données dans le cache avec un timestamp
+            $cacheItem->set([
+                'data' => $validatedResponse,
+                'timestamp' => time(), // Ajouter un timestamp pour savoir quand les données ont été mises en cache
+            ]);
+            $cacheItem->expiresAfter(60);  // Expiration après 10 minutes (600 secondes)
+            $this->cache->save($cacheItem);
+
+            return $validatedResponse;
+
         } catch (\Exception $e) {
             throw new \Exception('Erreur lors de la requête : ' . $e->getMessage());
         }
     }
 
     /**
-     * @return array<int, array<string, mixed>> Le tableau des captures avec les données sous forme de tableau associatif.
+     * Récupère la dernière capture pour une salle avec cache.
      */
     public function getLastCapture(string $name, string $dbname): array
     {
+        $cacheKey = 'last_capture_' . md5($name . $dbname);  // Clé de cache unique
+
+        // Récupérer l'élément de cache
+        $cacheItem = $this->cache->getItem($cacheKey);
+
+        // Vérifier si l'élément est dans le cache et s'il n'est pas expiré
+        if ($cacheItem->isHit()) {
+            $cachedData = $cacheItem->get();
+            // Vérifier l'expiration manuellement (si les données datent de moins de 10 minutes)
+            if (isset($cachedData['timestamp']) && (time() - $cachedData['timestamp']) < 600) {
+                return $cachedData['data']; // Retourne les données en cache si elles ne sont pas expirées
+            }
+        }
+
+        // Si les données sont expirées ou non présentes dans le cache, on refait la requête API
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/last';
 
         $headers = [
@@ -114,48 +139,26 @@ class ApiService
             }
 
             $responseData = $response->toArray();
+            $validatedResponse = $this->validateResponse($responseData);
 
-            // Transform response to ensure it matches array<int, array<string, mixed>>
-            return $this->validateResponse($responseData);
+            // Enregistrer les données dans le cache avec un timestamp
+            $cacheItem->set([
+                'data' => $validatedResponse,
+                'timestamp' => time(), // Ajouter un timestamp pour savoir quand les données ont été mises en cache
+            ]);
+            $cacheItem->expiresAfter(60);  // Expiration après 10 minutes (600 secondes)
+            $this->cache->save($cacheItem);
+
+            return $validatedResponse;
+
         } catch (\Exception $e) {
             throw new \Exception('Erreur lors de la requête : ' . $e->getMessage());
         }
     }
 
     /**
-     * Validates and transforms the API response to ensure it matches the expected type.
-     *
-     * @param array<mixed> $response
-     * @return array<int, array<string, mixed>>
+     * Mise à jour des dernières captures pour les salles avec cache.
      */
-    private function validateResponse(array $response): array
-    {
-        $validated = [];
-        foreach ($response as $item) {
-            if (is_array($item) && $this->isAssociativeArray($item)) {
-                /** @var array<string, mixed> $item */
-                $validated[] = $item;
-            }
-        }
-        return $validated;
-    }
-
-    /**
-     * Helper function to check if an array is associative with string keys.
-     *
-     * @param array<mixed> $array
-     * @return bool
-     */
-    private function isAssociativeArray(array $array): bool
-    {
-        foreach (array_keys($array) as $key) {
-            if (!is_string($key)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public function updateLastCapturesForRooms(RoomRepository $roomRepository, EntityManagerInterface $entityManager): void
     {
         $rooms = $roomRepository->findRoomWithAsInstalled();
@@ -197,4 +200,30 @@ class ApiService
         $entityManager->flush();
     }
 
+    /**
+     * Validates and transforms the API response to ensure it matches the expected type.
+     */
+    private function validateResponse(array $response): array
+    {
+        $validated = [];
+        foreach ($response as $item) {
+            if (is_array($item) && $this->isAssociativeArray($item)) {
+                $validated[] = $item;
+            }
+        }
+        return $validated;
+    }
+
+    /**
+     * Helper function to check if an array is associative with string keys.
+     */
+    private function isAssociativeArray(array $array): bool
+    {
+        foreach (array_keys($array) as $key) {
+            if (!is_string($key)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
