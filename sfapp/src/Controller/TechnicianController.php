@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TechnicianController extends AbstractController
 {
-    #[IsGranted("ROLE_TECHNICIAN")]
+    #[IsGranted("ROLE_TECHNICIEN")]
     #[Route('/technician', name: 'app_technician')]
     public function index(RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager,EntityManagerInterface $entityManager, InstallationRepository $installationRepository): Response
     {
@@ -47,7 +47,7 @@ class TechnicianController extends AbstractController
         ]);
     }
 
-    #[IsGranted("ROLE_TECHNICIAN")]
+    #[IsGranted("ROLE_TECHNICIEN")]
     #[Route('/technician/{id}/detail', name: 'app_technician_detail')]
     public function detail(Request $request, EntityManagerInterface $entityManager, InstallationRepository $installationRepository, AlertManager $alertManager): Response
     {
