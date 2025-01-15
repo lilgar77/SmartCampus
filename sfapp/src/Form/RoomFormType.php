@@ -18,48 +18,56 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class RoomFormType extends AbstractType
 {
-
+    /**
+     * @var AcquisitionSystemRepository Repository for the AcquisitionSystem entity
+     */
     private AcquisitionSystemRepository $acquisitionSystemRepository;
+
 
     public function __construct(AcquisitionSystemRepository $acquisitionSystemRepository)
     {
         $this->acquisitionSystemRepository = $acquisitionSystemRepository;
     }
 
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // 'name' field: Represents the name of the room
             ->add('name', null, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Le nom ne peut pas être vide.',
+                        'message' => 'The name cannot be empty.',
                     ]),
                 ],
             ])
+            // 'id_AS' field: Represents the AcquisitionSystem associated with the room
             ->add('id_AS', EntityType::class, [
-                'required' => false,
-                'class' => AcquisitionSystem::class,
-                'choice_label' => 'name',
-                'placeholder' => 'Choisissez un système',
-                'choices' => $this->acquisitionSystemRepository->findAvailableSystems(),
+                'required' => false, // Makes the field optional
+                'class' => AcquisitionSystem::class, // Specifies the related entity class
+                'choice_label' => 'name', // Displays the 'name' property in the form
+                'placeholder' => 'Choose a system', // Placeholder text
+                'choices' => $this->acquisitionSystemRepository->findAvailableSystems(), // Fetches available systems from the repository
             ])
+            // 'floor' field: Represents the floor where the room is located
             ->add('floor', EntityType::class, [
-                'required' => true,
-                'class' => Floor::class,
-                'choice_label' => 'numberFloor',
+                'required' => true, // Makes the field mandatory
+                'class' => Floor::class, // Specifies the related entity class
+                'choice_label' => 'numberFloor', // Displays the 'numberFloor' property in the form
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez sélectionner un étage.',
+                        'message' => 'Please select a floor.',
                     ]),
                 ],
             ])
+            // 'building' field: Represents the building where the room is located
             ->add('building', EntityType::class, [
-                'required' => true,
-                'class' => Building::class,
-                'choice_label' => 'NameBuilding',
+                'required' => true, // Makes the field mandatory
+                'class' => Building::class, // Specifies the related entity class
+                'choice_label' => 'NameBuilding', // Displays the 'NameBuilding' property in the form
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez sélectionner un bâtiment.',
+                        'message' => 'Please select a building.',
                     ]),
                 ],
             ])
@@ -69,7 +77,7 @@ class RoomFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Room::class,
+            'data_class' => Room::class, // Associates the form with the Room entity class
         ]);
     }
 }
