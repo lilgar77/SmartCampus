@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Model\EtatAS;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\AcquisitionSystem;
@@ -54,8 +55,8 @@ class AcquisitionSystemTest extends WebTestCase
             [
                 'acquisition_systeme[name]' => 'TestSA-001',
                 'acquisition_systeme[wording]' => 'Salle de réunion',
-                'acquisition_systeme[macAdress]' => '00:00:00:09:00:05',
-                'acquisition_systeme[etat]' => 0,
+                'acquisition_systeme[macAdress]' => '00:0B:00:09:00:00',
+                'acquisition_systeme[etat]' => 3,
             ]
         );
 
@@ -90,8 +91,8 @@ class AcquisitionSystemTest extends WebTestCase
             [
                 'acquisition_systeme[name]' => 'TestSA-Updated',
                 'acquisition_systeme[wording]' => 'Salle updated',
-                'acquisition_systeme[macAdress]' => '00:00:00:05:00:05',
-                'acquisition_systeme[etat]' => 2,
+                'acquisition_systeme[macAdress]' => '00:00:0A:05:00:05',
+                'acquisition_systeme[etat]' => 3,
             ]
         );
 

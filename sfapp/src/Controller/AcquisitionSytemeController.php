@@ -119,7 +119,10 @@ class AcquisitionSytemeController extends AbstractController
     {
         $alertManager->checkAndCreateAlerts();
 
-        $alertManager->deleteAlerts($acquisitionSystem->getRoom());
+        if($acquisitionSystem->getRoom()!=null){
+            $alertManager->deleteAlerts($acquisitionSystem->getRoom());
+
+        }
 
         $entityManager->remove($acquisitionSystem);
         $entityManager->flush();
