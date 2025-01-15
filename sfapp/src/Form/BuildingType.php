@@ -15,15 +15,17 @@ class BuildingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // 'NameBuilding' field: Represents the name of the building
             ->add('NameBuilding')
+            // 'AdressBuilding' field: Represents the address of the building
             ->add('AdressBuilding')
         ;
     }
-
+    
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Building::class,
+            'data_class' => Building::class, // Associates the form with the Building entity class
         ]);
     }
 }
