@@ -14,8 +14,10 @@ class RoomRepository extends ServiceEntityRepository
 {
     /**
      * @var array<string, array{dbname: string, nomsa: string}>
+     * Stores a mapping of room names to their database and system identifiers.
      */
     private array $roomdb = [
+        // Room database mapping
         'D205' => ['dbname' => 'sae34bdk1eq1', 'nomsa' => 'ESP-004'],
         'D206' => ['dbname' => 'sae34bdk1eq2', 'nomsa' => 'ESP-008'],
         'D207' => ['dbname' => 'sae34bdk1eq3', 'nomsa' => 'ESP-006'],
@@ -40,7 +42,7 @@ class RoomRepository extends ServiceEntityRepository
 
     /**
      * @param string $name
-     * @return array{dbname: string, nomsa: string}|array{} Returns an array with room db details or an empty array
+     * @return array{dbname: string, nomsa: string}|array{} Returns an array with room db details or an empty array.
      */
     public function getRoomDb(string $name): array
     {
@@ -48,7 +50,7 @@ class RoomRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<string, array{dbname: string, nomsa: string}> Returns the full room db details
+     * @return array<string, array{dbname: string, nomsa: string}> Returns the full room db details.
      */
     public function getRoomDbName(): array
     {
@@ -57,7 +59,7 @@ class RoomRepository extends ServiceEntityRepository
 
     /**
      * @param string $name
-     * @return Room|null
+     * @return Room|null Finds a room by its name and returns it, or null if not found.
      */
     public function findRoomByName(string $name): ?Room
     {
@@ -76,7 +78,7 @@ class RoomRepository extends ServiceEntityRepository
 
     /**
      * @param string $name
-     * @return Room[] Un tableau indexé contenant des entités Room
+     * @return Room[] Returns an array of Room entities whose names start with the specified string.
      */
     public function findByNameStartingWith(string $name): array
     {
@@ -92,7 +94,7 @@ class RoomRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Room[] Un tableau contenant des entités Room avec un système d'acquisition "installé"
+     * @return Room[] Returns an array of Room entities with an acquisition system installed.
      */
     public function findRoomWithAs(Room $criteria): array
     {
@@ -116,7 +118,7 @@ class RoomRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Room[] Un tableau contenant des entités Room
+     * @return Room[] Returns an array of Room entities with a system installed, regardless of other criteria.
      */
     public function findRoomWithAsInstalled(): array
     {
@@ -135,7 +137,7 @@ class RoomRepository extends ServiceEntityRepository
 
     /**
      * @param Room $criteria
-     * @return Room[]
+     * @return Room[] Finds rooms based on specific criteria such as name, floor, or building.
      */
     public function findByCriteria(Room $criteria): array
     {
@@ -168,7 +170,7 @@ class RoomRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Room[] Un tableau contenant des entités Room
+     * @return Room[] Finds rooms with an acquisition system installed, in a specific default configuration.
      */
     public function findRoomWithAsDefault(): array
     {
