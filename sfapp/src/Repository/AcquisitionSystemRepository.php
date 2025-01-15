@@ -18,6 +18,8 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find an Acquisition System by its name.
+     *
      * @param string $name
      * @return AcquisitionSystem|null
      */
@@ -33,6 +35,8 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
     }
 
     /**
+     * Get all available acquisition systems.
+     *
      * @return AcquisitionSystem[] Returns an array of AcquisitionSystem objects
      */
     public function findAvailableSystems(): array
@@ -49,6 +53,8 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find acquisition systems based on filters.
+     *
      * @param array<string, mixed> $data
      * @return AcquisitionSystem[]
      */
@@ -56,13 +62,13 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('a');
 
-        // Filtrer par état
+        // Filter by status
         if (!empty($data['etat'])) {
             $queryBuilder->where('a.etat = :etat')
                 ->setParameter('etat', $data['etat']);
         }
 
-        // Filtrer par nom du SA
+        // Filter by system name
         if (!empty($data['Name'] && is_string($data['Name']))) {
             $queryBuilder->andWhere('a.Name LIKE :Name')
                 ->setParameter('Name', '%' . $data['Name'] . '%');
@@ -75,6 +81,8 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
     }
 
     /**
+     * Get all installed acquisition systems.
+     *
      * @return AcquisitionSystem[] Returns an array of AcquisitionSystem objects
      */
     public function findInstalledSystems(): array
@@ -82,13 +90,11 @@ class AcquisitionSystemRepository extends ServiceEntityRepository
         $result = $this->createQueryBuilder('a')
             ->where('a.etat = :installed')
             ->setParameter('installed', EtatAS::Installer)
-            ->orderBy('a.Name', 'ASC') // Optionnel, pour trier les résultats
+            ->orderBy('a.Name', 'ASC') // Optional, to sort the results
             ->getQuery()
             ->getResult();
 
         /** @var AcquisitionSystem[] $result */
         return $result;
     }
-
 }
-
