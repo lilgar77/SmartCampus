@@ -46,7 +46,7 @@ class RoomFormType extends AbstractType
                 'required' => false, // Makes the field optional
                 'class' => AcquisitionSystem::class, // Specifies the related entity class
                 'choice_label' => 'name', // Displays the 'name' property in the form
-                'placeholder' => 'Choose a system', // Placeholder text
+                'placeholder' => 'Choisissez un SA', // Placeholder text
                 'choices' => $this->acquisitionSystemRepository->findAvailableSystems(), // Fetches available systems from the repository
             ])
             // 'floor' field: Represents the floor where the room is located
@@ -56,7 +56,7 @@ class RoomFormType extends AbstractType
                 'choice_label' => 'numberFloor', // Displays the 'numberFloor' property in the form
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please select a floor.',
+                        'message' => 'Choisissez un étage.',
                     ]),
                 ],
             ])
@@ -67,7 +67,7 @@ class RoomFormType extends AbstractType
                 'choice_label' => 'NameBuilding', // Displays the 'NameBuilding' property in the form
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please select a building.',
+                        'message' => 'Choisissez un bâtiment.',
                     ]),
                 ],
             ])

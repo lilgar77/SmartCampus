@@ -22,7 +22,7 @@ class FloorType extends AbstractType
             ->add('numberFloor', null, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'The floor number cannot be empty.',
+                        'message' => 'Le numéro d\'etage est obligatoire.',
                     ]),
                 ],
             ])
@@ -32,7 +32,7 @@ class FloorType extends AbstractType
                 'choice_label' => 'NameBuilding', // Displays the 'NameBuilding' property in the form
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please select a building.',
+                        'message' => 'Choisissez un bâtiment.',
                     ]),
                 ],
             ])

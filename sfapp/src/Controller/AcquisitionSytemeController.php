@@ -107,7 +107,7 @@ class AcquisitionSytemeController extends AbstractController
             $entityManager->flush();
 
             // Add success message and redirect to the list page
-            $this->addFlash('success', 'Acquisition system "' . $acquisitionSystem->getName() . '" successfully added.');
+            $this->addFlash('success', 'Système d\'acquisitions "' . $acquisitionSystem->getName() . '" ajouté avec succès.');
             return $this->redirectToRoute('app_acquisition_syteme_liste');
         }
 
@@ -135,7 +135,7 @@ class AcquisitionSytemeController extends AbstractController
         $entityManager->flush();
 
         // Add success message and redirect to the list page
-        $this->addFlash('success', 'Acquisition system "' . $acquisitionSystem->getName() . '" successfully deleted.');
+        $this->addFlash('success', 'Système d\'acquisition "' . $acquisitionSystem->getName() . '" supprimé avec succès.');
         return $this->redirectToRoute('app_acquisition_syteme_liste');
     }
 
@@ -170,7 +170,7 @@ class AcquisitionSytemeController extends AbstractController
             $entityManager->flush();
 
             // Add success message and redirect to the list page
-            $this->addFlash('success', 'Acquisition system "' . $acquisitionSystem->getName() . '" successfully edited.');
+            $this->addFlash('success', 'Système d\'acquisition "' . $acquisitionSystem->getName() . '" modifié avec succès.');
             return $this->redirectToRoute('app_acquisition_syteme_liste');
         }
 

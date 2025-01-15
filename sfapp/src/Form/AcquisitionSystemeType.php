@@ -24,7 +24,7 @@ class AcquisitionSystemeType extends AbstractType
             ->add('name', null, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'The name is required.',
+                        'message' => 'Le nom est requis.',
                     ]),
                 ]
             ])
@@ -34,11 +34,11 @@ class AcquisitionSystemeType extends AbstractType
             ->add('macAdress', null, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'The MAC address is required.',
+                        'message' => 'L addresse MAC est requise.',
                     ]),
                     new Regex([
                         'pattern' => '/^([0-9A-Fa-f]{2}([-:])){5}([0-9A-Fa-f]{2})$/',
-                        'message' => 'The MAC address must be in a valid format (example: 01:23:45:67:89:AB or 01-23-45-67-89-AB).',
+                        'message' => 'L adresse MAC doit être dans un format valide (exemple: 01:23:45:67:89:AB ou 01-23-45-67-89-AB).',
                     ]),
                 ],
                 'label' => 'MAC Address', // Label for the MAC address field
@@ -46,11 +46,11 @@ class AcquisitionSystemeType extends AbstractType
             // 'etat' field: A dropdown for the system's state, with predefined choices
             ->add('etat', ChoiceType::class, [
                 'choices' => [
-                    'Available' => EtatAS::Disponible, // Available state
-                    'To uninstall' => EtatAS::A_Desinstaller, // To uninstall state
-                    'To install' => EtatAS::Installer, // To install state
-                    'To repair' => EtatAS::A_Reparer, // To repair state
-                    'In installation' => EtatAS::En_Installation, // In installation state
+                    'Disponible' => EtatAS::Disponible, // Available state
+                    'A désinstaller' => EtatAS::A_Desinstaller, // To uninstall state
+                    'Installé' => EtatAS::Installer, // To install state
+                    'A réparer' => EtatAS::A_Reparer, // To repair state
+                    'A installé' => EtatAS::En_Installation, // In installation state
                 ],
                 'choice_label' => function (EtatAS $choice): string {
                     return (string) ($choice->name ?? ''); // Displays the name of each state

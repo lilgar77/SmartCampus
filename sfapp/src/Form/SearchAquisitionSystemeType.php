@@ -17,21 +17,23 @@ class SearchAquisitionSystemeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // 'etat' field: Allows the user to filter acquisition systems by their state
             ->add('etat', ChoiceType::class, [
                 'choices' => [
-                    'Tous les états' => null,
+                    'Tout les états' => null, // Option for no state filter
                     'Disponible' => EtatAS::Disponible,
-                    'Désinstaller' => EtatAS::A_Desinstaller,
-                    'Installer' => EtatAS::Installer,
-                    'À réparer' => EtatAS::A_Reparer,
+                    'A désinstaller' => EtatAS::A_Desinstaller,
+                    'Installé' => EtatAS::Installer,
+                    'A réparer' => EtatAS::A_Reparer,
                     'En cours d\'installation' => EtatAS::En_Installation,
                 ],
             ])
+            // 'Name' field: Allows the user to search acquisition systems by name
             ->add('Name', TextType::class, [
-                'required' => false,
+                'required' => false, // Makes the field optional
                 'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Rechercher par nom...',
+                    'class' => 'form-control', // CSS class for styling the input field
+                    'placeholder' => 'Cherchez par nom...', // Placeholder text
                 ],
             ]);
     }
@@ -39,7 +41,7 @@ class SearchAquisitionSystemeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => null, // Pas de lien direct avec une entité pour ce formulaire
+            'data_class' => null, // No direct entity association for this form
         ]);
     }
 }
