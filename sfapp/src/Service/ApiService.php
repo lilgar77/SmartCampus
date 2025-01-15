@@ -15,14 +15,20 @@ class ApiService
     private string $userpass;
     private FilesystemAdapter $cache;
 
+    /**
+     * Constructor to initialize dependencies and load API credentials.
+     */
     public function __construct(HttpClientInterface $client, ParameterBagInterface $parameterBag)
     {
         $this->client = $client;
         $this->username = $this->getStringParam($parameterBag, 'API_USERNAME');
         $this->userpass = $this->getStringParam($parameterBag, 'API_USERPASS');
-        $this->cache = new FilesystemAdapter();  // Utilisation du cache sur le système de fichiers
+        $this->cache = new FilesystemAdapter(); // File system caching
     }
 
+    /**
+     * Retrieves a parameter value as a string.
+     */
     private function getStringParam(ParameterBagInterface $parameterBag, string $paramName): string
     {
         $value = $parameterBag->get($paramName);
@@ -30,25 +36,23 @@ class ApiService
     }
 
     /**
-     * Récupère les captures par intervalle avec cache.
+     * Fetches captures within a date interval, with caching for performance.
      */
     public function getCapturesByInterval(string $date1, string $date2, string $name, int $page, string $dbname): array
     {
-        $cacheKey = 'captures_' . md5($date1 . $date2 . $name . $page . $dbname);  // Clé de cache unique
+        $cacheKey = 'captures_' . md5($date1 . $date2 . $name . $page . $dbname);
 
-        // Récupérer l'élément de cache
         $cacheItem = $this->cache->getItem($cacheKey);
 
-        // Vérifier si l'élément est dans le cache et s'il n'est pas expiré
+        // Check if cached data is available and valid
         if ($cacheItem->isHit()) {
             $cachedData = $cacheItem->get();
-            // Vérifier l'expiration manuellement (si les données datent de moins de 10 minutes)
-            if (isset($cachedData['timestamp']) && (time() - $cachedData['timestamp']) < 600) {
-                return $cachedData['data']; // Retourne les données en cache si elles ne sont pas expirées
+            if (isset($cachedData['timestamp']) && (time() - $cachedData['timestamp']) < 120) {
+                return $cachedData['data'];
             }
         }
 
-        // Si les données sont expirées ou non présentes dans le cache, on refait la requête API
+        // If not cached, fetch data from the API
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/interval';
 
         $headers = [
@@ -72,47 +76,44 @@ class ApiService
             ]);
 
             if ($response->getStatusCode() !== 200) {
-                throw new \Exception('Erreur HTTP : ' . $response->getStatusCode());
+                throw new \Exception('HTTP error: ' . $response->getStatusCode());
             }
 
             $responseData = $response->toArray();
             $validatedResponse = $this->validateResponse($responseData);
 
-            // Enregistrer les données dans le cache avec un timestamp
+            // Cache the response with a timestamp
             $cacheItem->set([
                 'data' => $validatedResponse,
-                'timestamp' => time(), // Ajouter un timestamp pour savoir quand les données ont été mises en cache
+                'timestamp' => time(),
             ]);
-            $cacheItem->expiresAfter(60);  // Expiration après 10 minutes (600 secondes)
+            $cacheItem->expiresAfter(120); // Cache expiry after 120 seconds
             $this->cache->save($cacheItem);
 
             return $validatedResponse;
 
         } catch (\Exception $e) {
-            throw new \Exception('Erreur lors de la requête : ' . $e->getMessage());
+            throw new \Exception('Error during API request: ' . $e->getMessage());
         }
     }
 
     /**
-     * Récupère la dernière capture pour une salle avec cache.
+     * Fetches the latest capture for a specific room, with caching.
      */
     public function getLastCapture(string $name, string $dbname): array
     {
-        $cacheKey = 'last_capture_' . md5($name . $dbname);  // Clé de cache unique
+        $cacheKey = 'last_capture_' . md5($name . $dbname);
 
-        // Récupérer l'élément de cache
         $cacheItem = $this->cache->getItem($cacheKey);
 
-        // Vérifier si l'élément est dans le cache et s'il n'est pas expiré
         if ($cacheItem->isHit()) {
             $cachedData = $cacheItem->get();
-            // Vérifier l'expiration manuellement (si les données datent de moins de 10 minutes)
-            if (isset($cachedData['timestamp']) && (time() - $cachedData['timestamp']) < 600) {
-                return $cachedData['data']; // Retourne les données en cache si elles ne sont pas expirées
+            if (isset($cachedData['timestamp']) && (time() - $cachedData['timestamp']) < 120) {
+                return $cachedData['data'];
             }
         }
 
-        // Si les données sont expirées ou non présentes dans le cache, on refait la requête API
+        // Fetch latest capture from the API
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/last';
 
         $headers = [
@@ -135,29 +136,29 @@ class ApiService
             ]);
 
             if ($response->getStatusCode() !== 200) {
-                throw new \Exception('Erreur HTTP : ' . $response->getStatusCode());
+                throw new \Exception('HTTP error: ' . $response->getStatusCode());
             }
 
             $responseData = $response->toArray();
             $validatedResponse = $this->validateResponse($responseData);
 
-            // Enregistrer les données dans le cache avec un timestamp
+            // Cache the response
             $cacheItem->set([
                 'data' => $validatedResponse,
-                'timestamp' => time(), // Ajouter un timestamp pour savoir quand les données ont été mises en cache
+                'timestamp' => time(),
             ]);
-            $cacheItem->expiresAfter(60);  // Expiration après 10 minutes (600 secondes)
+            $cacheItem->expiresAfter(120);
             $this->cache->save($cacheItem);
 
             return $validatedResponse;
 
         } catch (\Exception $e) {
-            throw new \Exception('Erreur lors de la requête : ' . $e->getMessage());
+            throw new \Exception('Error during API request: ' . $e->getMessage());
         }
     }
 
     /**
-     * Mise à jour des dernières captures pour les salles avec cache.
+     * Updates the latest captures for all rooms in the database.
      */
     public function updateLastCapturesForRooms(RoomRepository $roomRepository, EntityManagerInterface $entityManager): void
     {
@@ -201,7 +202,7 @@ class ApiService
     }
 
     /**
-     * Validates and transforms the API response to ensure it matches the expected type.
+     * Validates and filters the API response to ensure it contains valid data.
      */
     private function validateResponse(array $response): array
     {
@@ -215,7 +216,7 @@ class ApiService
     }
 
     /**
-     * Helper function to check if an array is associative with string keys.
+     * Checks if an array is associative.
      */
     private function isAssociativeArray(array $array): bool
     {
