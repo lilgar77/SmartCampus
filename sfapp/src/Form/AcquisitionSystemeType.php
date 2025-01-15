@@ -20,35 +20,40 @@ class AcquisitionSystemeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // 'name' field: A required field with a NotBlank constraint
             ->add('name', null, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Le nom est obligatoire.',
-                    ],) ],
-                ])
+                        'message' => 'The name is required.',
+                    ]),
+                ]
+            ])
+            // 'wording' field: An optional text field for additional information
             ->add('wording')
+            // 'macAdress' field: A required field with MAC address format validation
             ->add('macAdress', null, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'L\'adresse MAC est obligatoire.',
+                        'message' => 'The MAC address is required.',
                     ]),
                     new Regex([
                         'pattern' => '/^([0-9A-Fa-f]{2}([-:])){5}([0-9A-Fa-f]{2})$/',
-                        'message' => 'L\'adresse MAC doit être au format valide (exemple : 01:23:45:67:89:AB ou 01-23-45-67-89-AB).',
+                        'message' => 'The MAC address must be in a valid format (example: 01:23:45:67:89:AB or 01-23-45-67-89-AB).',
                     ]),
                 ],
-                'label' => 'Adresse MAC',
+                'label' => 'MAC Address', // Label for the MAC address field
             ])
+            // 'etat' field: A dropdown for the system's state, with predefined choices
             ->add('etat', ChoiceType::class, [
                 'choices' => [
-                    'Dispo' => EtatAS::Disponible,
-                    'Désinstaller' => EtatAS::A_Desinstaller,
-                    'Installer' => EtatAS::Installer,
-                    'À réparer' => EtatAS::A_Reparer,
-                    'En cours d\'installation' => EtatAS::En_Installation,
+                    'Available' => EtatAS::Disponible, // Available state
+                    'To uninstall' => EtatAS::A_Desinstaller, // To uninstall state
+                    'To install' => EtatAS::Installer, // To install state
+                    'To repair' => EtatAS::A_Reparer, // To repair state
+                    'In installation' => EtatAS::En_Installation, // In installation state
                 ],
                 'choice_label' => function (EtatAS $choice): string {
-                    return (string) ($choice->name ?? '');
+                    return (string) ($choice->name ?? ''); // Displays the name of each state
                 },
             ])
         ;
@@ -57,7 +62,7 @@ class AcquisitionSystemeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => AcquisitionSystem::class,
+            'data_class' => AcquisitionSystem::class, // Associates the form with the AcquisitionSystem entity class
         ]);
     }
 }
