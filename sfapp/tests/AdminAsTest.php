@@ -57,7 +57,7 @@ class AdminAsTest extends WebTestCase
         $admin = $userRepository->findOneByEmail('admin@admin.com');
 
         $client->loginUser($admin);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('R2-D2')->getId();
+        $identifier = $client->getContainer()->get('doctrine')->getRepository(AcquisitionSystem::class)->findASByName('ESP-008')->getId();
         $client->request('GET', '/acquisitionsyteme/' . $identifier . '/edit');
         $this->assertResponseIsSuccessful();
     }

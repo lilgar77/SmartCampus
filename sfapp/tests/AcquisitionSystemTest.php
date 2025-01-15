@@ -54,7 +54,7 @@ class AcquisitionSystemTest extends WebTestCase
             [
                 'acquisition_systeme[name]' => 'TestSA-001',
                 'acquisition_systeme[wording]' => 'Salle de réunion',
-                'acquisition_systeme[macAdress]' => '00:00:00:00:00:05',
+                'acquisition_systeme[macAdress]' => '00:00:00:00:00:AA',
                 'acquisition_systeme[etat]' => 0,
             ]
         );
@@ -90,7 +90,7 @@ class AcquisitionSystemTest extends WebTestCase
             [
                 'acquisition_systeme[name]' => 'TestSA-Updated',
                 'acquisition_systeme[wording]' => 'Salle updated',
-                'acquisition_systeme[macAdress]' => '00:00:00:00:00:08',
+                'acquisition_systeme[macAdress]' => '00:00:00:00:00:AD',
                 'acquisition_systeme[etat]' => 2,
             ]
         );

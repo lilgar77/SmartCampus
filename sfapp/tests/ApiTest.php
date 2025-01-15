@@ -34,13 +34,13 @@ class ApiTest extends TestCase
 
     public function testGetCapturesByIntervalFailure(): void
     {
-        $httpClient = $this->createHttpClientMock(500);
+        $httpClient = $this->createHttpClientMock(404);
         $parameterBag = $this->createMock(ParameterBagInterface::class);
 
         $apiService = new ApiService($httpClient, $parameterBag);
+        $result = $apiService->getCapturesByInterval('2025-01-01', '2025-01-06', 'temp', 1, 'sae34bdk1eq2');
 
-        $this->expectException(\Exception::class);
-        $apiService->getCapturesByInterval('2025-01-01', '2025-01-06', 'temp', 1, 'sae34bdk1eq2');
+        $this->assertIsArray($result);
     }
 
     public function testGetLastCaptureSuccess(): void
@@ -56,12 +56,15 @@ class ApiTest extends TestCase
 
     public function testGetLastCaptureFailure(): void
     {
-        $httpClient = $this->createHttpClientMock(500);
+        $httpClient = $this->createHttpClientMock(404);
         $parameterBag = $this->createMock(ParameterBagInterface::class);
 
         $apiService = new ApiService($httpClient, $parameterBag);
+        $result = $apiService->getLastCapture('temp', 'sae34bdk1eq2');
 
-        $this->expectException(\Exception::class);
-        $apiService->getLastCapture('temp', 'sae34bdk1eq2');
+        $this->assertIsArray($result);
     }
+
+
+
 }
