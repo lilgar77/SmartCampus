@@ -54,7 +54,7 @@ class AcquisitionSystemTest extends WebTestCase
             [
                 'acquisition_systeme[name]' => 'TestSA-001',
                 'acquisition_systeme[wording]' => 'Salle de réunion',
-                'acquisition_systeme[macAdress]' => '00:00:00:09:00:05',
+                'acquisition_systeme[macAdress]' => '00:00:00:00:00:AA',
                 'acquisition_systeme[etat]' => 0,
             ]
         );
@@ -63,7 +63,7 @@ class AcquisitionSystemTest extends WebTestCase
         $client->submit($form);
 
         // Verify redirection to the list page after submission
-        $this->assertResponseRedirects('/acquisitionsysteme');  // Vérifie la redirection vers la page d'acquisition
+        $this->assertResponseRedirects('/acquisitionsysteme'); 
     }
 
     // Test case for editing an existing Acquisition System
@@ -90,7 +90,7 @@ class AcquisitionSystemTest extends WebTestCase
             [
                 'acquisition_systeme[name]' => 'TestSA-Updated',
                 'acquisition_systeme[wording]' => 'Salle updated',
-                'acquisition_systeme[macAdress]' => '00:00:00:05:00:05',
+                'acquisition_systeme[macAdress]' => '00:00:00:00:00:AD',
                 'acquisition_systeme[etat]' => 2,
             ]
         );
