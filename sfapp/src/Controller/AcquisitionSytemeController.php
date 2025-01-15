@@ -10,6 +10,7 @@
 ##      - delete (Page that deletes SA)                                 ##
 ##      - edit   (Page that edits SA)                                   ##
 ##########################################################################
+
 namespace App\Controller;
 
 use App\Entity\AcquisitionSystem;
@@ -30,61 +31,65 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\RoomRepository;
 
-
 class AcquisitionSytemeController extends AbstractController
 {
-
     #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsysteme', name: 'app_acquisition_syteme_liste')]
     public function listeAS(Request $request, AcquisitionSystemRepository $acquisitionSystemRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
+        // Update last capture data for rooms using the API service
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
 
+        // Check and create necessary alerts
         $alertManager->checkAndCreateAlerts();
 
-        // Créer le formulaire
+        // Create the search form for acquisition systems
         $form = $this->createForm(SearchAquisitionSystemeType::class, null, [
             'method' => 'GET',
         ]);
         $form->handleRequest($request);
 
+        // Fetch all acquisition systems by default
         $ASSearch = $acquisitionSystemRepository->findAll();
 
+        // If the form is submitted and valid, filter acquisition systems based on search criteria
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-
-            // Vérifier que les données ne sont pas nulles avant d'appeler la méthode
             if ($data !== null && is_array($data)) {
                 $ASSearch = $acquisitionSystemRepository->findByFilters($data);
             }
         }
 
+        // Render the list page with filtered acquisition systems
         return $this->render('acquisition_syteme/index.html.twig', [
             'acquisition_systems' => $ASSearch,
             'AS' => $form->createView(),
         ]);
     }
+
     #[IsGranted("ROLE_ADMIN")]
     #[Route('/acquisitionsyteme/add', name: 'app_acquisition_syteme_add')]
     public function addAS(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-
+        // Check and create necessary alerts
         $alertManager->checkAndCreateAlerts();
 
+        // Initialize a new acquisition system entity
         $acquisitionSystem = new AcquisitionSystem();
 
+        // Create the form for adding a new acquisition system
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Set default state as "Available"
             $acquisitionSystem->setEtat(EtatAS::Disponible);
 
-            if(($acquisitionSystem->getEtat()== EtatAS::En_Installation
-                || $acquisitionSystem->getEtat()== EtatAS::A_Reparer
-                || $acquisitionSystem->getEtat()== EtatAS::A_Desinstaller)
-                && $acquisitionSystem->getRoom()!=null)
-            {
+            // Handle special states that require an installation entity
+            if (($acquisitionSystem->getEtat() == EtatAS::En_Installation
+                    || $acquisitionSystem->getEtat() == EtatAS::A_Reparer
+                    || $acquisitionSystem->getEtat() == EtatAS::A_Desinstaller)
+                && $acquisitionSystem->getRoom() != null) {
                 $installation = new Installation();
                 $installation->setSA($acquisitionSystem);
                 $installation->setRoom($acquisitionSystem->getRoom());
@@ -93,7 +98,7 @@ class AcquisitionSytemeController extends AbstractController
                 $entityManager->flush();
             }
 
-            // Set default values for temp and humidity
+            // Set default sensor values
             $acquisitionSystem->setTemperature(0);
             $acquisitionSystem->setHumidity(0);
             $acquisitionSystem->setCO2(0);
@@ -101,8 +106,8 @@ class AcquisitionSytemeController extends AbstractController
             $entityManager->persist($acquisitionSystem);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" ajouté avec succès ');
-
+            // Add success message and redirect to the list page
+            $this->addFlash('success', 'Acquisition system "' . $acquisitionSystem->getName() . '" successfully added.');
             return $this->redirectToRoute('app_acquisition_syteme_liste');
         }
 
@@ -117,18 +122,20 @@ class AcquisitionSytemeController extends AbstractController
     #[Route('/acquisitionsyteme/{id}', name: 'app_acquisition_syteme_delete', methods: ['POST'])]
     public function delete(AcquisitionSystem $acquisitionSystem, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
+        // Check and create necessary alerts
         $alertManager->checkAndCreateAlerts();
 
-        if($acquisitionSystem->getRoom()!=null){
+        // Remove alerts associated with the acquisition system's room
+        if ($acquisitionSystem->getRoom() != null) {
             $alertManager->deleteAlerts($acquisitionSystem->getRoom());
-
         }
 
+        // Remove the acquisition system from the database
         $entityManager->remove($acquisitionSystem);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" supprimé avec succès ');
-
+        // Add success message and redirect to the list page
+        $this->addFlash('success', 'Acquisition system "' . $acquisitionSystem->getName() . '" successfully deleted.');
         return $this->redirectToRoute('app_acquisition_syteme_liste');
     }
 
@@ -136,37 +143,41 @@ class AcquisitionSytemeController extends AbstractController
     #[Route('/acquisitionsyteme/{id}/edit', name: 'app_acquisition_syteme_edit')]
     public function edit(AcquisitionSystem $acquisitionSystem, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
+        // Ensure the user has admin privileges
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error_403');
         }
+
+        // Check and create necessary alerts
         $alertManager->checkAndCreateAlerts();
 
+        // Create the edit form for the acquisition system
         $form = $this->createForm(AcquisitionSystemeType::class, $acquisitionSystem);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if(($acquisitionSystem->getEtat()== EtatAS::En_Installation
-                    || $acquisitionSystem->getEtat()== EtatAS::A_Reparer
-                    || $acquisitionSystem->getEtat()== EtatAS::A_Desinstaller)
-                    && $acquisitionSystem->getRoom()!=null){
-
+            // Handle special states that require an installation entity
+            if (($acquisitionSystem->getEtat() == EtatAS::En_Installation
+                    || $acquisitionSystem->getEtat() == EtatAS::A_Reparer
+                    || $acquisitionSystem->getEtat() == EtatAS::A_Desinstaller)
+                && $acquisitionSystem->getRoom() != null) {
                 $installation = new Installation();
                 $installation->setSA($acquisitionSystem);
                 $installation->setRoom($acquisitionSystem->getRoom());
-                $installation->setComment("Requête pour installation");
+                $installation->setComment("Request for installation");
                 $entityManager->persist($installation);
             }
             $entityManager->flush();
 
-            $this->addFlash('success', 'Système d\'acquisition "'. $acquisitionSystem->getName() . '" modifié avec succès ');
-
+            // Add success message and redirect to the list page
+            $this->addFlash('success', 'Acquisition system "' . $acquisitionSystem->getName() . '" successfully edited.');
             return $this->redirectToRoute('app_acquisition_syteme_liste');
         }
 
+        // Render the edit page with the form
         return $this->render('acquisition_syteme/edit.html.twig', [
             'acquisition_systems' => $acquisitionSystem,
             'ASForm' => $form->createView(),
         ]);
     }
-
 }
