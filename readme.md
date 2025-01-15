@@ -42,10 +42,6 @@ docker compose up --build
 docker compose ps
 ```
 
-- pour installer le vendor 
-```
-composer installer
-``` 
 ## Se connecter au service `sfapp`
 
 Dans un terminal positionné dans le dossier de la stack du projet : 
@@ -58,11 +54,27 @@ docker compose exec sfapp bash
 ```
 pwd 
 ```
+- déplacez vous ensuite dans le dossier `/sfapp`, avec la commande :
+```
+cd sfapp 
+```
 
-- vérifier l'exécution du service `sfapp`
+- pour installer le `/vendor` 
+```
+composer installer
+``` 
+
+- Créer un fichier `.env.local` et rentrez : 
+```php
+API_USERNAME=l1eq1
+API_USERPASS=dicvex-Zofsip-4juqru
+```
+
+- vérifier l'exécution du service `sfapp` en rentrant l'URL
 ```
 localhost:8000
 ```
+
 ## Configurer l'environnement de test `PhpUnit`
 
 Après avoir configuré la connexion au service `sfapp`, suivez les étapes ci-dessous :
@@ -88,9 +100,15 @@ php bin/console doctrine:database:create --env=test
 php bin/console doctrine:migrations:migrate --env=test
 ```
 
-5.	Lancer les tests :
+5. Créer un fichier `env.test.local` et rentrez : 
 ```php
-php bin/phpunit
+API_USERNAME=l1eq1
+API_USERPASS=dicvex-Zofsip-4juqru
+```
+
+6.	Lancer les tests :
+```php
+php bin/phpunit --testdox
 ```
 
 
