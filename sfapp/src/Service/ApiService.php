@@ -38,19 +38,14 @@ class ApiService
      *
      * @return array<mixed, mixed>
      */
-    public function getCapturesByInterval(
-        string $date1,
-        string $date2,
-        string $name,
-        int $page,
-        string $dbname
-    ): array {
+    public function getCapturesByInterval(string $date1, string $date2, string $name, int $page, string $dbname): array
+    {
         $cacheKey = 'captures_' . md5($date1 . $date2 . $name . $page . $dbname);
         $cacheItem = $this->cache->getItem($cacheKey);
 
         if ($cacheItem->isHit()) {
             $cachedData = $cacheItem->get();
-            // Vérification que 'timestamp' et 'data' existent et ont les bons types
+            // Check that ‘timestamp’ and ‘data’ exist and have the correct types
             if (is_array($cachedData)&& isset($cachedData['timestamp'], $cachedData['data']) &&
                 is_int($cachedData['timestamp']) && is_array($cachedData['data']) &&
                 (time() - $cachedData['timestamp']) < 120) {
@@ -264,7 +259,7 @@ class ApiService
     {
         $validated = [];
         foreach ($response as $item) {
-            // Vérification que chaque élément est un tableau associatif
+            // Check that each element is an associative array
             if (is_array($item) && $this->isAssociativeArray($item)) {
                 $validated[] = $item;
             }
