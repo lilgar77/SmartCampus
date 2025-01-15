@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RoomRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -33,6 +35,17 @@ class Room
     #[ORM\ManyToOne(targetEntity: Building::class, inversedBy: 'rooms')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Building $building = null;
+
+    /**
+     * @var Collection<int, Alert>
+     */
+    #[ORM\OneToMany(targetEntity: Alert::class, mappedBy: 'IdRoom')]
+    private Collection $alerts;
+
+    public function __construct()
+    {
+        $this->alerts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,5 +102,35 @@ class Room
     public function __toString(): string
     {
         return $this->name ?? '';
+    }
+
+    /**
+     * @return Collection<int, Alert>
+     */
+    public function getAlerts(): Collection
+    {
+        return $this->alerts;
+    }
+
+    public function addAlert(Alert $alert): static
+    {
+        if (!$this->alerts->contains($alert)) {
+            $this->alerts->add($alert);
+            $alert->setIdRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAlert(Alert $alert): static
+    {
+        if ($this->alerts->removeElement($alert)) {
+            // set the owning side to null (unless already changed)
+            if ($alert->getIdRoom() === $this) {
+                $alert->setIdRoom(null);
+            }
+        }
+
+        return $this;
     }
 }

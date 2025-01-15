@@ -11,15 +11,15 @@
             <a href="{{ path('app_welcome') }}" class="btn btn-violet text-white">
                 &#8592; Retour
             </a>
-            <h1>Détails de la salle {{ room.name }} ({{ lastCapturehum.dateCapture }})</h1>
+            <h1>Détails de la salle {{ room.name }} ({{ lastCapturehum.dateCapture|date('H:i d-m-Y') }})</h1>
         </div>
 
         <div class="d-flex justify-content-around circles-wrapper">
-            <div class="circle-container">
-                <div class="circle-item">
-                    <div class="progress-circle-container">
-                        <div class="progress-circle">
-                            <div class="circle-info-wave">
+            <div class="d-flex justify-content-space-around align-items-center w-100 gap-4">
+                <div class="circle-item w-100 h-100 rounded d-flex flex-column align-items-center text-align-center position-relative">
+                    <div class="progress-circle-container position-relative d-flex align-items-center justify-content-center overflow-hidden">
+                        <div class="progress-circle position-relative">
+                            <div class="circle-info-wave position-absolute text-align-center z-2">
                                 {{ lastCapturehum.valeur}}%
                             </div>
                             <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
@@ -27,51 +27,51 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="legend">
-                        <div class="legend-item">
-                            <span class="legend-color green"></span>
+                    <div class="d-flex justify-content-start align-items-start flex-column gap-3 m-2 ms-3 d-flex justify-content-start align-items-start flex-column gap-3 m-2">
+                        <div class="d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle green"></span>
                             <span> <70% ou sinon la température est inférieur à 20°C</span>
                         </div>
-                        <div class="legend-item">
-                            <span class="legend-color yellow"></span>
+                        <div class="d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle yellow"></span>
                             <span> >70% et la température est entre 20 et 25°C</span>
                         </div>
-                        <div class="legend-item">
-                            <span class="legend-color red"></span>
+                        <div class="d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle red"></span>
                             <span> >70% et la température est supérieur à 25°C</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="circle-item">
-                    <div class="thermometer-container">
-                        <div class="thermometer">
-                            <div class="thermometer-level"></div>
+                <div class="circle-item w-100 h-100 rounded d-flex flex-column align-items-center text-align-center position-relative">
+                    <div class="thermometer-container w-25 h-75 d-flex align-items-center justify-content-end position-relative flex-column">
+                        <div class="thermometer w-50 h-75 position-relative bg-white mt-3">
+                            <div class="thermometer-level position-absolute bottom-0 w-100"></div>
                         </div>
-                        <div class="thermometer-bulb">
-                            <p class="circle-info-temp">
+                        <div class="thermometer-bulb w-100 h-25 position-relative rounded-circle">
+                            <p class="circle-info-temp position-absolute">
                                 {{ lastCapturetemp.valeur ?? 0 }}°C
                             </p>
                         </div>
                     </div>
-                    <div class="legend-thermometer">
-                        <div class="legend-item">
-                            <span class="legend-color green"></span>
+                    <div class="legend-thermometer d-flex justify-content-start align-items-start flex-column gap-3">
+                        <div class="d-flex align-items-center gap-2 text-align-left d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle green"></span>
                             <span>Entre 17 et 21°C</span>
                         </div>
-                        <div class="legend-item">
-                            <span class="legend-color yellow"></span>
+                        <div class="d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle yellow"></span>
                             <span>Entre 22 et 26°C ou entre 16 et 12°C</span>
                         </div>
-                        <div class="legend-item">
-                            <span class="legend-color red"></span>
+                        <div class="d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle red"></span>
                             <span>Moins de 12°C ou plus de 26°C</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="circle-item">
-                    <div class="co2-container">
+                <div class="circle-item w-100 h-100 rounded d-flex flex-column align-items-center text-align-center position-relative">
+                    <div class="co2-container w-100 h-75 d-flex justify-content-center align-items-center position-relative">
                         <svg viewBox="0 0 200 100" class="co2-svg">
                             <defs>
                                 <!-- Gradient dynamique -->
@@ -83,7 +83,7 @@
                             <!-- Texte avec contour noir -->
                             <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
                                   fill="url(#co2-gradient)" stroke="black" stroke-width="2"
-                                  font-size="70" font-family="Arial, sans-serif" class="co2-text">
+                                  font-size="70" class="co2-text fw-bold">
                                 CO2
                             </text>
                         </svg>
@@ -91,17 +91,17 @@
                     <p class="circle-info-cloud">
                         {{ lastCaptureco2.valeur ?? 0 }} ppm
                     </p>
-                    <div class="legend">
-                        <div class="legend-item">
-                            <span class="legend-color green"></span>
+                    <div class="d-flex justify-content-start align-items-start flex-column gap-3 m-2">
+                        <div class="d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle green"></span>
                             <span>Entre 400 et 1000 ppm</span>
                         </div>
-                        <div class="legend-item">
-                            <span class="legend-color yellow"></span>
+                        <div class="d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle rounded-circle yellow"></span>
                             <span>Entre 1000 et 1400 ppm</span>
                         </div>
-                        <div class="legend-item">
-                            <span class="legend-color red"></span>
+                        <div class="d-flex align-items-center gap-2 text-align-left">
+                            <span class="legend-color rounded-circle red"></span>
                             <span>Moins de 400 ppm ou plus de 1400 ppm </span>
                         </div>
                     </div>
@@ -110,12 +110,34 @@
         </div>
 
     </div>
+
+    <div class="alert-container mt-4 text-center w-50 mx-auto">
+        {% if lastCapturetemp.valeur is not null and lastCapturehum.valeur is not null and lastCaptureco2.valeur is not null %}
+            {% if lastCaptureco2.valeur > 1000 %}
+                <p class="alert alert-danger fs-4">Ouvrir les fenêtres - L'air est de mauvaise qualité (CO2 élevé)</p>
+            {% elseif lastCapturetemp.valeur < 17 and lastCapturehum.valeur > 70 %}
+                <p class="alert alert-warning fs-4">Fermer les fenêtres - Il fait trop froid et l'humidité est élevée</p>
+            {% elseif lastCapturetemp.valeur < 17 and lastCapturehum.valeur < 40 %}
+                <p class="alert alert-info fs-4">Augmenter le chauffage - La température est basse et l'air est sec</p>
+            {% elseif lastCapturetemp.valeur > 25 and lastCapturehum.valeur > 70 %}
+                <p class="alert alert-warning fs-4">Baisser le chauffage - La température est élevée et l'humidité est élevée</p>
+            {% elseif lastCapturetemp.valeur > 25 and lastCapturehum.valeur < 40 %}
+                <p class="alert alert-info fs-4">Baisser le chauffage - La température est élevée mais l'air est sec</p>
+            {% else %}
+                <p class="alert alert-success fs-4">Les conditions de la salle sont confortables.</p>
+            {% endif %}
+        {% else %}
+            <p class="alert alert-secondary fs-3">Aucune donnée disponible pour évaluer les conditions de la salle.</p>
+        {% endif %}
+    </div>
+
+
     {% if dataTemp.error is defined or dataHum.error is defined or dataCo2.error is defined %}
         <p>Erreur : {{ dataTemp.error ?? dataHum.error ?? dataCo2.error }}</p>
     {% else %}
         <h1 class="text-center mb-4">Résultats de la journée:</h1>
 
-    </div>
+
         <div class="d-flex justify-content-center mb-4">
             <div style="width: 30%; text-align: center; margin-right: 5%;">
                 <h5>Température (°C)</h5>
@@ -143,96 +165,26 @@
         window.roomTemp = {{ lastCapturetemp.valeur }};
         window.roomHumidity = {{ lastCapturehum.valeur }};
 
-    </script>
-
-
-
-
-
-
-    <script>
         // Données pour les graphiques
-        const labels = [];
+        window.chartLabels = [];
         {% for item in dataTemp %}
-        labels.push('{{ item.dateCapture }}');
+        chartLabels.push('{{ item.dateCapture }}');
         {% endfor %}
 
-        const tempData = [];
+        window.tempData = [];
         {% for item in dataTemp %}
         tempData.push({{ item.valeur }});
         {% endfor %}
 
-        const humData = [];
+        window.humData = [];
         {% for item in dataHum %}
         humData.push({{ item.valeur }});
         {% endfor %}
 
-        const co2Data = [];
+        window.co2Data = [];
         {% for item in dataCo2 %}
         co2Data.push({{ item.valeur }});
         {% endfor %}
-
-        // Créer les graphiques
-        const tempChartCtx = document.getElementById('tempChart').getContext('2d');
-        const humChartCtx = document.getElementById('humChart').getContext('2d');
-        const co2ChartCtx = document.getElementById('co2Chart').getContext('2d');
-
-        const tempChart = new Chart(tempChartCtx, {
-            type: 'line',  // ou 'bar'
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Température (°C)',
-                    data: tempData,
-                    borderColor: 'rgb(255, 99, 132)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-
-        const humChart = new Chart(humChartCtx, {
-            type: 'line',  // ou 'bar'
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Humidité (%)',
-                    data: humData,
-                    borderColor: 'rgb(54, 162, 235)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-
-        const co2Chart = new Chart(co2ChartCtx, {
-            type: 'line',  // ou 'bar'
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'CO2 (ppm)',
-                    data: co2Data,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
     </script>
 
 {% endblock %}

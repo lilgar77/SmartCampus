@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Outil de diagnostic{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+    <!-- Contenu principal centré -->
+    <div class="d-flex justify-content-center align-items-center vh-60 flex-column">
+        <h1>Diagnostic</h1>
+    </div>
+
+    <div class="container mt-4">
+        <div class="card shadow-sm p-4">
+            <h1 class="h3 mb-4 text-center background-container">Liste des SA</h1>
+
+            <div class="container">
+                <div class="row">
+                    {% for as in AS %}
+                        <div class="col-12 col-md-4 mb-4">
+                            <a href="{{ path('app_diagnostic_details', {id: as.id}) }}" class="text-decoration-none text-dark">
+                                <div class="room-card card shadow-sm">
+                                    <div class="card-body bg-secondary-subtle">
+                                        <h5 class="card-title text-violet">{{ as.Name }}</h5>
+                                        <p class="card-text">
+                                            <strong>Relier à:</strong> {{ as.room.name }}<br>
+                                            <strong>Étage:</strong> {{ as.room.floor.numberFloor }}<br>
+                                            <strong>Bâtiment:</strong> {{ as.room.building.NameBuilding }} ({{ as.room.building.AdressBuilding }})<br>
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

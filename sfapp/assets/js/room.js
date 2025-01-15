@@ -68,15 +68,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gestion de la température
     const thermometerLevel = document.querySelector('.thermometer-level');
-    const colorTextTemp = document.querySelector('.circle-info-temp');
+    const colorBulbTemp = document.querySelector('.thermometer-bulb');
 
     function updateTemperatureColor() {
         if (temp >= 17 && temp <= 21) {
-            colorTextTemp.style.color = '#93CC56';
+            colorBulbTemp.style.background = '#93CC56';
+            thermometerLevel.style.background = '#93CC56';
         } else if ((temp > 21 && temp <= 26) || (temp < 17 && temp >= 12)) {
-            colorTextTemp.style.color = '#edc11d';
+            colorBulbTemp.style.background = '#edc11d';
+            thermometerLevel.style.background = '#edc11d';
         } else {
-            colorTextTemp.style.color = '#b22222';
+            colorBulbTemp.style.background = '#b22222';
+            thermometerLevel.style.background = '#b22222';
         }
     }
 
@@ -88,11 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const height = ((clampedTemp - minTemp) / (maxTemp - minTemp)) * 250;
         thermometerLevel.style.height = `${height}px`;
 
-        thermometerLevel.style.background =
-            temp < 0 ? 'blue' :
-                temp <= 15 ? '#edc11d' :
-                    temp <= 25 ? 'orange' :
-                        temp <= 30 ? 'orangered' : 'red';
+
     }
 
     // Gestion du CO2

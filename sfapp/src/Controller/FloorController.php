@@ -11,6 +11,9 @@
 ###############################################################
 namespace App\Controller;
 
+use App\Repository\RoomRepository;
+use App\Service\AlertManager;
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,29 +22,46 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Floor;
 use App\Repository\FloorRepository;
 use App\Form\FloorType;
+use App\Form\SearchFloorType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class FloorController extends AbstractController
 {
-   
+
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor', name: 'app_floor')]
-    public function index(FloorRepository $floorRepository): Response
+    public function index(FloorRepository $floorRepository, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, Request $request): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
+
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+        $alertManager->checkAndCreateAlerts();
+
+
+        $floor = new Floor();
+        $form = $this->createForm(SearchFloorType::class, $floor, [
+            'method' => 'GET',
+        ]);
+
+        $form->handleRequest($request);
+
+        $floorSearch=$floorRepository->findFloorByBuilding($floor);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $floorSearch = $floorRepository->findFloorByBuilding($floor);
         }
+        
         return $this->render('floor/index.html.twig', [
-            'floors' => $floorRepository->sortFloors(),
+            'floor' => $form->createView(),
+            'floors' => $floorSearch,
         ]);
     }
-
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/add', name: 'app_floor_add')]
-    public function add(Request $request, EntityManagerInterface $entityManager): Response
+    public function add(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
+        $alertManager->checkAndCreateAlerts();
+
         $floor = new Floor();
         $form = $this->createForm(FloorType::class, $floor);
 
@@ -63,13 +83,13 @@ class FloorController extends AbstractController
         ]);
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/{id}', name: 'app_floor_delete', methods: ['POST'])]
-    public function delete(Floor $floor, EntityManagerInterface $entityManager): Response
+    public function delete(Floor $floor, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
+        $alertManager->checkAndCreateAlerts();
+
         $entityManager->remove($floor);
         $entityManager->flush();
 
@@ -78,13 +98,13 @@ class FloorController extends AbstractController
         return $this->redirectToRoute('app_floor');
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/floor/{id}/edit', name: 'app_floor_edit')]
-    public function edit(Floor $floor, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(Floor $floor, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
+        $alertManager->checkAndCreateAlerts();
+
         $form = $this->createForm(FloorType::class, $floor);
 
         $form->handleRequest($request);

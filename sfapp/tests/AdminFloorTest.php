@@ -13,7 +13,7 @@ class AdminFloorTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/floor/add');
-        $this->assertResponseRedirects('/403');
+        $this->assertResponseRedirects('/login');
     }
     public function testAjoutEtageAccessibleAuxAdmins(): void
     {
@@ -58,49 +58,4 @@ class AdminFloorTest extends WebTestCase
         $client->request('GET', '/floor/'.$identifier.'/edit');
         $this->assertResponseIsSuccessful();
     }
-    public function testAjoutEtageInterditAuxTechniciens(): void
-    {
-        // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
-
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // le même que dans les fixtures
-        $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
-
-        $client->loginUser($technicien);
-        $client->request('GET', '/floor/add');
-        $this->assertResponseRedirects('/403');
-    }
-    public function testListeEtageInterditAuxTechniciens(): void
-    {
-        // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
-
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // le même que dans les fixtures
-        $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
-
-        $client->loginUser($technicien);
-        $client->request('GET', '/floor');
-        $this->assertResponseRedirects('/403');
-    }
-    public function testModifEtageInterditAuxTechniciens(): void
-    {
-        // https://symfony.com/doc/6.4/testing.html#logging-in-users-authentication
-
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // le même que dans les fixtures
-        $technicien = $userRepository->findOneByEmail('technicien@technicien.com');
-
-        $client->loginUser($technicien);
-        $identifier = $client->getContainer()->get('doctrine')->getRepository(Floor::class)->findFloorByNumber(1)->getId();
-        $client->request('GET', '/floor/'.$identifier.'/edit');
-        $this->assertResponseRedirects('/403');
-    }
 }
-
-

@@ -12,8 +12,11 @@
 
 namespace App\Controller;
 
-use App\Entity\AcquisitionSystem;
+use App\Model\EtatAS;
 use App\Repository\RoomRepository;
+use App\Service\AlertManager;
+use App\Service\ApiService;
+use App\Entity\Installation;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,51 +29,53 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RoomsController extends AbstractController
 {
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms', name: 'app_rooms')]
-    public function index(Request $request, RoomRepository $roomRepository): Response
+    public function index(Request $request, RoomRepository $roomRepository, ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+        $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+        $alertManager->checkAndCreateAlerts();
+
+
         $room = new Room();
         $form = $this->createForm(SearchRoomFormType::class, $room, [
             'method' => 'GET',
         ]);
         $form->handleRequest($request);
 
-        // Vérifier si le formulaire est soumis, valide et contient un nom
+        $roomSearch=$roomRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
-            $name = $room->getName();
 
-            if (!empty($name)) {
-                $roomSearch = $roomRepository->findByNameStartingWith($name);
-
-                return $this->render('rooms/index.html.twig', [
-                    'rooms' => $roomSearch,
-                    'room' => $form->createView(),
-                ]);
-            }
+            $roomSearch = $roomRepository->findByCriteria($room);
         }
 
         return $this->render('rooms/index.html.twig', [
+            'rooms' => $roomSearch,
             'room'  => $form->createView(),
-            'rooms' => $roomRepository->sortRooms(),
         ]);
     }
-
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/add', name: 'app_room_add')]
-    public function add(Request $request, EntityManagerInterface $entityManager): Response
+    public function add(Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
+        $alertManager->checkAndCreateAlerts();
         $room = new Room();
         $form = $this->createForm(RoomFormType::class, $room);
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($room);
+            if($room->getIdAS() != null)
+            {
+                $room->getIdAS()->setEtat(EtatAS::En_Installation);
+                $installation = new Installation();
+                $installation->setSA($room->getIdAS());
+                $installation->setRoom($room);
+                $installation->setComment("Requête pour installation");
+                $entityManager->persist($installation);
+            }
+
             $entityManager->flush();
             $this->addFlash('success', 'La salle "' . $room->getName() . '" a été ajoutée avec succès.');
             return $this->redirectToRoute('app_rooms');
@@ -84,13 +89,14 @@ class RoomsController extends AbstractController
         ]);
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/{id}', name: 'app_room_delete', methods: ['POST'])]
-    public function delete(Request $request, Room $room, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Room $room, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
+        $alertManager->checkAndCreateAlerts();
+
+        $alertManager->deleteAlerts($room);
         $entityManager->remove($room);
         $entityManager->flush();
 
@@ -100,13 +106,12 @@ class RoomsController extends AbstractController
         return $this->redirectToRoute('app_rooms');
     }
 
-    
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/rooms/{id}/edit', name: 'app_room_edit')]
-    public function edit(Room $room, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(Room $room, Request $request, EntityManagerInterface $entityManager, AlertManager $alertManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_error_403');
-        }
+
+        $alertManager->checkAndCreateAlerts();
         $form = $this->createForm(RoomFormType::class, $room);
 
         $form->handleRequest($request);

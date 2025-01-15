@@ -37,42 +37,22 @@ class FloorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Floor[] Un tableau contenant des entités Floor avec un système d'acquisition "installé".
+     * @param Floor $criteria
+     * @return Floor[]
      */
-    public function sortFloors() : array
+    public function findFloorByBuilding(Floor $criteria): array
     {
-        /** @var Floor[] $floor */
-        $floor = $this->createQueryBuilder('f')
-            ->orderBy('LENGTH(f.numberFloor)', 'ASC') // Trier d'abord par longueur (pour gérer les nombres)
-            ->addOrderBy('f.numberFloor', 'ASC')
-            ->getQuery()
-            ->getResult();
-        return $floor;
+        $queryBuilder = $this->createQueryBuilder('f')
+            ->leftJoin('f.IdBuilding', 'b');
+
+        if ($criteria->getIdBuilding() && $criteria->getIdBuilding()->getNameBuilding()) {
+            $queryBuilder
+                ->andWhere('b.NameBuilding LIKE :building')
+                ->setParameter('building', '%' . $criteria->getIdBuilding()->getNameBuilding() . '%');
+        }
+        $result = $queryBuilder->getQuery()->getResult();
+        // Execute the query and return the results as an array
+        /** @var Floor[] $result */
+        return $result;
     }
-
-
-//    /**
-//     * @return Floor[] Returns an array of Floor objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Floor
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
