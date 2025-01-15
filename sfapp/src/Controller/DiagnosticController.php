@@ -1,4 +1,13 @@
 <?php
+##################################################################
+##  @Name of file : DiagnosticController.php                    ##
+##  @brief : Controller for handling diagnostics.               ##
+##          Provides functionality for viewing system details   ##
+##          and historical capture data by intervals.           ##
+##  @Functions :                                                ##
+##      - index (Displays all acquisition systems)              ##
+##      - details (Displays detailed diagnostics of a system)   ##
+##################################################################
 
 namespace App\Controller;
 
@@ -14,51 +23,80 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\ApiService;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
 class DiagnosticController extends AbstractController
 {
-
+    /**
+     * Displays a list of all acquisition systems with diagnostic data.
+     */
     #[IsGranted("ROLE_ADMIN")]
     #[Route('/diagnostic', name: 'app_diagnostic')]
-    public function index(AcquisitionSystemRepository $acquisitionSystemRepository,ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, RoomRepository $roomRepository): Response
-    {
+    public function index(
+        AcquisitionSystemRepository $acquisitionSystemRepository,
+        ApiService $apiService,
+        AlertManager $alertManager,
+        EntityManagerInterface $entityManager,
+        RoomRepository $roomRepository
+    ): Response {
+        // Update last captures for rooms using the API service
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
+
+        // Check and create alerts if necessary
         $alertManager->checkAndCreateAlerts();
+
+        // Retrieve all installed acquisition systems
         $AcquisitionSystems = $acquisitionSystemRepository->findInstalledSystems();
 
+        // Render the diagnostic index page with the list of acquisition systems
         return $this->render('diagnostic/index.html.twig', [
             'AS' => $AcquisitionSystems,
         ]);
     }
+
+    /**
+     * Displays detailed diagnostics for a specific acquisition system.
+     */
     #[IsGranted("ROLE_ADMIN")]
     #[Route('/diagnostic/{id}', name: 'app_diagnostic_details')]
-    public function details(AcquisitionSystemRepository $acquisitionSystemRepository, int $id, RoomRepository $roomRepository,ApiService $apiService, AlertManager $alertManager, EntityManagerInterface $entityManager, AlertRepository $alertRepository, Request $request): Response
-    {
+    public function details(
+        AcquisitionSystemRepository $acquisitionSystemRepository,
+        int $id,
+        RoomRepository $roomRepository,
+        ApiService $apiService,
+        AlertManager $alertManager,
+        EntityManagerInterface $entityManager,
+        AlertRepository $alertRepository,
+        Request $request
+    ): Response {
+        // Update last captures for rooms and check for alerts
         $apiService->updateLastCapturesForRooms($roomRepository, $entityManager);
         $alertManager->checkAndCreateAlerts();
 
+        // Retrieve the acquisition system by ID
         $AS = $acquisitionSystemRepository->find($id);
         if (!$AS) {
-            throw $this->createNotFoundException('SA non trouvée');
+            throw $this->createNotFoundException('Acquisition system not found.');
         }
 
+        // Retrieve the associated room
         $room = $AS->getRoom();
         if (!$room) {
-            throw $this->createNotFoundException('La salle n’a pas été trouvée.');
+            throw $this->createNotFoundException('Room not found.');
         }
 
+        // Retrieve the room's name and validate its database
         $name = $room->getName();
         if (!$name) {
-            throw $this->createNotFoundException('Le nom de la salle est introuvable.');
+            throw $this->createNotFoundException('Room name is missing.');
         }
 
         $roomDb = $roomRepository->getRoomDb($name);
         if (!isset($roomDb['dbname']) || !is_string($roomDb['dbname'])) {
-            throw $this->createNotFoundException('La base de données de la salle est introuvable ou invalide.');
+            throw $this->createNotFoundException('Database for the room is invalid or missing.');
         }
 
         $dbname = $roomDb['dbname'];
 
+        // Retrieve the last capture data for specific types
         $getLastCapture = function (string $type) use ($apiService, $dbname) {
             return $apiService->getLastCapture($type, $dbname)[0] ?? null;
         };
@@ -67,7 +105,7 @@ class DiagnosticController extends AbstractController
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
-        // Gestion de l'intervalle
+        // Handle the interval parameter for historical data
         $interval = $request->query->get('interval', '1d');
         $date2 = (new \DateTime('now'))->format("Y-m-d");
         switch ($interval) {
@@ -88,6 +126,7 @@ class DiagnosticController extends AbstractController
                 break;
         }
 
+        // Retrieve capture data for the specified interval
         $getCapturesByInterval = function (string $type) use ($apiService, $date1, $date2, $dbname) {
             try {
                 return $apiService->getCapturesByInterval($date1, $date2, $type, 1, $dbname);
@@ -100,8 +139,10 @@ class DiagnosticController extends AbstractController
         $dataHum = $getCapturesByInterval('hum');
         $dataCo2 = $getCapturesByInterval('co2');
 
+        // Retrieve the last five alerts for the room
         $alerts = $alertRepository->findLastFiveAlertsByRoom($room);
 
+        // Render the diagnostic details page with all data
         return $this->render('diagnostic/diagnostic.html.twig', [
             'as' => $AS,
             'dataTemp' => $dataTemp,
