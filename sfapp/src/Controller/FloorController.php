@@ -85,7 +85,7 @@ class FloorController extends AbstractController
             $entityManager->persist($floor);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Floor "' . $floor->getNumberFloor() . '" added successfully.');
+            $this->addFlash('success', 'Étage "' . $floor->getNumberFloor() . '"  ajouté avec succès.');
 
             return $this->redirectToRoute('app_floor');
         }
@@ -112,7 +112,7 @@ class FloorController extends AbstractController
         $entityManager->remove($floor);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Floor "' . $floor->getNumberFloor() . '" deleted successfully.');
+        $this->addFlash('success', 'Étage "' . $floor->getNumberFloor() . '" supprimé avec succès.');
 
         return $this->redirectToRoute('app_floor');
     }
@@ -138,7 +138,7 @@ class FloorController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', 'Floor "' . $floor->getNumberFloor() . '" updated successfully.');
+            $this->addFlash('success', 'Étage "' . $floor->getNumberFloor() . '"  modifié avec succès.');
 
             return $this->redirectToRoute('app_floor');
         }

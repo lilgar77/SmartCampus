@@ -93,7 +93,7 @@ class RoomsController extends AbstractController
             }
 
             $entityManager->flush();
-            $this->addFlash('success', 'Room "' . $room->getName() . '" has been successfully added.');
+            $this->addFlash('success', 'La salle "' . $room->getName() . '" a été ajoutée avec succès.');
 
             return $this->redirectToRoute('app_rooms');
         }
@@ -122,7 +122,7 @@ class RoomsController extends AbstractController
         $entityManager->remove($room);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Room "' . $room->getName() . '" has been successfully deleted.');
+        $this->addFlash('success', 'La salle "' . $room->getName() . '" a été supprimée avec succès.');
 
         return $this->redirectToRoute('app_rooms');
     }
@@ -148,7 +148,7 @@ class RoomsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', 'Room "' . $room->getName() . '" has been successfully updated.');
+            $this->addFlash('success', 'La salle "' . $room->getName() . '" a été modifiée avec succès.');
 
             return $this->redirectToRoute('app_rooms');
         }

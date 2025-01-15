@@ -100,7 +100,7 @@ class BuildingController extends AbstractController
             $entityManager->flush();
 
             // Add a success message and redirect to the building list
-            $this->addFlash('success', 'Building "' . $building->getNameBuilding() . '" added successfully.');
+            $this->addFlash('success', 'Bâtiment "' . $building->getNameBuilding() . '" ajouté avec succès.');
             return $this->redirectToRoute('app_building');
         }
 
@@ -132,7 +132,7 @@ class BuildingController extends AbstractController
         $entityManager->flush();
 
         // Add a success message and redirect to the building list
-        $this->addFlash('success', 'Building "' . $building->getNameBuilding() . '" deleted successfully.');
+        $this->addFlash('success', 'Bâtiment "' . $building->getNameBuilding() . '" supprimé avec succès.');
         return $this->redirectToRoute('app_building');
     }
 
@@ -159,7 +159,7 @@ class BuildingController extends AbstractController
             $entityManager->flush();
 
             // Add a success message and redirect to the building list
-            $this->addFlash('success', 'Building "' . $building->getNameBuilding() . '" updated successfully.');
+            $this->addFlash('success', 'Bâtiment "' . $building->getNameBuilding() . '" modifié avec succès.');
             return $this->redirectToRoute('app_building');
         }
 
