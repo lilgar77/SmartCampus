@@ -80,6 +80,9 @@ class AlertRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return Alert[] Returns an array of Alert objects
+     */
     public function findAlertsByRoom(Room $room): array
     {
         $result = $this->createQueryBuilder('a')
@@ -91,8 +94,4 @@ class AlertRepository extends ServiceEntityRepository
         /** @var Alert[] $result */
         return $result;
     }
-
-
-    
-
 }

@@ -15,20 +15,14 @@ class ApiService
     private string $userpass;
     private FilesystemAdapter $cache;
 
-    /**
-     * Constructor to initialize dependencies and load API credentials.
-     */
     public function __construct(HttpClientInterface $client, ParameterBagInterface $parameterBag)
     {
         $this->client = $client;
         $this->username = $this->getStringParam($parameterBag, 'API_USERNAME');
         $this->userpass = $this->getStringParam($parameterBag, 'API_USERPASS');
-        $this->cache = new FilesystemAdapter(); // File system caching
+        $this->cache = new FilesystemAdapter();
     }
 
-    /**
-     * Retrieves a parameter value as a string.
-     */
     private function getStringParam(ParameterBagInterface $parameterBag, string $paramName): string
     {
         $value = $parameterBag->get($paramName);
@@ -36,25 +30,35 @@ class ApiService
     }
 
     /**
-     * Fetches captures within a date interval, with caching for performance.
+     * @param string $date1
+     * @param string $date2
+     * @param string $name
+     * @param int $page
+     * @param string $dbname
+     *
+     * @return array<mixed, mixed>
      */
-    public function getCapturesByInterval(string $date1, string $date2, string $name, int $page, string $dbname): array
-    {
+    public function getCapturesByInterval(
+        string $date1,
+        string $date2,
+        string $name,
+        int $page,
+        string $dbname
+    ): array {
         $cacheKey = 'captures_' . md5($date1 . $date2 . $name . $page . $dbname);
-
         $cacheItem = $this->cache->getItem($cacheKey);
 
-        // Check if cached data is available and valid
         if ($cacheItem->isHit()) {
             $cachedData = $cacheItem->get();
-            if (isset($cachedData['timestamp']) && (time() - $cachedData['timestamp']) < 120) {
+            // Vérification que 'timestamp' et 'data' existent et ont les bons types
+            if (is_array($cachedData)&& isset($cachedData['timestamp'], $cachedData['data']) &&
+                is_int($cachedData['timestamp']) && is_array($cachedData['data']) &&
+                (time() - $cachedData['timestamp']) < 120) {
                 return $cachedData['data'];
             }
         }
 
-        // If not cached, fetch data from the API
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/interval';
-
         $headers = [
             'accept'   => 'application/ld+json',
             'dbname'   => $dbname,
@@ -66,13 +70,13 @@ class ApiService
             'date1' => $date1,
             'date2' => $date2,
             'nom' => $name,
-            'page'  => $page,
+            'page' => $page,
         ];
 
         try {
             $response = $this->client->request('GET', $url, [
                 'headers' => $headers,
-                'query'   => $query,
+                'query' => $query,
             ]);
 
             if ($response->getStatusCode() !== 200) {
@@ -82,40 +86,44 @@ class ApiService
             $responseData = $response->toArray();
             $validatedResponse = $this->validateResponse($responseData);
 
-            // Cache the response with a timestamp
             $cacheItem->set([
                 'data' => $validatedResponse,
                 'timestamp' => time(),
             ]);
-            $cacheItem->expiresAfter(120); // Cache expiry after 120 seconds
+            $cacheItem->expiresAfter(120);
             $this->cache->save($cacheItem);
 
             return $validatedResponse;
-
         } catch (\Exception $e) {
             throw new \Exception('Error during API request: ' . $e->getMessage());
         }
     }
 
     /**
-     * Fetches the latest capture for a specific room, with caching.
+     * @param string $name
+     * @param string $dbname
+     *
+     * @return array<int, array<string, mixed>>
+     * @throws \Exception
      */
     public function getLastCapture(string $name, string $dbname): array
     {
         $cacheKey = 'last_capture_' . md5($name . $dbname);
-
         $cacheItem = $this->cache->getItem($cacheKey);
 
         if ($cacheItem->isHit()) {
             $cachedData = $cacheItem->get();
-            if (isset($cachedData['timestamp']) && (time() - $cachedData['timestamp']) < 120) {
-                return $cachedData['data'];
+            // Verify 'timestamp' and 'data' exist and are of correct types
+            if (
+                is_array($cachedData) && isset($cachedData['timestamp'], $cachedData['data']) &&
+                is_int($cachedData['timestamp']) && is_array($cachedData['data']) &&
+                (time() - $cachedData['timestamp']) < 120
+            ) {
+                return $this->ensureCorrectReturnType($cachedData['data']);
             }
         }
 
-        // Fetch latest capture from the API
         $url = 'https://sae34.k8s.iut-larochelle.fr/api/captures/last';
-
         $headers = [
             'accept'   => 'application/ld+json',
             'dbname'   => $dbname,
@@ -126,13 +134,13 @@ class ApiService
         $query = [
             'nom' => $name,
             'limit' => 1,
-            'page'  => 1,
+            'page' => 1,
         ];
 
         try {
             $response = $this->client->request('GET', $url, [
                 'headers' => $headers,
-                'query'   => $query,
+                'query' => $query,
             ]);
 
             if ($response->getStatusCode() !== 200) {
@@ -142,7 +150,7 @@ class ApiService
             $responseData = $response->toArray();
             $validatedResponse = $this->validateResponse($responseData);
 
-            // Cache the response
+            // Save validated response to cache
             $cacheItem->set([
                 'data' => $validatedResponse,
                 'timestamp' => time(),
@@ -150,18 +158,44 @@ class ApiService
             $cacheItem->expiresAfter(120);
             $this->cache->save($cacheItem);
 
-            return $validatedResponse;
-
+            return $this->ensureCorrectReturnType($validatedResponse);
         } catch (\Exception $e) {
             throw new \Exception('Error during API request: ' . $e->getMessage());
         }
     }
 
     /**
-     * Updates the latest captures for all rooms in the database.
+     * Ensure the response adheres to array<int, array<string, mixed>>.
+     *
+     * @param array<mixed> $data
+     *
+     * @return array<int, array<string, mixed>>
      */
-    public function updateLastCapturesForRooms(RoomRepository $roomRepository, EntityManagerInterface $entityManager): void
+    private function ensureCorrectReturnType(array $data): array
     {
+        $result = [];
+
+        foreach ($data as $item) {
+            if (is_array($item) && $this->isAssociativeArray($item)) {
+                $result[] = $item;
+            }
+        }
+
+        // Explicitly cast to the correct type for PHPStan
+        /** @var array<int, array<string, mixed>> $result */
+        return $result;
+    }
+
+
+
+    /**
+     * @param RoomRepository $roomRepository
+     * @param EntityManagerInterface $entityManager
+     */
+    public function updateLastCapturesForRooms(
+        RoomRepository $roomRepository,
+        EntityManagerInterface $entityManager
+    ): void {
         $rooms = $roomRepository->findRoomWithAsInstalled();
 
         foreach ($rooms as $room) {
@@ -178,13 +212,33 @@ class ApiService
             }
 
             try {
-                $lastTemperature = $this->getLastCapture('temp', $dbname)[0]['valeur'] ?? null;
-                $lastHumidity = $this->getLastCapture('hum', $dbname)[0]['valeur'] ?? null;
-                $lastCO2 = $this->getLastCapture('co2', $dbname)[0]['valeur'] ?? null;
+                $lastCaptureTemp = $this->getLastCapture('temp', $dbname);
+                $lastTemperature = isset($lastCaptureTemp[0]['valeur']) && is_numeric($lastCaptureTemp[0]['valeur'])
+                    ? (float) $lastCaptureTemp[0]['valeur']
+                    : null;
 
+                $lastCaptureHum = $this->getLastCapture('hum', $dbname);
+                $lastHumidity = isset($lastCaptureHum[0]['valeur']) && is_numeric($lastCaptureHum[0]['valeur'])
+                    ? (float) $lastCaptureHum[0]['valeur']
+                    : null;
+
+                $lastCaptureCO2 = $this->getLastCapture('co2', $dbname);
+                $lastCO2 = isset($lastCaptureCO2[0]['valeur']) && is_numeric($lastCaptureCO2[0]['valeur'])
+                    ? (float) $lastCaptureCO2[0]['valeur']
+                    : null;
+
+                // Ensure default values if null
                 $lastTemperature = is_numeric($lastTemperature) ? (int) $lastTemperature : 0;
                 $lastHumidity = is_numeric($lastHumidity) ? (int) $lastHumidity : 0;
                 $lastCO2 = is_numeric($lastCO2) ? (int) $lastCO2 : 0;
+
+                $acquisitionSystem = $room->getIdAS();
+
+                if ($acquisitionSystem !== null) {
+                    $acquisitionSystem->setTemperature($lastTemperature);
+                    $acquisitionSystem->setHumidity($lastHumidity);
+                    $acquisitionSystem->setCO2($lastCO2);
+                }
 
                 $acquisitionSystem = $room->getIdAS();
 
@@ -202,12 +256,15 @@ class ApiService
     }
 
     /**
-     * Validates and filters the API response to ensure it contains valid data.
+     * @param array<mixed, mixed> $response
+     *
+     * @return array<mixed, mixed>
      */
     private function validateResponse(array $response): array
     {
         $validated = [];
         foreach ($response as $item) {
+            // Vérification que chaque élément est un tableau associatif
             if (is_array($item) && $this->isAssociativeArray($item)) {
                 $validated[] = $item;
             }
@@ -216,7 +273,9 @@ class ApiService
     }
 
     /**
-     * Checks if an array is associative.
+     * @param array<mixed, mixed> $array
+     *
+     * @return bool
      */
     private function isAssociativeArray(array $array): bool
     {
