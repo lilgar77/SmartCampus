@@ -100,7 +100,7 @@ class WelcomeController extends AbstractController
                 : null;
 
             $co2Value = isset($lastCaptureCo2[0]['valeur']) && is_numeric($lastCaptureCo2[0]['valeur'])
-                ? $lastCaptureCo2[0]['valeur'] // Ensure it's cast to int
+                ? $lastCaptureCo2[0]['valeur']
                 : null;
 
             return [

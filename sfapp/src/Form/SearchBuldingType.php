@@ -17,15 +17,16 @@ class SearchBuldingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // 'NameBuilding' field: Allows searching for buildings by their name
             ->add('NameBuilding', TextType::class, [
-                'required' => false,
+                'required' => false, // Makes the field optional
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Building::class,
+            'data_class' => Building::class, // Specifies the entity the form relates to
         ]);
     }
 }
