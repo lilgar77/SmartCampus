@@ -18,6 +18,8 @@ class AlertRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find all alerts without an end date.
+     *
      * @return Alert[] Returns an array of Alert objects
      */
     public function findWithoutDateEnd(): array
@@ -33,6 +35,8 @@ class AlertRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find all alerts that have an end date.
+     *
      * @return Alert[] Returns an array of Alert objects
      */
     public function findWithDateEnd(): array
@@ -48,6 +52,9 @@ class AlertRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find all active alerts for a specific room.
+     *
+     * @param Room $room
      * @return Alert[] Returns an array of Alert objects
      */
     public function findActiveAlertsByRoom(Room $room): array
@@ -64,15 +71,18 @@ class AlertRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find the last five alerts for a specific room, ordered by descending start date.
+     *
+     * @param Room $room
      * @return Alert[] Returns an array of Alert objects
      */
     public function findLastFiveAlertsByRoom(Room $room): array
     {
         $result = $this->createQueryBuilder('a')
-            ->andWhere('a.IdRoom = :room') // Filtrer les alertes par salle
+            ->andWhere('a.IdRoom = :room') // Filter alerts by room
             ->setParameter('room', $room)
-            ->orderBy('a.DateBegin', 'DESC') // Trier par date de début décroissante (les plus récentes d'abord)
-            ->setMaxResults(5) // Limiter à 5 résultats
+            ->orderBy('a.DateBegin', 'DESC') // Order by start date descending (most recent first)
+            ->setMaxResults(5) // Limit to 5 results
             ->getQuery()
             ->getResult();
 
@@ -80,6 +90,12 @@ class AlertRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * Find all alerts for a specific room.
+     *
+     * @param Room $room
+     * @return Alert[] Returns an array of Alert objects
+     */
     public function findAlertsByRoom(Room $room): array
     {
         $result = $this->createQueryBuilder('a')
@@ -91,8 +107,4 @@ class AlertRepository extends ServiceEntityRepository
         /** @var Alert[] $result */
         return $result;
     }
-
-
-    
-
 }
