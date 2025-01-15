@@ -21,7 +21,7 @@ class BuildingType extends AbstractType
             ->add('AdressBuilding')
         ;
     }
-    
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

@@ -15,23 +15,24 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class FloorType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // 'numberFloor' field: Represents the floor number
             ->add('numberFloor', null, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Le numéro de l\'étage ne peut pas être vide.',
+                        'message' => 'The floor number cannot be empty.',
                     ]),
                 ],
             ])
+            // 'IdBuilding' field: Represents the building the floor belongs to
             ->add('IdBuilding', EntityType::class, [
-                'class' => Building::class,
-                'choice_label' => 'NameBuilding',
+                'class' => Building::class, // Defines the related entity as Building
+                'choice_label' => 'NameBuilding', // Displays the 'NameBuilding' property in the form
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez sélectionner un bâtiment.',
+                        'message' => 'Please select a building.',
                     ]),
                 ],
             ])
@@ -41,7 +42,7 @@ class FloorType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Floor::class,
+            'data_class' => Floor::class, // Associates the form with the Floor entity class
         ]);
     }
 }
