@@ -92,15 +92,15 @@ class WelcomeController extends AbstractController
 
             // Validate and extract values
             $tempValue = isset($lastCaptureTemp[0]['valeur']) && is_numeric($lastCaptureTemp[0]['valeur'])
-                ? round((float) $lastCaptureTemp[0]['valeur'], 1)
+                ? round((float)$lastCaptureTemp[0]['valeur'], 1)
                 : null;
 
             $humValue = isset($lastCaptureHum[0]['valeur']) && is_numeric($lastCaptureHum[0]['valeur'])
-                ? round((float) $lastCaptureHum[0]['valeur'], 1)
+                ? round((float)$lastCaptureHum[0]['valeur'], 1)
                 : null;
 
-            $co2Value = isset($lastCaptureCo2[0]['valeur'])
-                ? $lastCaptureCo2[0]['valeur']
+            $co2Value = isset($lastCaptureCo2[0]['valeur']) && is_numeric($lastCaptureCo2[0]['valeur'])
+                ? $lastCaptureCo2[0]['valeur'] // Ensure it's cast to int
                 : null;
 
             return [
@@ -139,13 +139,11 @@ class WelcomeController extends AbstractController
         // Check and create alerts if necessary
         $alertManager->checkAndCreateAlerts();
 
-        // Fetch the room by its ID
         $room = $roomRepository->find($id);
         if (!$room) {
             throw $this->createNotFoundException('Room not found');
         }
 
-        // Retrieve the room's database information
         $roomName = $room->getName();
         if (!is_string($roomName)) {
             throw new \InvalidArgumentException('Invalid room name.');
@@ -172,12 +170,19 @@ class WelcomeController extends AbstractController
         $lastCapturehum = $getLastCapture('hum');
         $lastCaptureco2 = $getLastCapture('co2');
 
-        // Set values for the room's acquisition system (AS)
-        $room->getIdAS()->setTemperature($lastCapturetemp['valeur']);
-        $room->getIdAS()->setHumidity($lastCapturehum['valeur']);
-        $room->getIdAS()->setCO2($lastCaptureco2['valeur']);
+        $acquisitionSystem = $room->getIdAS();
+        if ($acquisitionSystem !== null) {
+            if (isset($lastCapturetemp['valeur']) && is_numeric($lastCapturetemp['valeur'])) {
+                $acquisitionSystem->setTemperature((int)$lastCapturetemp['valeur']);
+            }
+            if (isset($lastCapturehum['valeur']) && is_numeric($lastCapturehum['valeur'])) {
+                $acquisitionSystem->setHumidity((int)$lastCapturehum['valeur']);
+            }
+            if (isset($lastCaptureco2['valeur']) && is_numeric($lastCaptureco2['valeur'])) {
+                $acquisitionSystem->setCO2((int)$lastCaptureco2['valeur']);
+            }
+        }
 
-        // Define the date range for capturing hourly averages
         $date1 = (new \DateTime())->format('Y-m-d');
         $date2 = (new \DateTime('tomorrow'))->format('Y-m-d');
 
@@ -190,12 +195,22 @@ class WelcomeController extends AbstractController
             }
         };
 
-        // Calculate hourly averages and round the results
-        $dataTemp = $this->calculateHourlyAverage($getCapturesByInterval('temp'));
-        $dataHum = $this->calculateHourlyAverage($getCapturesByInterval('hum'));
-        $dataCo2 = $this->calculateHourlyAverage($getCapturesByInterval('co2'));
+        $sanitizeData = function ($data) {
+            if (!is_array($data)) {
+                return [];
+            }
 
-        // Render the room details page with the required data
+            // Ensure each item is an array with 'dateCapture' and 'valeur'
+            return array_filter($data, function ($item) {
+                return is_array($item) && isset($item['dateCapture'], $item['valeur']) && is_string($item['dateCapture']) && is_numeric($item['valeur']);
+            });
+        };
+
+        // Sanitize data before passing to the calculateHourlyAverage function
+        $dataTemp = $this->calculateHourlyAverage($sanitizeData($getCapturesByInterval('temp')));
+        $dataHum = $this->calculateHourlyAverage($sanitizeData($getCapturesByInterval('hum')));
+        $dataCo2 = $this->calculateHourlyAverage($sanitizeData($getCapturesByInterval('co2')));
+
         return $this->render('welcome/detail.html.twig', [
             'room' => $room,
             'dataTemp' => $dataTemp,
@@ -208,28 +223,35 @@ class WelcomeController extends AbstractController
     }
 
     /**
-     * Groups data by hour and calculates rounded averages.
-     *
-     * @param array<int|string, array<string, Mixed>|string>  $data Array of data points with 'dateCapture' and 'valeur' keys.
-     * @return array<int|string,array<string, Mixed>|string> Array of hourly averaged data with rounded values.
+     * @param array<mixed> $data
+     * @return array<mixed>
      */
     private function calculateHourlyAverage(array $data): array
     {
+        // Ensure that the data is well-structured
         $groupedData = [];
 
         // Group data by hour
         foreach ($data as $item) {
-            // Validate expected keys
-            if (!isset($item['dateCapture'], $item['valeur']) || !is_string($item['dateCapture']) || !is_numeric($item['valeur'])) {
-                continue; // Ignore invalid data
+            // Ensure that the item is an array with 'dateCapture' and 'valeur'
+            if (!is_array($item) || !isset($item['dateCapture'], $item['valeur'])
+                || !is_string($item['dateCapture']) || !is_numeric($item['valeur'])) {
+                continue;  // Skip if the data is not valid
             }
 
-            $hour = (new \DateTime($item['dateCapture']))->format('Y-m-d H:00:00');
+            // Convert 'dateCapture' into the desired hourly format
+            try {
+                $hour = (new \DateTime($item['dateCapture']))->format('Y-m-d H:00:00');
+            } catch (\Exception $e) {
+                continue; // Skip invalid date formats
+            }
 
+            // Initialize array if not already set
             if (!isset($groupedData[$hour])) {
                 $groupedData[$hour] = ['sum' => 0, 'count' => 0];
             }
 
+            // Accumulate the sum and count for averaging later
             $groupedData[$hour]['sum'] += (float)$item['valeur'];
             $groupedData[$hour]['count']++;
         }

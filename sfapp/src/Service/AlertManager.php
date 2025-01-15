@@ -159,7 +159,9 @@ class AlertManager
         // Delete all alerts for the given room
         $alerts = $this->alertRepository->findAlertsByRoom($room);
         foreach ($alerts as $alert) {
-            $this->entityManager->remove($alert);
+            if ($alert instanceof Alert) {
+                $this->entityManager->remove($alert);
+            }
         }
         $this->entityManager->flush();
     }
