@@ -64,7 +64,7 @@ class AcquisitionSystemTest extends WebTestCase
         $client->submit($form);
 
         // Verify redirection to the list page after submission
-        $this->assertResponseRedirects('/acquisitionsysteme');  // Vérifie la redirection vers la page d'acquisition
+        $this->assertResponseRedirects('/acquisitionsysteme'); 
     }
 
     // Test case for editing an existing Acquisition System
