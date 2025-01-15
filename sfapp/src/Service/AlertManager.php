@@ -149,4 +149,14 @@ class AlertManager
 
         return null;
     }
+
+
+    public function deleteAlerts(Room $room): void
+    {
+        $alerts = $this->alertRepository->findAlertsByRoom($room);
+        foreach ($alerts as $alert) {
+            $this->entityManager->remove($alert);
+        }
+        $this->entityManager->flush();
+    }
 }

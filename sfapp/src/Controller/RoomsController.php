@@ -95,6 +95,8 @@ class RoomsController extends AbstractController
     {
 
         $alertManager->checkAndCreateAlerts();
+
+        $alertManager->deleteAlerts($room);
         $entityManager->remove($room);
         $entityManager->flush();
 

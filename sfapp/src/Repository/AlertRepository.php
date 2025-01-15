@@ -24,7 +24,7 @@ class AlertRepository extends ServiceEntityRepository
     {
         $result = $this->createQueryBuilder('a')
             ->andWhere('a.DateEnd IS NULL')
-            ->orderBy('a.DateBegin', 'ASC') // Vous pouvez modifier l'ordre si besoin
+            ->orderBy('a.DateBegin', 'ASC')
             ->getQuery()
             ->getResult();
 
@@ -39,7 +39,7 @@ class AlertRepository extends ServiceEntityRepository
     {
         $result = $this->createQueryBuilder('a')
             ->andWhere('a.DateEnd IS NOT NULL')
-            ->orderBy('a.DateBegin', 'ASC') // Vous pouvez modifier l'ordre si besoin
+            ->orderBy('a.DateBegin', 'ASC')
             ->getQuery()
             ->getResult();
 
@@ -79,6 +79,20 @@ class AlertRepository extends ServiceEntityRepository
         /** @var Alert[] $result */
         return $result;
     }
+
+    public function findAlertsByRoom(Room $room): array
+    {
+        $result = $this->createQueryBuilder('a')
+            ->andWhere('a.IdRoom = :room')
+            ->setParameter('room', $room)
+            ->getQuery()
+            ->getResult();
+
+        /** @var Alert[] $result */
+        return $result;
+    }
+
+
     
 
 }
