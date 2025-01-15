@@ -22,7 +22,7 @@ class SearchBuldingType extends AbstractType
                 'required' => false, // Makes the field optional
             ]);
     }
-    
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
