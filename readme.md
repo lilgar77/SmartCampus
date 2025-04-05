@@ -66,8 +66,8 @@ composer installer
 
 - Créer un fichier `.env.local` et rentrez : 
 ```php
-API_USERNAME=l1eq1
-API_USERPASS=dicvex-Zofsip-4juqru
+API_USERNAME=user fourni
+API_USERPASS=mot de passe fournie
 ```
 
 - vérifier l'exécution du service `sfapp` en rentrant l'URL
@@ -102,8 +102,8 @@ php bin/console doctrine:migrations:migrate --env=test
 
 5. Créer un fichier `env.test.local` et rentrez : 
 ```php
-API_USERNAME=l1eq1
-API_USERPASS=dicvex-Zofsip-4juqru
+API_USERNAME=user fourni
+API_USERPASS=mot de passe fournie
 ```
 
 6.	Lancer les tests :
